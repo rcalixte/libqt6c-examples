@@ -6,7 +6,7 @@
 void mouse_press_event(void* self, void* event) {
     int button = q_mouseevent_button(event);
     char buffer[BUFFER_SIZE];
-    switch (q_mouseevent_button(event)) {
+    switch (button) {
     case QT_MOUSEBUTTON_LEFTBUTTON:
         snprintf(buffer, BUFFER_SIZE, "Left mouse button pressed!");
         q_label_set_text(self, buffer);
