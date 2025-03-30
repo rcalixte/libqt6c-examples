@@ -2,7 +2,6 @@ qapplication
 qcoreapplication
 qcoreevent
 qevent
-qevent
 qframe
 qguiapplication
 qlabel
