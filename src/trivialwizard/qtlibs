@@ -1,0 +1,15 @@
+qapplication
+qboxlayout
+qcoreapplication
+qdialog
+qframe
+qgridlayout
+qguiapplication
+qlabel
+qlayout
+qlayoutitem
+qlineedit
+qobject
+qpaintdevice
+qwidget
+qwizard

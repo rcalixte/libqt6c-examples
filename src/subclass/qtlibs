@@ -1,0 +1,12 @@
+qapplication
+qbrush
+qcoreapplication
+qcoreevent
+qevent
+qframe
+qgroupbox
+qguiapplication
+qobject
+qpaintdevice
+qpainter
+qwidget

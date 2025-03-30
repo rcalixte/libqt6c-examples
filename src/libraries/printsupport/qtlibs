@@ -1,0 +1,11 @@
+qabstractbutton
+qabstractprintdialog
+qapplication
+qcoreapplication
+qdialog
+qguiapplication
+qobject
+qpaintdevice
+qprintdialog
+qpushbutton
+qwidget
