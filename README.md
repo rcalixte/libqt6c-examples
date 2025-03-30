@@ -9,7 +9,7 @@
 
 Example applications using the MIT-licensed Qt 6 bindings for C
 
-These examples can be thought of as instructive templates for using the main library. Though some of the examples have some complexity to them, the intention is to aim for simplicity while demonstrating valid uses of the library. All of source code for the examples are a single file by design. Any auxiliary files are placed in the same directory for either compilation or execution purposes. Please try out the sample applications and start a [discussion](https://github.com/rcalixte/libqt6zig/discussions) if you have any questions or issues relevant to these examples.
+These examples can be thought of as instructive templates for using the main library. Though some of the examples have some complexity to them, the intention is to aim for simplicity while demonstrating valid uses of the library. All of source code for the examples are a single file by design. Any auxiliary files are placed in the same directory for either compilation or execution purposes. Please try out the sample applications and start a [discussion](https://github.com/rcalixte/libqt6c/discussions) if you have any questions or issues relevant to these examples.
 
 ---
 
@@ -83,7 +83,7 @@ FAQ
 
 ### Q1. How long does it take to compile the examples?
 
-The examples compile the entire main library and then build the sample applications from the source code. The first compilation should take less than 10 minutes, assuming the hardware in use is at or above the level of that of a consumer-grade mid-tier machine released in the past decade. Once the build cache is warmed up for the examples, subsequent compilations should be very fast, on the order of seconds. For client applications that use and configure a specific subset of the main library, the expected compilation time should be much shorter, e.g. compiling the `helloworld` example, only linking the libraries needed and without a warm cache, should take under 30 seconds.
+The examples compile a subset of the entire main library and then build the sample applications from the source code. The first compilation should take less than 3 minutes, assuming the hardware in use is at or above the level of that of a consumer-grade mid-tier machine released in the past decade. Once the build cache is warmed up for the examples, subsequent compilations should be very fast, on the order of seconds. For client applications that use and configure a specific subset of the main library, the expected compilation time should be similar to the examples.
 
 ### Q2. What build modes are supported by the build system used by the examples?
 
