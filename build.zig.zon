@@ -7,12 +7,6 @@
             .hash = "libqt6c-6.4.2-DLhhNvmSVwaSsX8Tg199ud0IrMQuleoMCiG595kzEln2",
         },
     },
-    .paths = .{
-        "build.zig",
-        "build.zig.zon",
-        "src",
-        "LICENSE",
-        "README.md",
-    },
+    .paths = .{""},
     .fingerprint = 0x221fd13f404bd8f9,
 }
