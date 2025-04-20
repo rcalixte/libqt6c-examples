@@ -1,0 +1,10 @@
+qabstractscrollarea
+qapplication
+qcoreapplication
+qframe
+qguiapplication
+qobject
+qpaintdevice
+qpdfdocument
+qpdfview
+qwidget
