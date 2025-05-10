@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{});
+    const optimize = standardOptimizeOption(b, .{});
     const enable_workaround = b.option(bool, "enable-workaround", "Enable workaround for missing Qt C++ headers") orelse false;
     const skip_restricted = b.option(bool, "skip-restricted", "Skip restricted libraries") orelse false;
 
@@ -102,9 +102,11 @@ pub fn build(b: *std.Build) !void {
         }
     }
 
+    const lib_optimized = if (optimize == .Debug) .ReleaseFast else optimize;
+
     const qt6c = b.dependency("libqt6c", .{
         .target = target,
-        .optimize = .ReleaseFast,
+        .optimize = lib_optimized,
         .@"enable-workaround" = enable_workaround or is_bsd_family,
         .@"skip-restricted" = skip_restricted,
     });
@@ -167,4 +169,27 @@ pub fn build(b: *std.Build) !void {
         const run_step = b.step(exe_name, run_description);
         run_step.dependOn(&run_cmd.step);
     }
+}
+
+fn standardOptimizeOption(b: *std.Build, options: std.Build.StandardOptimizeOptionOptions) std.builtin.OptimizeMode {
+    if (options.preferred_optimize_mode) |mode| {
+        if (b.option(bool, "release", "optimize for end users") orelse (b.release_mode != .off)) {
+            return mode;
+        }
+    }
+
+    if (b.option(
+        std.builtin.OptimizeMode,
+        "optimize",
+        "Prioritize performance, safety, or binary size",
+    )) |mode| {
+        return mode;
+    }
+
+    return switch (b.release_mode) {
+        .off, .any => .Debug,
+        .fast => .ReleaseFast,
+        .safe => .ReleaseSafe,
+        .small => .ReleaseSmall,
+    };
 }
