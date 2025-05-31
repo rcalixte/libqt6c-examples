@@ -178,8 +178,12 @@ static AppTab* create_app_tab() {
     q_textedit_on_text_changed(tab->textArea, handle_text_changed);
     q_splitter_add_widget(panes, tab->textArea);
 
-    int sizes[] = {250, 550};
-    q_splitter_set_sizes(panes, (int**)sizes);
+    int size_list[] = {250, 550};
+    libqt_list sizes = {
+        .len = 2,
+        .data = {(int*)size_list},
+    };
+    q_splitter_set_sizes(panes, sizes);
 
     return tab;
 }
