@@ -21,7 +21,7 @@ typedef struct ButtonData {
     void* button; // QPushButton
 } ButtonData;
 
-void update_label_text(void* ctx, void* _) {
+void update_label_text(void* ctx) {
     Counter* counter = (Counter*)ctx;
     char text[64];
     snprintf(text, sizeof(text), "%d %ld", counter->counter, time(NULL));
