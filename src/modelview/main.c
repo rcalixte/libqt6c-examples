@@ -24,8 +24,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    q_filesystemmodel_set_root_path(model, dir);
-    QModelIndex* modelindex = q_filesystemmodel_index_with_path(model, dir);
+    QModelIndex* modelindex = q_filesystemmodel_set_root_path(model, dir);
     if (!modelindex) {
         fprintf(stderr, "Failed to create model index\n");
         q_filesystemmodel_delete(model);
@@ -58,6 +57,9 @@ int main(int argc, char* argv[]) {
     q_listview_set_model(list, model);
     q_listview_set_root_index(list, modelindex);
 
+    QItemSelectionModel* tree_model = q_treeview_selection_model(tree);
+    q_listview_set_selection_model(list, tree_model);
+
     q_splitter_set_window_title(splitter, "Folder Model Views");
     q_splitter_show(splitter);
 
@@ -66,8 +68,6 @@ int main(int argc, char* argv[]) {
     // Cleanup
     q_modelindex_delete(modelindex);
     q_filesystemmodel_delete(model);
-    // tree and list are deleted with splitter
-    q_splitter_delete(splitter);
 
     return result;
 }
