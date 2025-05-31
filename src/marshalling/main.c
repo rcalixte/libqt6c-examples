@@ -29,13 +29,15 @@ int main(int argc, char* argv[]) {
     q_widget_delete(widget);
 
     // QList<int>
-    int numbers[] = {10, 20, 30, 40, 50};
-    QVersionNumber* version = q_versionnumber_new2(&numbers);
+    int nums[] = {10, 20, 30, 40, 50};
+    libqt_list numbers = {
+	    .len = 5,
+	    .data = {(int*)nums},
+    };
+    QVersionNumber* version = q_versionnumber_new2(numbers);
     libqt_list segs_list = q_versionnumber_segments(version);
     int* segs = (int*)segs_list.data.ints;
-    // hacking around UB
-    int SEGMENTS = 5;
-    for (int i = 0; i < SEGMENTS; i++) {
+    for (int i = 0; i < segs_list.len; i++) {
         if (segs[i]) {
             printf("Segment %d: %d\n", i, segs[i]);
         }
@@ -60,28 +62,25 @@ int main(int argc, char* argv[]) {
     q_inputdialog_delete(dialog);
 
     // QList<Qt type>
-    void* keyList[] = {
+    void* keyData[] = {
         q_keysequence_from_string("F1"),
         q_keysequence_from_string("F2"),
         q_keysequence_from_string("F3"),
         NULL,
     };
+    libqt_list keyList = qlist(keyData, 3);
     QAction* action = q_action_new();
     q_action_set_shortcuts(action, keyList);
-    libqt_list shortcuts_list = q_action_shortcuts(action);
-    QKeySequence** shortcuts = (QKeySequence**)shortcuts_list.data.ptr;
-    for (int i = 0; i < (int)shortcuts_list.len; i++) {
-        QKeySequence* shortcut = shortcuts[i];
+    libqt_list shortcuts = q_action_shortcuts(action);
+    QKeySequence** shortcuts_list = (QKeySequence**)shortcuts.data.ptr;
+    for (int i = 0; i < (int)shortcuts.len; i++) {
+        QKeySequence* shortcut = shortcuts_list[i];
         if (shortcut) {
             printf("Shortcut %d: %s\n", i, q_keysequence_to_string(shortcut));
         }
         q_keysequence_delete(shortcut);
     }
-    for (int i = 0; keyList[i] != NULL; i++) {
-        q_keysequence_delete(keyList[i]);
-    }
     q_action_delete(action);
-    free(shortcuts_list.data.ptr);
 
     // QByteArray
     const char* f_input = "foo bar baz";
