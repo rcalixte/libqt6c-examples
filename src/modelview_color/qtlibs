@@ -1,0 +1,13 @@
+qabstractitemmodel
+qabstractitemview
+qabstractscrollarea
+qapplication
+qcolor
+qcoreapplication
+qframe
+qguiapplication
+qlistview
+qobject
+qpaintdevice
+qvariant
+qwidget
