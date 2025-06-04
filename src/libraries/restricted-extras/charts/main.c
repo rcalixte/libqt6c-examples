@@ -19,7 +19,8 @@ int main(int argc, char* argv[]) {
     for (float i = -500; i <= 500; i++) {
         x = i / 10000;
         y = sin(1 / x) * x;
-        if (isnan(y)) y = 0;
+        if (isnan(y))
+            y = 0;
         q_lineseries_append(series, x, y);
     }
 
