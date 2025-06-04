@@ -31,8 +31,8 @@ int main(int argc, char* argv[]) {
     // QList<int>
     int nums[] = {10, 20, 30, 40, 50};
     libqt_list numbers = {
-	    .len = 5,
-	    .data = {(int*)nums},
+        .len = 5,
+        .data = {(int*)nums},
     };
     QVersionNumber* version = q_versionnumber_new2(numbers);
     libqt_list segs_list = q_versionnumber_segments(version);
