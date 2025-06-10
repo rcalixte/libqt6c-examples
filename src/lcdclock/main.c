@@ -3,7 +3,7 @@
 static void* lcd;
 static void* time;
 
-void show_time(void* self, void* event) {
+void show_time(void* self) {
     time = q_time_current_time();
     const char* text = q_time_to_string_with_format(time, "hh:mm");
     char lcd_text[6];
@@ -31,25 +31,22 @@ int main(int argc, char* argv[]) {
 
     QHBoxLayout* hbox = q_hboxlayout_new(widget);
     lcd = q_lcdnumber_new(widget);
-    QFont* font = q_font_new6("DejaVu Sans", 14);
 
-    q_lcdnumber_set_font(lcd, font);
     q_lcdnumber_set_style_sheet(lcd, "background-color: #555555; color: white;");
 
-    show_time(NULL, NULL);
+    show_time(NULL);
 
     q_hboxlayout_add_widget(hbox, lcd);
 
     QTimer* timer = q_timer_new2(widget);
     q_timer_start(timer, 1000);
-    q_timer_on_timer_event(timer, show_time);
+    q_timer_on_timeout(timer, show_time);
 
     q_widget_show(widget);
 
     int result = q_application_exec();
 
     q_widget_delete(widget);
-    q_font_delete(font);
 
     return result;
 }
