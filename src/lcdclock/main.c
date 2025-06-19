@@ -5,17 +5,14 @@ static void* time;
 
 void show_time(void* self) {
     time = q_time_current_time();
-    const char* text = q_time_to_string_with_format(time, "hh:mm");
-    char lcd_text[6];
-
-    strncpy(lcd_text, text, 5);
-    lcd_text[5] = '\0';
+    char lcd_format[6] = "hh:mm";
 
     if (q_time_second(time) % 2 == 0) {
-        lcd_text[2] = ' ';
+        lcd_format[2] = ' ';
     }
 
-    q_lcdnumber_display(lcd, lcd_text);
+    const char* text = q_time_to_string_with_format(time, lcd_format);
+    q_lcdnumber_display(lcd, text);
 
     q_time_delete(time);
     free(text);
