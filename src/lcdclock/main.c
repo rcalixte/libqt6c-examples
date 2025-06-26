@@ -3,7 +3,7 @@
 static void* lcd;
 static void* time;
 
-void show_time(void* self) {
+void show_time(void* _) {
     time = q_time_current_time();
     char lcd_format[6] = "hh:mm";
 
