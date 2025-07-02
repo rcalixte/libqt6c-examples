@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <limits.h>
 
-void onPlaybackStateChanged(void* player, int64_t state) {
+void onPlaybackStateChanged(void* _, int64_t state) {
     printf("Playback state: %ld\n", state);
 
     if (state == QMEDIAPLAYER_PLAYBACKSTATE_STOPPEDSTATE) {
