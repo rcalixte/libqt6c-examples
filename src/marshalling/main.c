@@ -5,6 +5,14 @@
 #include <stdio.h>
 #include <unistd.h>
 
+size_t get_strv_length(const char** strv) {
+    size_t len = 0;
+    while (strv[len] != NULL) {
+        len++;
+    }
+    return len;
+}
+
 int main(int argc, char* argv[]) {
     // Initialize Qt application
     q_application_new(&argc, argv);
@@ -32,7 +40,7 @@ int main(int argc, char* argv[]) {
     int nums[] = {10, 20, 30, 40, 50};
     libqt_list numbers = {
         .len = 5,
-        .data = {(int*)nums},
+        .data.ints = nums,
     };
     QVersionNumber* version = q_versionnumber_new2(numbers);
     libqt_list segs_list = q_versionnumber_segments(version);
@@ -50,11 +58,10 @@ int main(int argc, char* argv[]) {
     const char* text[] = {"foo", "bar", "baz", "quux", NULL};
     q_inputdialog_set_combo_box_items(dialog, text);
     const char** items = q_inputdialog_combo_box_items(dialog);
-    // hacking around UB
-    int STRV_LEN = 4;
-    for (int i = 0; i < STRV_LEN; i++) {
+    size_t items_len = get_strv_length(items);
+    for (size_t i = 0; i < items_len; i++) {
         if (items[i]) {
-            printf("Combo box item %d: %s\n", i + 1, items[i]);
+            printf("Combo box item %zu: %s\n", i + 1, items[i]);
             free((void*)items[i]);
         }
     }
