@@ -41,7 +41,7 @@ void* run_counter(void* arg) {
     return NULL;
 }
 
-void button_clicked(void* button, bool checked) {
+void button_clicked(void* button) {
     void* variant = q_pushbutton_property(button, "buttonData");
     if (!variant)
         return;
@@ -176,7 +176,7 @@ int main(int argc, char* argv[]) {
     q_pushbutton_set_property(button, "buttonData", variant);
 
     // Connect button click handler
-    q_pushbutton_on_clicked1(button, button_clicked);
+    q_pushbutton_on_clicked(button, button_clicked);
 
     // Add button to layout
     void* qwlayout = q_widget_layout(widget);
