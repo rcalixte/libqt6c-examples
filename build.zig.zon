@@ -1,10 +1,10 @@
 .{
     .name = .libqt6c_examples,
-    .version = "6.4.2",
+    .version = "6.8.2",
     .dependencies = .{
         .libqt6c = .{
-            .url = "git+https://github.com/rcalixte/libqt6c#04db6f47d91a92a59f028a47de55cce00b4f6abb",
-            .hash = "libqt6c-6.4.2-DLhhNkd7IAccoLsPuukyKxVkLWlczGh778ornJyCOKBj",
+            .url = "git+https://github.com/rcalixte/libqt6c#b415b240b17ea274258aa51ef4ed3b9caa1d2204",
+            .hash = "libqt6c-6.8.2-DLhhNsOHewfJ_kZ7moe83UhM1rEwFpUk6vF1MErEGuAQ",
         },
     },
     .paths = .{""},
