@@ -97,10 +97,11 @@ int main(int argc, char* argv[]) {
     free(bat);
 
     // QAnyStringView parameter
-    QVariant* variant = q_variant_new14("QAnyStringView");
-    const char* value = q_variant_to_string(variant);
+    QObject* object = q_object_new();
+    q_object_set_object_name(object, "QAnyStringView Name");
+    const char* value = q_object_object_name(object);
     printf("Value: %s\n", value);
-    q_variant_delete(variant);
+    q_object_delete(object);
 
     return 0;
 }
