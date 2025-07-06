@@ -38,7 +38,7 @@ QVariant* on_data(void* self, void* index, int role) {
     case QT_ITEMDATAROLE_DISPLAYROLE: {
         char buf[16];
         snprintf(buf, sizeof(buf), "this is row %d", q_modelindex_row(index));
-        return q_variant_new11(buf);
+        return q_variant_new23(buf);
     }
     default:
         return q_variant_new();
