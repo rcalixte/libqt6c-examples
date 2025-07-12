@@ -22,7 +22,6 @@ struct AppTab {
 
 struct AppWindow {
     QMainWindow* w;
-    QWidget* cw;
     QTabWidget* tabs;
 };
 
@@ -37,8 +36,8 @@ static struct {
 
 // Map functions
 static void map_init(size_t initial_capacity) {
-    app_tab_map.keys = calloc(initial_capacity, sizeof(void*));
-    app_tab_map.values = calloc(initial_capacity, sizeof(AppTab*));
+    app_tab_map.keys = (void**)calloc(initial_capacity, sizeof(void*));
+    app_tab_map.values = (AppTab**)calloc(initial_capacity, sizeof(AppTab*));
     app_tab_map.capacity = initial_capacity;
     app_tab_map.size = 0;
 }
@@ -46,8 +45,8 @@ static void map_init(size_t initial_capacity) {
 static void map_put(void* key, AppTab* value) {
     if (app_tab_map.size >= app_tab_map.capacity) {
         size_t new_capacity = app_tab_map.capacity * 2;
-        app_tab_map.keys = realloc(app_tab_map.keys, new_capacity * sizeof(void*));
-        app_tab_map.values = realloc(app_tab_map.values, new_capacity * sizeof(AppTab*));
+        app_tab_map.keys = (void**)realloc(app_tab_map.keys, new_capacity * sizeof(void*));
+        app_tab_map.values = (AppTab**)realloc(app_tab_map.values, new_capacity * sizeof(AppTab*));
         app_tab_map.capacity = new_capacity;
     }
     app_tab_map.keys[app_tab_map.size] = key;
@@ -96,6 +95,7 @@ static void handle_jump_to_bookmark(void* self, void* current, void* previous) {
 
     QVariant* line_number_variant = q_listwidgetitem_data(item, LINE_NUMBER_ROLE);
     int line_number = q_variant_to_int(line_number_variant);
+    q_variant_delete(line_number_variant);
     QTextDocument* doc = q_textedit_document(tab->textArea);
     if (!doc)
         return;
@@ -111,6 +111,7 @@ static void handle_jump_to_bookmark(void* self, void* current, void* previous) {
     q_textcursor_set_position(cursor, q_textblock_position(block));
     q_textedit_set_text_cursor(tab->textArea, cursor);
     q_textedit_set_focus(tab->textArea);
+    q_textcursor_delete(cursor);
 }
 
 static void update_outline_for_content(AppTab* tab, const char* content) {
@@ -121,7 +122,6 @@ static void update_outline_for_content(AppTab* tab, const char* content) {
     int line_number = 0;
 
     while (*ptr) {
-        // Get next line
         size_t i = 0;
         while (*ptr && *ptr != '\n' && i < MAX_LINE_LENGTH - 1) {
             line[i++] = *ptr++;
@@ -154,10 +154,11 @@ static void handle_text_changed(void* self) {
         return;
 
     update_outline_for_content(tab, content);
+    free((void*)content);
 }
 
-static AppTab* create_app_tab() {
-    AppTab* tab = malloc(sizeof(AppTab));
+static AppTab* new_app_tab() {
+    AppTab* tab = (AppTab*)malloc(sizeof(AppTab));
     if (!tab)
         return NULL;
 
@@ -165,7 +166,7 @@ static AppTab* create_app_tab() {
     QHBoxLayout* layout = q_hboxlayout_new(tab->tab);
 
     QSplitter* panes = q_splitter_new2();
-    q_boxlayout_add_widget(layout, panes);
+    q_hboxlayout_add_widget(layout, panes);
 
     tab->outline = q_listwidget_new(tab->tab);
     q_splitter_add_widget(panes, tab->outline);
@@ -181,7 +182,7 @@ static AppTab* create_app_tab() {
     int size_list[] = {250, 550};
     libqt_list sizes = {
         .len = 2,
-        .data = {(int*)size_list},
+        .data.ints = size_list,
     };
     q_splitter_set_sizes(panes, sizes);
 
@@ -190,32 +191,49 @@ static AppTab* create_app_tab() {
 
 // AppWindow methods
 static void handle_tab_close(void* self, int index) {
+    // Get the widget at this index before removing it
     QWidget* widget = q_tabwidget_widget(self, index);
     if (!widget)
         return;
 
-    // Find and cleanup the AppTab
+    // Keep track of the AppTab we need to free
+    AppTab* tab_to_free = NULL;
+
+    // Find and remove the AppTab instance
     for (size_t i = 0; i < app_tab_map.size; i++) {
         AppTab* tab = app_tab_map.values[i];
         if (tab->tab == widget) {
+            tab_to_free = tab;
+            // Remove from map before freeing
             if (tab->textArea)
                 map_remove(tab->textArea);
             if (tab->outline)
                 map_remove(tab->outline);
-            if (tab->textArea)
-                q_textedit_delete(tab->textArea);
-            if (tab->outline)
-                q_listwidget_delete(tab->outline);
-            q_widget_delete(tab->tab);
-            free(tab);
             break;
         }
     }
+    // Remove the tab from the tab widget first
     q_tabwidget_remove_tab(self, index);
+
+    // Then clean up the memory
+    if (tab_to_free) {
+        q_widget_delete(tab_to_free->tab);
+        free(tab_to_free);
+    }
+}
+
+static void handle_close_current_tab() {
+    if (main_window) {
+        int current_index = q_tabwidget_current_index(main_window->tabs);
+        if (current_index >= 0) {
+            handle_tab_close(main_window->tabs, current_index);
+        }
+    }
 }
 
 static void create_tab_with_contents(AppWindow* window, const char* title, const char* content) {
-    AppTab* tab = create_app_tab();
+    AppTab* tab = new_app_tab();
+    // the new tab is cleaned up during handle_tab_close
     if (!tab)
         return;
 
@@ -251,7 +269,7 @@ static void handle_file_open() {
     long size = ftell(file);
     rewind(file);
 
-    char* content = malloc(size + 1);
+    char* content = (char*)malloc(size + 1);
     if (!content) {
         fclose(file);
         return;
@@ -268,6 +286,7 @@ static void handle_file_open() {
     create_tab_with_contents(main_window, basename, content);
 
     free(content);
+    free((void*)fname);
 }
 
 static void handle_exit() {
@@ -278,13 +297,13 @@ static void handle_about() {
     q_application_about_qt();
 }
 
-static AppWindow* create_app_window() {
-    AppWindow* window = malloc(sizeof(AppWindow));
+static AppWindow* new_app_window() {
+    AppWindow* window = (AppWindow*)malloc(sizeof(AppWindow));
     if (!window)
         return NULL;
 
     window->w = q_mainwindow_new2();
-    q_widget_set_window_title(window->w, "Markdown Outliner");
+    q_mainwindow_set_window_title(window->w, "Markdown Outliner");
 
     // Menu setup
     QMenuBar* menubar = q_menubar_new2();
@@ -338,6 +357,7 @@ static AppWindow* create_app_window() {
     QKeySequence* close_shortcut = q_keysequence_new2("Ctrl+W");
     QAction* close_action = q_mainwindow_add_action3(window->w, "Ctrl+W", close_shortcut);
     q_action_set_shortcut(close_action, close_shortcut);
+    q_action_on_triggered(close_action, handle_close_current_tab);
     q_keysequence_delete(close_shortcut);
 
     // Main widgets
@@ -359,7 +379,7 @@ int main(int argc, char* argv[]) {
 
     map_init(INITIAL_MAP_CAPACITY);
 
-    AppWindow* app = create_app_window();
+    AppWindow* app = new_app_window();
     if (!app) {
         fprintf(stderr, "Failed to create application window\n");
         return 1;
