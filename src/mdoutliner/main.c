@@ -84,7 +84,7 @@ static void map_cleanup() {
 }
 
 // AppTab methods
-static void handle_jump_to_bookmark(void* self, void* current, void* previous) {
+static void handle_jump_to_bookmark(void* self, void* UNUSED current, void* UNUSED previous) {
     AppTab* tab = map_get(self);
     if (!tab)
         return;
@@ -154,7 +154,7 @@ static void handle_text_changed(void* self) {
         return;
 
     update_outline_for_content(tab, content);
-    free((void*)content);
+    libqt_free(content);
 }
 
 static AppTab* new_app_tab() {
@@ -286,7 +286,7 @@ static void handle_file_open() {
     create_tab_with_contents(main_window, basename, content);
 
     free(content);
-    free((void*)fname);
+    libqt_free(fname);
 }
 
 static void handle_exit() {
@@ -309,9 +309,9 @@ static AppWindow* new_app_window() {
     QMenuBar* menubar = q_menubar_new2();
 
     // File menu
-    QMenu* file_menu = q_menubar_add_menu_with_title(menubar, "&File");
+    QMenu* file_menu = q_menubar_add_menu2(menubar, "&File");
 
-    QAction* new_action = q_menubar_add_action_with_text(file_menu, "New Tab");
+    QAction* new_action = q_menubar_add_action2(file_menu, "New Tab");
     QKeySequence* new_shortcut = q_keysequence_new2("Ctrl+N");
     q_action_set_shortcut(new_action, new_shortcut);
     q_keysequence_delete(new_shortcut);
@@ -320,7 +320,7 @@ static AppWindow* new_app_window() {
     q_icon_delete(new_icon);
     q_action_on_triggered(new_action, handle_new_tab);
 
-    QAction* open_action = q_menubar_add_action_with_text(file_menu, "Open...");
+    QAction* open_action = q_menubar_add_action2(file_menu, "Open...");
     QKeySequence* open_shortcut = q_keysequence_new2("Ctrl+O");
     q_action_set_shortcut(open_action, open_shortcut);
     q_keysequence_delete(open_shortcut);
@@ -331,7 +331,7 @@ static AppWindow* new_app_window() {
 
     q_menubar_add_separator(file_menu);
 
-    QAction* exit_action = q_menubar_add_action_with_text(file_menu, "Exit");
+    QAction* exit_action = q_menubar_add_action2(file_menu, "Exit");
     QKeySequence* exit_shortcut = q_keysequence_new2("Ctrl+Q");
     q_action_set_shortcut(exit_action, exit_shortcut);
     q_keysequence_delete(exit_shortcut);
@@ -341,8 +341,8 @@ static AppWindow* new_app_window() {
     q_action_on_triggered(exit_action, handle_exit);
 
     // Help menu
-    QMenu* help_menu = q_menubar_add_menu_with_title(menubar, "&Help");
-    QAction* about_action = q_menubar_add_action_with_text(help_menu, "About Qt");
+    QMenu* help_menu = q_menubar_add_menu2(menubar, "&Help");
+    QAction* about_action = q_menubar_add_action2(help_menu, "About Qt");
     QIcon* about_icon = q_icon_from_theme("help-about");
     q_action_set_icon(about_action, about_icon);
     q_icon_delete(about_icon);
@@ -355,7 +355,7 @@ static AppWindow* new_app_window() {
 
     // Ctrl+W shortcut
     QKeySequence* close_shortcut = q_keysequence_new2("Ctrl+W");
-    QAction* close_action = q_mainwindow_add_action3(window->w, "Ctrl+W", close_shortcut);
+    QAction* close_action = q_mainwindow_add_action4(window->w, "Ctrl+W", close_shortcut);
     q_action_set_shortcut(close_action, close_shortcut);
     q_action_on_triggered(close_action, handle_close_current_tab);
     q_keysequence_delete(close_shortcut);
