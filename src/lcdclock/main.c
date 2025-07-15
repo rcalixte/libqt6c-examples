@@ -3,7 +3,7 @@
 static void* lcd;
 static void* time;
 
-void show_time(void* _) {
+void show_time() {
     time = q_time_current_time();
     char lcd_format[6] = "hh:mm";
 
@@ -11,11 +11,11 @@ void show_time(void* _) {
         lcd_format[2] = ' ';
     }
 
-    const char* text = q_time_to_string_with_format(time, lcd_format);
+    const char* text = q_time_to_string2(time, lcd_format);
     q_lcdnumber_display(lcd, text);
 
     q_time_delete(time);
-    free(text);
+    libqt_free(text);
 }
 
 int main(int argc, char* argv[]) {
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     q_lcdnumber_set_style_sheet(lcd, "background-color: #555555; color: white;");
 
-    show_time(NULL);
+    show_time();
 
     q_hboxlayout_add_widget(hbox, lcd);
 
