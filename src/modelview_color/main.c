@@ -1,15 +1,15 @@
 #include <libqt6c.h>
 #include <stdio.h>
 
-int on_row_count(void* self, void* index) {
+int on_row_count(void* UNUSED self, void* UNUSED index) {
     return 1000;
 }
 
-int on_column_count(void* self, void* index) {
+int on_column_count(void* UNUSED self, void* UNUSED index) {
     return 1;
 }
 
-QVariant* on_data(void* self, void* index, int role) {
+QVariant* on_data(void* UNUSED self, void* index, int role) {
     switch (role) {
     case QT_ITEMDATAROLE_FOREGROUNDROLE:
         if (q_modelindex_row(index) % 2 == 0) {
@@ -38,7 +38,7 @@ QVariant* on_data(void* self, void* index, int role) {
     case QT_ITEMDATAROLE_DISPLAYROLE: {
         char buf[16];
         snprintf(buf, sizeof(buf), "this is row %d", q_modelindex_row(index));
-        return q_variant_new23(buf);
+        return q_variant_new24(buf);
     }
     default:
         return q_variant_new();
