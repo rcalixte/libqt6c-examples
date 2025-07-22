@@ -81,9 +81,6 @@ int main(int argc, char* argv[]) {
 
     int ret = q_application_exec();
 
-    q_wizardpage_delete(intro_page);
-    q_wizardpage_delete(registration_page);
-    q_wizardpage_delete(conclusion_page);
-    q_wizard_delete(wizard);
+    q_wizard_delete_later(wizard);
     return ret;
 }
