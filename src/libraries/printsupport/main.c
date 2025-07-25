@@ -1,11 +1,11 @@
 #include <libqt6c.h>
 #include <stdio.h>
 
-void onFinished(void* self, int _) {
+void onFinished(void* self, int UNUSED result) {
     q_printdialog_delete_later(self);
 }
 
-void onPressed(void* _) {
+void onPressed() {
     QPrintDialog* dialog = q_printdialog_new3();
     if (!dialog) {
         fprintf(stderr, "Failed to create print dialog\n");
