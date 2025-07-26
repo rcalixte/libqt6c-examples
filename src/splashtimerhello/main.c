@@ -13,7 +13,7 @@ void button_callback(void* self) {
     q_pushbutton_set_text(self, buffer);
 }
 
-void splash_mouse_press_event(void* self, void* event) {
+void splash_mouse_press_event() {
 }
 
 void timer_callback(void* self, void* event) {
