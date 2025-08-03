@@ -1,0 +1,14 @@
+qabstractbutton
+qapplication
+qboxlayout
+qcoreapplication
+qguiapplication
+qicon
+qlayout
+qlayoutitem
+qobject
+qpaintdevice
+qradiobutton
+qresource
+qsize
+qwidget
