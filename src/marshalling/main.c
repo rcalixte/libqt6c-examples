@@ -45,9 +45,9 @@ int main(int argc, char* argv[]) {
     QVersionNumber* version = q_versionnumber_new2(numbers);
     libqt_list segs_list = q_versionnumber_segments(version);
     int* segs = (int*)segs_list.data.ints;
-    for (int i = 0; i < segs_list.len; i++) {
+    for (size_t i = 0; i < segs_list.len; i++) {
         if (segs[i]) {
-            printf("Segment %d: %d\n", i, segs[i]);
+            printf("Segment %zu: %d\n", i, segs[i]);
         }
     }
     free(segs_list.data.ints);
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
     for (size_t i = 0; i < items_len; i++) {
         if (items[i]) {
             printf("Combo box item %zu: %s\n", i + 1, items[i]);
-            free((void*)items[i]);
+            libqt_free(items[i]);
         }
     }
     free(items);
@@ -80,10 +80,10 @@ int main(int argc, char* argv[]) {
     q_action_set_shortcuts(action, keyList);
     libqt_list shortcuts = q_action_shortcuts(action);
     QKeySequence** shortcuts_list = (QKeySequence**)shortcuts.data.ptr;
-    for (int i = 0; i < (int)shortcuts.len; i++) {
+    for (size_t i = 0; i < shortcuts.len; i++) {
         QKeySequence* shortcut = shortcuts_list[i];
         if (shortcut) {
-            printf("Shortcut %d: %s\n", i, q_keysequence_to_string(shortcut));
+            printf("Shortcut %zu: %s\n", i, q_keysequence_to_string(shortcut));
         }
         q_keysequence_delete(shortcut);
     }
