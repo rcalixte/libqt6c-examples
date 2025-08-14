@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
     q_widget_set_tool_tip(widget, "Sample text");
     const char* tip = q_widget_tool_tip(widget);
     printf("Widget tooltip: %s\n", tip);
+    libqt_free(tip);
     q_widget_delete(widget);
 
     // QList<int>
@@ -94,6 +95,7 @@ int main(int argc, char* argv[]) {
     char* bat = q_file_encode_name(f_input);
     const char* f_output = q_file_decode_name(bat);
     printf("QByteArray: %s\n", f_output);
+    libqt_free(f_output);
     free(bat);
 
     // QAnyStringView parameter
@@ -101,6 +103,7 @@ int main(int argc, char* argv[]) {
     q_object_set_object_name(object, "QAnyStringView Name");
     const char* value = q_object_object_name(object);
     printf("Value: %s\n", value);
+    libqt_free(value);
     q_object_delete(object);
 
     return 0;
