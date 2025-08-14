@@ -7,6 +7,7 @@ void onFinished(void* dns) {
     if (q_dnslookup_error(dns) != QDNSLOOKUP_ERROR_NOERROR) {
         const char* error_str = q_dnslookup_error_string(dns);
         printf("DNS lookup failed: %s\n", error_str);
+        libqt_free(error_str);
         return;
     }
 
@@ -18,6 +19,7 @@ void onFinished(void* dns) {
         QHostAddress* value = q_dnshostaddressrecord_value(results[i]);
         const char* addr_str = q_hostaddress_to_string(value);
         printf("- %s\n", addr_str);
+        libqt_free(addr_str);
         q_hostaddress_delete(value);
     }
     q_dnshostaddressrecord_delete(records.data.ptr);
