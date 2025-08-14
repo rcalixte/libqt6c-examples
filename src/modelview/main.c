@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
     QFileSystemModel* model = q_filesystemmodel_new();
     if (!model) {
         fprintf(stderr, "Failed to create filesystem model\n");
+        libqt_free(dir);
         q_splitter_delete(splitter);
         return 1;
     }
@@ -28,9 +29,12 @@ int main(int argc, char* argv[]) {
     if (!modelindex) {
         fprintf(stderr, "Failed to create model index\n");
         q_filesystemmodel_delete(model);
+        libqt_free(dir);
         q_splitter_delete(splitter);
         return 1;
     }
+
+    libqt_free(dir);
 
     // Tree view
     QTreeView* tree = q_treeview_new(splitter);
