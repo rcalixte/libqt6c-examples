@@ -261,6 +261,7 @@ static void handle_file_open() {
 
     FILE* file = fopen(fname, "r");
     if (!file) {
+        libqt_free(fname);
         return;
     }
 
@@ -272,6 +273,7 @@ static void handle_file_open() {
     char* content = (char*)malloc(size + 1);
     if (!content) {
         fclose(file);
+        libqt_free(fname);
         return;
     }
 
@@ -363,6 +365,7 @@ static AppWindow* new_app_window() {
     // Main widgets
     window->tabs = q_tabwidget_new(window->w);
     q_tabwidget_set_tabs_closable(window->tabs, true);
+    q_tabwidget_set_movable(window->tabs, true);
     q_tabwidget_on_tab_close_requested(window->tabs, handle_tab_close);
     q_mainwindow_set_central_widget(window->w, window->tabs);
 
