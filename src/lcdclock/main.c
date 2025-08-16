@@ -1,7 +1,7 @@
 #include <libqt6c.h>
 
-static void* lcd;
-static void* time;
+static QLCDNumber* lcd;
+static QTime* time;
 
 void show_time() {
     time = q_time_current_time();
