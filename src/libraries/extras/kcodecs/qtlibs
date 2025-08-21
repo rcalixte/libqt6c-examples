@@ -1,0 +1,16 @@
+kcharsets
+qabstractitemview
+qabstractscrollarea
+qapplication
+qboxlayout
+qcoreapplication
+qframe
+qguiapplication
+qlabel
+qlayout
+qlayoutitem
+qlistview
+qlistwidget
+qobject
+qpaintdevice
+qwidget
