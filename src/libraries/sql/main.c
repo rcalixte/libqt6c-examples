@@ -33,9 +33,10 @@ int main(int argc, char* argv[]) {
             "Cannot open database",
             "Unable to establish a database connection.\nThis example needs SQLite support. Please read the Qt SQL driver documentation for information on how to build it.",
             QMESSAGEBOX_STANDARDBUTTON_CANCEL);
-            q_widget_delete(widget);
-            q_sqldatabase_delete(db);
-            exit(1);
+
+        q_widget_delete(widget);
+        q_sqldatabase_delete(db);
+        exit(1);
     }
 
     // Setup the main table
