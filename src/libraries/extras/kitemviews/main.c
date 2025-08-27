@@ -36,7 +36,7 @@ static void create3rdLevel(QTreeWidgetItem* item) {
     q_treewidgetitem_new7(item, growing);
     const char* ripe[] = {"Ripe", "$8.00", "", "Market", NULL};
     q_treewidgetitem_new7(item, ripe);
-    const char* decaying[] = {"Decaying", "$0.50", "", "Ground",   NULL};
+    const char* decaying[] = {"Decaying", "$0.50", "", "Ground", NULL};
     q_treewidgetitem_new7(item, decaying);
     const char* pickled[] = {"Pickled", "$4.00", "", "Shop", NULL};
     q_treewidgetitem_new7(item, pickled);
@@ -68,16 +68,16 @@ int main(int argc, char* argv[]) {
     q_application_new(&argc, argv);
 
     dialog = q_dialog_new2();
-    
+
     q_dialog_set_window_title(dialog, "Qt 6 KItemViews");
     q_dialog_set_whats_this(dialog, "This is a test dialog for KTreeWidgetSearchLineTest");
-    
+
     treewidget = q_treewidget_new(dialog);
     q_treewidget_set_column_count(treewidget, 4);
     const char* labels[] = {"Item", "Price", "HIDDEN COLUMN", "Source", NULL};
     q_treewidget_set_header_labels(treewidget, labels);
     q_treewidget_hide_column(treewidget, 2);
-    
+
     KTreeWidgetSearchLineWidget* searchwidget = k_treewidgetsearchlinewidget_new3(dialog, treewidget);
     m_searchline = k_treewidgetsearchlinewidget_search_line(searchwidget);
 
