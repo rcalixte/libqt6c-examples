@@ -291,14 +291,6 @@ static void handle_file_open() {
     libqt_free(fname);
 }
 
-static void handle_exit() {
-    q_coreapplication_quit();
-}
-
-static void handle_about() {
-    q_application_about_qt();
-}
-
 static AppWindow* new_app_window() {
     AppWindow* window = (AppWindow*)malloc(sizeof(AppWindow));
     if (!window)
@@ -340,7 +332,7 @@ static AppWindow* new_app_window() {
     QIcon* exit_icon = q_icon_from_theme("application-exit");
     q_action_set_icon(exit_action, exit_icon);
     q_icon_delete(exit_icon);
-    q_action_on_triggered(exit_action, handle_exit);
+    q_action_on_triggered(exit_action, q_coreapplication_quit);
 
     // Help menu
     QMenu* help_menu = q_menubar_add_menu2(menubar, "&Help");
@@ -351,7 +343,7 @@ static AppWindow* new_app_window() {
     QKeySequence* about_shortcut = q_keysequence_new2("F1");
     q_action_set_shortcut(about_action, about_shortcut);
     q_keysequence_delete(about_shortcut);
-    q_action_on_triggered(about_action, handle_about);
+    q_action_on_triggered(about_action, q_application_about_qt);
 
     q_mainwindow_set_menu_bar(window->w, menubar);
 
