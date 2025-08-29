@@ -1,8 +1,7 @@
 #include <libqt6c.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
+
+static const char* MP3_PATH = "src/libraries/multimedia/pixabay-public-domain-strong-hit-36455.mp3";
 
 void onPlaybackStateChanged(void* UNUSED player, int32_t state) {
     printf("Playback state: %d\n", state);
@@ -15,14 +14,6 @@ void onPlaybackStateChanged(void* UNUSED player, int32_t state) {
 
 int main(int argc, char* argv[]) {
     q_application_new(&argc, argv);
-
-    // Get absolute path to MP3
-    char mp3_path[PATH_MAX];
-    const char* res = realpath("src/libraries/multimedia/pixabay-public-domain-strong-hit-36455.mp3", mp3_path);
-    if (!res) {
-        fprintf(stderr, "Failed to resolve MP3 path\n");
-        return 1;
-    }
 
     QMediaPlayer* player = q_mediaplayer_new();
     if (!player) {
@@ -38,13 +29,13 @@ int main(int argc, char* argv[]) {
     }
 
     q_mediaplayer_set_audio_output(player, output);
-    QUrl* url = q_url_new3(mp3_path);
+    QUrl* url = q_url_new3(MP3_PATH);
     q_mediaplayer_set_source(player, url);
     q_audiooutput_set_volume(output, 50);
 
     q_mediaplayer_on_playback_state_changed(player, onPlaybackStateChanged);
 
-    fprintf(stdout, "Playing %s\n", mp3_path);
+    fprintf(stdout, "Playing %s\n", MP3_PATH);
     q_mediaplayer_play(player);
 
     int result = q_application_exec();
