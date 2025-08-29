@@ -160,15 +160,19 @@ pub fn build(b: *std.Build) !void {
         if (entry.kind == .file and std.mem.eql(u8, entry.basename, "main.c")) {
             const parent_dir = std.fs.path.dirname(entry.path) orelse continue;
             const lib_path = try std.fs.path.join(allocator, &.{ parent_dir, "qtlibs" });
-            const lib_file = try std.fs.cwd().openFile(lib_path, .{});
+            var buffer: [1024]u8 = undefined;
+            var lib_file = try std.fs.cwd().openFile(lib_path, .{});
             defer lib_file.close();
+            var lib_file_reader = lib_file.reader(&buffer);
 
             var lib_contents: std.ArrayListUnmanaged([]const u8) = .empty;
-            while (try lib_file.reader().readUntilDelimiterOrEofAlloc(allocator, '\n', std.math.maxInt(usize))) |line| {
+            while (lib_file_reader.interface.takeDelimiterExclusive('\n')) |line| {
                 if (std.mem.startsWith(u8, line, "#"))
                     continue;
 
                 try lib_contents.append(allocator, try allocator.dupe(u8, line));
+            } else |err| {
+                if (!lib_file_reader.atEnd()) return err;
             }
 
             try main_files.append(allocator, .{
@@ -225,8 +229,10 @@ pub fn build(b: *std.Build) !void {
         }
         const exe = b.addExecutable(.{
             .name = exe_name,
-            .target = target,
-            .optimize = optimize,
+            .root_module = b.createModule(.{
+                .target = target,
+                .optimize = optimize,
+            }),
         });
 
         // Add include path
