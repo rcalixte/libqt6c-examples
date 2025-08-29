@@ -6,7 +6,7 @@ static QTimer* timer;
 
 static void on_timeout() {
     const char* plaintext = q_textedit_to_plain_text(plainTextEditor);
-    int64_t options = 0;
+    int32_t options = 0;
     const char* html = k_texttohtml_convert_to_html(plaintext, &options, 4096, 255);
     q_textbrowser_set_html(htmlview, html);
     libqt_free(plaintext);
