@@ -15,6 +15,11 @@ const extra_libraries = [_]ExtraLibrary{
         .prefix = "extras",
     },
     .{
+        .name = "kcompletion",
+        .libraries = &.{"KF6Completion"},
+        .prefix = "extras",
+    },
+    .{
         .name = "kconfig",
         .libraries = &.{ "KF6ConfigCore", "KF6ConfigGui" },
         .prefix = "extras",
