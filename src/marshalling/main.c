@@ -98,5 +98,14 @@ int main(int argc, char* argv[]) {
     libqt_free(value);
     q_object_delete(object);
 
+    // QSet<QString>
+    libqt_list domainki18n = k_localizedstring_available_domain_translations("Qt");
+    const char** domains = (const char**)domainki18n.data.chars;
+    for (size_t i = 0; i < domainki18n.len; ++i) {
+        printf("AvailableDomainTranslations[%zu]: %s\n", i, domains[i]);
+        libqt_free(domains[i]);
+    }
+    free(domains);
+
     return 0;
 }
