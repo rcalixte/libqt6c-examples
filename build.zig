@@ -28,10 +28,10 @@ pub fn build(b: *std.Build) !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    var disabled_paths: std.ArrayListUnmanaged([]const u8) = .empty;
+    var disabled_paths: std.ArrayList([]const u8) = .empty;
 
     // System libraries to link
-    var system_libs: std.ArrayListUnmanaged([]const u8) = .empty;
+    var system_libs: std.ArrayList([]const u8) = .empty;
 
     try system_libs.appendSlice(allocator, &[_][]const u8{
         "Qt6Core",
@@ -85,7 +85,7 @@ pub fn build(b: *std.Build) !void {
     }
 
     // Find all main.c files
-    var main_files: std.ArrayListUnmanaged(struct {
+    var main_files: std.ArrayList(struct {
         dir: []const u8,
         path: []const u8,
         libraries: []const []const u8,
@@ -104,7 +104,7 @@ pub fn build(b: *std.Build) !void {
             defer lib_file.close();
             var lib_file_reader = lib_file.reader(&buffer);
 
-            var lib_contents: std.ArrayListUnmanaged([]const u8) = .empty;
+            var lib_contents: std.ArrayList([]const u8) = .empty;
             while (lib_file_reader.interface.takeDelimiterExclusive('\n')) |line| {
                 if (std.mem.startsWith(u8, line, "#"))
                     continue;
