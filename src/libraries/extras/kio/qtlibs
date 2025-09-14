@@ -1,0 +1,10 @@
+kfilecustomdialog
+qapplication
+qcoreapplication
+qdialog
+qframe
+qguiapplication
+qlabel
+qobject
+qpaintdevice
+qwidget
