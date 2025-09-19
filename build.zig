@@ -45,7 +45,9 @@ pub fn build(b: *std.Build) !void {
         sys_libraries: []const []const u8,
     }) = .empty;
 
-    var dir = try std.fs.cwd().openDir(".", .{ .iterate = true });
+    const src_dir = try std.fs.path.join(allocator, &.{ b.build_root.path.?, "src" });
+    var dir = try std.fs.cwd().openDir(src_dir, .{ .iterate = true });
+    defer dir.close();
     var walker = try dir.walk(b.allocator);
     defer walker.deinit();
 
@@ -61,7 +63,7 @@ pub fn build(b: *std.Build) !void {
     while (try walker.next()) |entry| {
         if (entry.kind == .file and std.mem.eql(u8, entry.basename, "main.c")) {
             const parent_dir = std.fs.path.dirname(entry.path) orelse continue;
-            const qtlibs_path = try std.fs.path.join(allocator, &.{ parent_dir, "qtlibs" });
+            const qtlibs_path = try std.fs.path.join(allocator, &.{ "src", parent_dir, "qtlibs" });
             var buffer: [1024]u8 = undefined;
             var qtlibs_file = try std.fs.cwd().openFile(qtlibs_path, .{});
             defer qtlibs_file.close();
@@ -77,7 +79,7 @@ pub fn build(b: *std.Build) !void {
                 if (!qtlibs_file_reader.atEnd()) return err;
             }
 
-            const syslibs_path = try std.fs.path.join(allocator, &.{ parent_dir, "syslibs" });
+            const syslibs_path = try std.fs.path.join(allocator, &.{ "src", parent_dir, "syslibs" });
             var syslibs_file = try std.fs.cwd().openFile(syslibs_path, .{});
             defer syslibs_file.close();
             var syslibs_file_reader = syslibs_file.reader(&buffer);
@@ -94,7 +96,7 @@ pub fn build(b: *std.Build) !void {
 
             try main_files.append(allocator, .{
                 .dir = try b.allocator.dupe(u8, parent_dir),
-                .path = try b.allocator.dupe(u8, entry.path),
+                .path = try std.fs.path.join(allocator, &.{ "src", entry.path }),
                 .qt_libraries = try qtlibs_contents.toOwnedSlice(allocator),
                 .sys_libraries = try syslibs_contents.toOwnedSlice(allocator),
             });
@@ -107,7 +109,6 @@ pub fn build(b: *std.Build) !void {
 
             var path_it = std.mem.splitScalar(u8, entry.path, '/');
             _ = path_it.first();
-            _ = path_it.next();
             const prefix = path_it.next().?;
 
             const name = while (path_it.next()) |name| {
