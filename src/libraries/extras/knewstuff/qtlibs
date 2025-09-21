@@ -1,0 +1,12 @@
+button
+qabstractbutton
+qapplication
+qboxlayout
+qcoreapplication
+qguiapplication
+qlayout
+qlayoutitem
+qobject
+qpaintdevice
+qpushbutton
+qwidget
