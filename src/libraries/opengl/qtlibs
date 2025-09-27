@@ -1,0 +1,11 @@
+qapplication
+qcoreapplication
+qguiapplication
+qmainwindow
+qobject
+qopenglcontext
+qopenglextrafunctions
+qopenglfunctions
+qopenglwidget
+qpaintdevice
+qwidget
