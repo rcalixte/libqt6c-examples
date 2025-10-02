@@ -3,8 +3,8 @@
     .version = "6.8.2",
     .dependencies = .{
         .libqt6c = .{
-            .url = "https://github.com/rcalixte/libqt6c/archive/d53b32d955b04446e042d53bda0909faefb47c07.tar.gz",
-            .hash = "libqt6c-6.8.2-DLhhNoWXVA_h39Wr3aGXfciXLrEsd5Py99_BZoWOeMXY",
+            .url = "https://github.com/rcalixte/libqt6c/archive/226dca93162835774045c3565e6d8e40153e215d.tar.gz",
+            .hash = "libqt6c-6.8.2-DLhhNtehXg8R5INU8aQ4tYhjZzCbiJj7bHmAxFRcLCqr",
         },
     },
     .paths = .{""},
