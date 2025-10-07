@@ -3,9 +3,8 @@ const host_os = @import("builtin").os.tag;
 
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
-    const optimize = standardOptimizeOption(b, .{});
-    const enable_workaround = b.option(bool, "enable-workaround", "Enable workaround for missing Qt C++ headers") orelse false;
     const extra_paths = b.option([]const []const u8, "extra-paths", "Extra library header and include search paths") orelse &.{};
+    const optimize = b.standardOptimizeOption(.{});
 
     const is_macos = target.result.os.tag == .macos or host_os == .macos;
     const is_windows = target.result.os.tag == .windows or host_os == .windows;
@@ -14,13 +13,6 @@ pub fn build(b: *std.Build) !void {
         .dragonfly, .freebsd, .netbsd, .openbsd => true,
         else => false,
     };
-
-    const is_bsd_target = switch (target.result.os.tag) {
-        .dragonfly, .freebsd, .netbsd, .openbsd => true,
-        else => false,
-    };
-
-    const is_bsd_family = is_bsd_host or is_bsd_target;
 
     var arena = std.heap.ArenaAllocator.init(b.allocator);
     defer arena.deinit();
@@ -147,12 +139,9 @@ pub fn build(b: *std.Build) !void {
     if (main_files.items.len == 0)
         @panic("No main.c files found.\n");
 
-    const lib_optimize = if (optimize == .Debug) .ReleaseFast else optimize;
-
     const qt6c = b.dependency("libqt6c", .{
         .target = target,
-        .optimize = lib_optimize,
-        .@"enable-workaround" = enable_workaround or is_bsd_family,
+        .optimize = if (optimize == .Debug) .ReleaseFast else optimize,
         .@"extra-paths" = extra_paths,
     });
 
@@ -223,27 +212,4 @@ pub fn build(b: *std.Build) !void {
         run_step.dependOn(&run_cmd.step);
         run_all_step.dependOn(&run_cmd.step);
     }
-}
-
-fn standardOptimizeOption(b: *std.Build, options: std.Build.StandardOptimizeOptionOptions) std.builtin.OptimizeMode {
-    if (options.preferred_optimize_mode) |mode| {
-        if (b.option(bool, "release", "optimize for end users") orelse (b.release_mode != .off)) {
-            return mode;
-        }
-    }
-
-    if (b.option(
-        std.builtin.OptimizeMode,
-        "optimize",
-        "Prioritize performance, safety, or binary size",
-    )) |mode| {
-        return mode;
-    }
-
-    return switch (b.release_mode) {
-        .off, .any => .Debug,
-        .fast => .ReleaseFast,
-        .safe => .ReleaseSafe,
-        .small => .ReleaseSmall,
-    };
 }
