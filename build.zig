@@ -1,6 +1,23 @@
 const std = @import("std");
 const host_os = @import("builtin").os.tag;
 
+var buffer: [1024]u8 = undefined;
+var disabled_paths: std.ArrayList([]const u8) = .empty;
+var system_libs: std.ArrayList([]const u8) = .{ .items = &base_libs };
+
+var base_libs = [_][]const u8{
+    "Qt6Core",
+    "Qt6Gui",
+    "Qt6Widgets",
+};
+
+var main_files: std.ArrayList(struct {
+    dir: []const u8,
+    path: []const u8,
+    qt_libraries: []const []const u8,
+    sys_libraries: []const []const u8,
+}) = .empty;
+
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const extra_paths = b.option([]const []const u8, "extra-paths", "Extra library header and include search paths") orelse &.{};
@@ -9,54 +26,21 @@ pub fn build(b: *std.Build) !void {
     const is_macos = target.result.os.tag == .macos or host_os == .macos;
     const is_windows = target.result.os.tag == .windows or host_os == .windows;
 
-    const is_bsd_host = switch (host_os) {
-        .dragonfly, .freebsd, .netbsd, .openbsd => true,
-        else => false,
-    };
-
     var arena = std.heap.ArenaAllocator.init(b.allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    var disabled_paths: std.ArrayList([]const u8) = .empty;
-
-    // System libraries to link
-    var system_libs: std.ArrayList([]const u8) = .empty;
-
-    try system_libs.appendSlice(allocator, &[_][]const u8{
-        "Qt6Core",
-        "Qt6Gui",
-        "Qt6Widgets",
-    });
-
     // Find all main.c files
-    var main_files: std.ArrayList(struct {
-        dir: []const u8,
-        path: []const u8,
-        qt_libraries: []const []const u8,
-        sys_libraries: []const []const u8,
-    }) = .empty;
-
     const src_dir = try std.fs.path.join(allocator, &.{ b.build_root.path.?, "src" });
     var dir = try std.fs.cwd().openDir(src_dir, .{ .iterate = true });
     defer dir.close();
     var walker = try dir.walk(b.allocator);
     defer walker.deinit();
 
-    const special_dirs = [_][]const u8{
-        "/extras/",
-        "/foss-extras/",
-        "/foss-restricted/",
-        "/posix-extras/",
-        "/posix-restricted/",
-        "/restricted-extras/",
-    };
-
     while (try walker.next()) |entry| {
         if (entry.kind == .file and std.mem.eql(u8, entry.basename, "main.c")) {
             const parent_dir = std.fs.path.dirname(entry.path) orelse continue;
             const qtlibs_path = try std.fs.path.join(allocator, &.{ "src", parent_dir, "qtlibs" });
-            var buffer: [1024]u8 = undefined;
             var qtlibs_file = try std.fs.cwd().openFile(qtlibs_path, .{});
             defer qtlibs_file.close();
             var qtlibs_file_reader = qtlibs_file.reader(&buffer);
@@ -136,18 +120,13 @@ pub fn build(b: *std.Build) !void {
         }
     }
 
-    if (main_files.items.len == 0)
-        @panic("No main.c files found.\n");
+    std.debug.assert(main_files.items.len != 0);
 
     const qt6c = b.dependency("libqt6c", .{
         .target = target,
         .optimize = if (optimize == .Debug) .ReleaseFast else optimize,
         .@"extra-paths" = extra_paths,
     });
-
-    const c_flags = &.{
-        "-O2",
-    };
 
     const run_all_step = b.step("run", "Build and run all of the examples");
 
@@ -176,6 +155,9 @@ pub fn build(b: *std.Build) !void {
             exe.root_module.addLibraryPath(std.Build.LazyPath{ .cwd_relative = "/usr/local/lib/qt6" });
 
         for (extra_paths) |path| {
+            std.fs.cwd().access(path, .{}) catch {
+                continue;
+            };
             exe.root_module.addLibraryPath(std.Build.LazyPath{ .cwd_relative = b.dupe(path) });
         }
 
@@ -213,3 +195,21 @@ pub fn build(b: *std.Build) !void {
         run_all_step.dependOn(&run_cmd.step);
     }
 }
+
+const is_bsd_host = switch (host_os) {
+    .dragonfly, .freebsd, .netbsd, .openbsd => true,
+    else => false,
+};
+
+const special_dirs = [_][]const u8{
+    "/extras/",
+    "/foss-extras/",
+    "/foss-restricted/",
+    "/posix-extras/",
+    "/posix-restricted/",
+    "/restricted-extras/",
+};
+
+const c_flags = &.{
+    "-O2",
+};
