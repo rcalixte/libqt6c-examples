@@ -81,6 +81,5 @@ int main(int argc, char* argv[]) {
 
     int ret = q_application_exec();
 
-    q_wizard_delete_later(wizard);
     return ret;
 }
