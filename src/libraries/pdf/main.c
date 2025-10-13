@@ -19,7 +19,6 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_pdfdocument_delete(document);
-    q_pdfview_delete_later(pdfview);
 
     return result;
 }
