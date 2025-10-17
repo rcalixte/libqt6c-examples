@@ -21,6 +21,13 @@ int main(int argc, char* argv[]) {
     printf("Width: %d\n", q_size_width(size));
     q_size_delete(size);
 
+    // Int by reference
+    QSize* size_ref = q_size_new4(32, 32);
+    int* ref = q_size_rheight(size_ref);
+    *ref = 64;
+    printf("Height: %d\n", q_size_height(size_ref));
+    q_size_delete(size_ref);
+
     // QString
     QWidget* widget = q_widget_new2();
     q_widget_set_tool_tip(widget, "Sample text");
