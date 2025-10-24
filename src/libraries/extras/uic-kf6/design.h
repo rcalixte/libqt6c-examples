@@ -98,6 +98,8 @@ static void retranslate_main_window(MainWindowUi* ui) {
 // new_main_window_ui creates all the Qt objects for MainWindowUi
 static MainWindowUi* new_main_window_ui() {
     MainWindowUi* ui = (MainWindowUi*)malloc(sizeof(MainWindowUi));
+    if (ui == NULL)
+        return NULL;
 
     ui->MainWindow = q_mainwindow_new2();
     q_mainwindow_set_object_name(ui->MainWindow, "MainWindow");
@@ -190,6 +192,7 @@ static MainWindowUi* new_main_window_ui() {
 
     q_tabwidget_add_tab(ui->tabWidget, ui->tab_2, "");
     q_gridlayout_add_widget2(ui->gridLayout, ui->tabWidget, 0, 0);
+
     q_mainwindow_set_central_widget(ui->MainWindow, ui->centralwidget);
 
     ui->menubar = q_menubar_new(ui->MainWindow);
