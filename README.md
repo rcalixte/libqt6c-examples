@@ -7,7 +7,7 @@
 
 ---
 
-Example applications using the MIT-licensed Qt 6 bindings for C
+Example applications using the [MIT-licensed Qt 6 bindings for C](https://github.com/rcalixte/libqt6c)
 
 These examples can be thought of as instructive templates for using the main library. Though some of the examples have some complexity to them, the intention is to aim for simplicity while demonstrating valid uses of the library. All of source code for the examples are a single file by design. Any auxiliary files are placed in the same directory for either compilation or execution purposes. Please try out the sample applications and start a [discussion](https://github.com/rcalixte/libqt6c/discussions) if you have any questions or issues relevant to these examples.
 
@@ -80,7 +80,6 @@ To see the full list of examples available:
 ```bash
 zig build -l
 ```
-
 
 To see the full list of examples and build options available:
 
