@@ -17,10 +17,10 @@ void splash_mouse_press_event() {
 }
 
 void timer_callback(void* self) {
-    void* splash_qv = q_timer_property(self, "splash");
+    QVariant* splash_qv = q_timer_property(self, "splash");
     uint64_t splash = q_variant_to_u_long_long(splash_qv);
 
-    void* widget_qv = q_timer_property(self, "widget");
+    QVariant* widget_qv = q_timer_property(self, "widget");
     uint64_t widget = q_variant_to_u_long_long(widget_qv);
 
     q_splashscreen_close((QSplashScreen*)splash);
@@ -30,7 +30,7 @@ void timer_callback(void* self) {
 
 int main(int argc, char* argv[]) {
     // Initialize Qt application
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QPixmap* pixmap = q_pixmap_new4("assets/libqt6c-examples.png");
     if (!pixmap) {
@@ -91,6 +91,7 @@ int main(int argc, char* argv[]) {
     q_widget_delete(widget);
     q_splashscreen_delete(splash);
     q_pixmap_delete(pixmap);
+    q_application_delete(qapp);
 
     printf("OK!\n");
 
