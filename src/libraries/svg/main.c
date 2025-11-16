@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QSvgWidget* svg = q_svgwidget_new3("assets/libqt6c-examples.svg");
     if (!svg) {
@@ -15,5 +15,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_svgwidget_delete(svg);
+    q_application_delete(qapp);
+
     return result;
 }
