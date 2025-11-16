@@ -1,9 +1,7 @@
 #include <libqt6c.h>
-#include <stdbool.h>
-#include <stdio.h>
 
 #define BUFFER_SIZE 32
-
+static char buffer[BUFFER_SIZE];
 static size_t currentColor = 0;
 
 static const Qt__GlobalColor useColors[] = {
@@ -15,22 +13,23 @@ static const Qt__GlobalColor useColors[] = {
 
 #define COLOR_COUNT (sizeof(useColors) / sizeof(useColors[0]))
 
-void onPaintEvent(void* self, void* ev) {
-    // Call base class paint event
+void on_paint_event(void* self, void* ev) {
+    // Call the base class's PaintEvent to get initial content
+    // (Comment this out to see the QGroupBox disappear)
     q_groupbox_qbase_paint_event(self, ev);
 
-    // Draw on top
-    QPainter* painter = q_painter_new2(self);
+    // Then, draw on top of it
+    QStylePainter* painter = q_stylepainter_new(self);
     QBrush* brush = q_brush_new12(useColors[currentColor], QT_BRUSHSTYLE_SOLIDPATTERN);
 
-    q_painter_set_brush(painter, brush);
-    q_painter_draw_rect2(painter, 80, 60, 160, 120);
+    q_stylepainter_set_brush(painter, brush);
+    q_stylepainter_draw_rect2(painter, 80, 60, 160, 120);
 
     q_brush_delete(brush);
     q_painter_delete(painter);
 }
 
-void onContextMenuEvent(void* self, void* ev) {
+void on_context_menu_event(void* self, void* ev) {
     q_groupbox_qbase_context_menu_event(self, ev);
 
     currentColor++;
@@ -40,40 +39,32 @@ void onContextMenuEvent(void* self, void* ev) {
     q_groupbox_update(self);
 }
 
-void onKeyPressEvent(void* self, void* ev) {
+void on_key_press_event(void* self, void* ev) {
     q_groupbox_qbase_key_press_event(self, ev);
 
-    char buffer[BUFFER_SIZE];
     snprintf(buffer, BUFFER_SIZE, "Keypress %d", q_keyevent_key(ev));
     q_groupbox_set_title(self, buffer);
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
     q_application_set_application_display_name("Right-click to change the color");
 
     QGroupBox* groupbox = q_groupbox_new2();
-    if (!groupbox) {
-        fprintf(stderr, "Failed to create groupbox\n");
-        return 1;
-    }
 
     q_groupbox_set_title(groupbox, "QGroupBox title");
-    q_groupbox_set_fixed_width(groupbox, 320);
-    q_groupbox_set_fixed_height(groupbox, 240);
-    q_groupbox_set_minimum_height(groupbox, 100);
-    q_groupbox_set_minimum_width(groupbox, 100);
-    q_groupbox_set_attribute2(groupbox, QT_WIDGETATTRIBUTE_WA_PAINTONSCREEN, true);
-    q_groupbox_set_attribute2(groupbox, QT_WIDGETATTRIBUTE_WA_NOSYSTEMBACKGROUND, true);
-
-    q_groupbox_on_paint_event(groupbox, onPaintEvent);
-    q_groupbox_on_context_menu_event(groupbox, onContextMenuEvent);
-    q_groupbox_on_key_press_event(groupbox, onKeyPressEvent);
+    q_groupbox_set_fixed_size2(groupbox, 320, 240);
+    q_groupbox_set_minimum_size2(groupbox, 100, 100);
+    q_groupbox_on_paint_event(groupbox, on_paint_event);
+    q_groupbox_on_context_menu_event(groupbox, on_context_menu_event);
+    q_groupbox_on_key_press_event(groupbox, on_key_press_event);
 
     q_groupbox_show(groupbox);
 
     int result = q_application_exec();
 
     q_groupbox_delete(groupbox);
+    q_application_delete(qapp);
+
     return result;
 }
