@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
         .values = NULL,
     };
 
-    void* arguments[] = {
+    QVariant* arguments[] = {
         q_variant_new24("Qt 6 D-Bus Example"),
         q_variant_new5(0),
         q_variant_new24("dialog-information"),
