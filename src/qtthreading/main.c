@@ -10,7 +10,7 @@
 
 typedef struct Counter {
     int32_t counter;
-    void* object; // QLabel
+    QLabel* label;
     bool running;
     pthread_t thread;
 } Counter;
@@ -18,14 +18,14 @@ typedef struct Counter {
 typedef struct ButtonData {
     Counter** counters;
     size_t counter_count;
-    void* button; // QPushButton
+    QPushButton* button;
 } ButtonData;
 
 void update_label_text(void* ctx) {
     Counter* counter = (Counter*)ctx;
     char text[64];
     snprintf(text, sizeof(text), "%d %ld", counter->counter, time(NULL));
-    q_label_set_text(counter->object, text);
+    q_label_set_text(counter->label, text);
 }
 
 void* run_counter(void* arg) {
@@ -42,7 +42,7 @@ void* run_counter(void* arg) {
 }
 
 void button_clicked(void* button) {
-    void* variant = q_pushbutton_property(button, "buttonData");
+    QVariant* variant = q_pushbutton_property(button, "buttonData");
     if (!variant)
         return;
 
@@ -78,15 +78,15 @@ void button_clicked(void* button) {
 
 int main(int argc, char* argv[]) {
     // Initialize Qt application
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     // Get CPU count for thread count
-    long thread_count = sysconf(_SC_NPROCESSORS_ONLN);
+    size_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
     if (thread_count < 2)
         thread_count = 2;
 
     // Create main window
-    void* window = q_mainwindow_new2();
+    QMainWindow* window = q_mainwindow_new2();
     if (!window) {
         fprintf(stderr, "Failed to create main window\n");
         return 1;
@@ -96,8 +96,8 @@ int main(int argc, char* argv[]) {
     q_mainwindow_set_window_title(window, "Qt 6 Threading Example");
 
     // Create central widget and layout
-    void* widget = q_widget_new(window);
-    void* vlayout = q_vboxlayout_new2();
+    QWidget* widget = q_widget_new(window);
+    QVBoxLayout* vlayout = q_vboxlayout_new2();
     q_widget_set_layout(widget, vlayout);
     q_mainwindow_set_central_widget(window, widget);
 
@@ -109,23 +109,23 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialize counters
-    for (int i = 0; i < thread_count; i++) {
+    for (size_t i = 0; i < thread_count; i++) {
         counters[i] = calloc(1, sizeof(Counter));
         if (!counters[i]) {
-            fprintf(stderr, "Failed to allocate counter %d\n", i);
+            fprintf(stderr, "Failed to allocate counter %zu\n", i);
             // Cleanup previously allocated counters
-            for (int j = 0; j < i; j++) {
+            for (size_t j = 0; j < i; j++) {
                 free(counters[j]);
             }
             free(counters);
             return 1;
         }
 
-        void* label = q_label_new(window);
+        QLabel* label = q_label_new(window);
         if (!label) {
-            fprintf(stderr, "Failed to create label %d\n", i);
+            fprintf(stderr, "Failed to create label %zu\n", i);
             // Cleanup
-            for (int j = 0; j <= i; j++) {
+            for (size_t j = 0; j <= i; j++) {
                 free(counters[j]);
             }
             free(counters);
@@ -135,20 +135,20 @@ int main(int argc, char* argv[]) {
         q_label_set_alignment(label, QT_ALIGNMENTFLAG_ALIGNCENTER);
         q_label_set_text(label, "0 0");
 
-        void* wlayout = q_widget_layout(widget);
+        QLayout* wlayout = q_widget_layout(widget);
         q_layout_add_widget(wlayout, label);
 
-        counters[i]->object = label;
+        counters[i]->label = label;
         counters[i]->counter = 0;
         counters[i]->running = false;
     }
 
     // Create start button
-    void* button = q_pushbutton_new5("Start!", window);
+    QPushButton* button = q_pushbutton_new5("Start!", window);
     if (!button) {
         fprintf(stderr, "Failed to create button\n");
         // Cleanup
-        for (int i = 0; i < thread_count; i++) {
+        for (size_t i = 0; i < thread_count; i++) {
             free(counters[i]);
         }
         free(counters);
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
     if (!button_data) {
         fprintf(stderr, "Failed to allocate button data\n");
         // Cleanup
-        for (int i = 0; i < thread_count; i++) {
+        for (size_t i = 0; i < thread_count; i++) {
             free(counters[i]);
         }
         free(counters);
@@ -172,14 +172,14 @@ int main(int argc, char* argv[]) {
     button_data->button = button;
 
     // Store button data in Qt property system
-    void* variant = q_variant_new7((intptr_t)button_data);
+    QVariant* variant = q_variant_new7((intptr_t)button_data);
     q_pushbutton_set_property(button, "buttonData", variant);
 
     // Connect button click handler
     q_pushbutton_on_clicked(button, button_clicked);
 
     // Add button to layout
-    void* qwlayout = q_widget_layout(widget);
+    QLayout* qwlayout = q_widget_layout(widget);
     q_layout_add_widget(qwlayout, button);
 
     // Show window and start event loop
@@ -188,19 +188,21 @@ int main(int argc, char* argv[]) {
 
     // Cleanup
     // First stop all running threads
-    for (int i = 0; i < thread_count; i++) {
+    for (size_t i = 0; i < thread_count; i++) {
         if (counters[i]->running) {
             counters[i]->running = false;
             int ret = pthread_join(counters[i]->thread, NULL);
             if (ret != 0) {
-                fprintf(stderr, "Failed to join thread %d: %s\n", i, strerror(ret));
+                fprintf(stderr, "Failed to join thread %zu: %s\n", i, strerror(ret));
             }
         }
         free(counters[i]);
     }
     free(counters);
     free(button_data);
+
     q_variant_delete(variant);
+    q_application_delete(qapp);
 
     return result;
 }
