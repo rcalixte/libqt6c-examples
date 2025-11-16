@@ -1,7 +1,7 @@
 #include <libqt6c.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QPdfDocument* document = q_pdfdocument_new();
     q_pdfdocument_load(document, "assets/example.pdf");
@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_pdfdocument_delete(document);
+    q_application_delete(qapp);
 
     return result;
 }
