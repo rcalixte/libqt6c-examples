@@ -3,7 +3,7 @@
 #include <math.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QLineSeries* series = q_lineseries_new();
     if (!series) {
@@ -37,5 +37,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_lineseries_delete(series);
+    q_application_delete(qapp);
+
     return result;
 }
