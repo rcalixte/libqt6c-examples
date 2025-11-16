@@ -1,13 +1,11 @@
 #include <libqt6c.h>
-#include <pthread.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <unistd.h>
 
 int main(int argc, char* argv[]) {
     // Initialize Qt application
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     // Bool
     QCheckBox* checkBox = q_checkbox_new2();
@@ -69,7 +67,7 @@ int main(int argc, char* argv[]) {
     q_inputdialog_delete(dialog);
 
     // QList<Qt type>
-    void* keyData[] = {
+    QKeySequence* keyData[] = {
         q_keysequence_from_string("F1"),
         q_keysequence_from_string("F2"),
         q_keysequence_from_string("F3"),
@@ -105,14 +103,7 @@ int main(int argc, char* argv[]) {
     libqt_free(value);
     q_object_delete(object);
 
-    // QSet<QString>
-    libqt_list domainki18n = k_localizedstring_available_domain_translations("Qt");
-    const char** domains = (const char**)domainki18n.data.chars;
-    for (size_t i = 0; i < domainki18n.len; ++i) {
-        printf("AvailableDomainTranslations[%zu]: %s\n", i, domains[i]);
-        libqt_free(domains[i]);
-    }
-    free(domains);
+    q_application_delete(qapp);
 
     return 0;
 }
