@@ -1,10 +1,13 @@
 qapplication
+qboxlayout
 qcoreapplication
 qcoreevent
 qevent
 qframe
 qguiapplication
 qlabel
+qlayout
+qlayoutitem
 qobject
 qpaintdevice
 qwidget
