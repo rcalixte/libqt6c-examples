@@ -6,7 +6,7 @@
 
 #define LINE_NUMBER_ROLE (QT_ITEMDATAROLE_USERROLE + 1)
 #define INITIAL_MAP_CAPACITY 32
-#define MAX_LINE_LENGTH 1024
+#define MAX_LINE_LENGTH 4096
 
 // Forward declarations
 struct AppTab;
@@ -118,7 +118,10 @@ static void update_outline_for_content(AppTab* tab, const char* content) {
     q_listwidget_clear(tab->outline);
 
     char line[MAX_LINE_LENGTH];
+    char prev_line[MAX_LINE_LENGTH];
+    char tooltip[32];
     const char* ptr = content;
+    bool in_code_block = false;
     int line_number = 0;
 
     while (*ptr) {
@@ -130,16 +133,30 @@ static void update_outline_for_content(AppTab* tab, const char* content) {
         if (*ptr == '\n')
             ptr++;
 
-        if (line[0] == '#') {
-            QListWidgetItem* bookmark = q_listwidgetitem_new7(line, tab->outline);
-            char tooltip[32];
-            snprintf(tooltip, sizeof(tooltip), "Line %d", line_number + 1);
-            q_listwidgetitem_set_tool_tip(bookmark, tooltip);
+        if (!in_code_block) {
+            if (line[0] == '#') {
+                QListWidgetItem* bookmark = q_listwidgetitem_new7(line, tab->outline);
+                snprintf(tooltip, sizeof(tooltip), "Line %d", line_number + 1);
+                q_listwidgetitem_set_tool_tip(bookmark, tooltip);
 
-            QVariant* line_num = q_variant_new4(line_number);
-            q_listwidgetitem_set_data(bookmark, LINE_NUMBER_ROLE, line_num);
-            q_variant_delete(line_num);
+                QVariant* line_num = q_variant_new4(line_number);
+                q_listwidgetitem_set_data(bookmark, LINE_NUMBER_ROLE, line_num);
+                q_variant_delete(line_num);
+            } else if (((strncmp(line, "---", 3) == 0) || (strncmp(line, "===", 3) == 0)) && prev_line[0] != '\0') {
+                QListWidgetItem* bookmark = q_listwidgetitem_new7(prev_line, tab->outline);
+                snprintf(tooltip, sizeof(tooltip), "Line %d", line_number);
+                q_listwidgetitem_set_tool_tip(bookmark, tooltip);
+
+                QVariant* line_num = q_variant_new4(line_number - 1);
+                q_listwidgetitem_set_data(bookmark, LINE_NUMBER_ROLE, line_num);
+                q_variant_delete(line_num);
+            }
         }
+
+        if (strncmp(line, "```", 3) == 0)
+            in_code_block = !in_code_block;
+
+        strncpy(prev_line, line, sizeof(prev_line));
         line_number++;
     }
 }
@@ -370,7 +387,7 @@ static AppWindow* new_app_window() {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     map_init(INITIAL_MAP_CAPACITY);
 
@@ -386,6 +403,8 @@ int main(int argc, char* argv[]) {
     // Cleanup
     map_cleanup();
     free(app);
+
+    q_application_delete(qapp);
 
     return result;
 }
