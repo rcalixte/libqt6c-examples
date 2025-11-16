@@ -24,7 +24,7 @@ static void show_event(void* self, void* event) {
     q_dialog_qbase_show_event(self, event);
 
     QHeaderView* headerview = q_treewidget_header(treewidget);
-    for (int i = 0; i < q_headerview_count(headerview); i++) {
+    for (size_t i = 0; i < (size_t)q_headerview_count(headerview); i++) {
         if (!q_headerview_is_section_hidden(headerview, i)) {
             q_treewidget_resize_column_to_contents(treewidget, i);
         }
@@ -65,7 +65,7 @@ static void create2ndLevel(QTreeWidgetItem* item) {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     dialog = q_dialog_new2();
 
@@ -136,4 +136,5 @@ int main(int argc, char* argv[]) {
     q_dialog_on_show_event(dialog, show_event);
 
     q_dialog_exec(dialog);
+    q_application_delete(qapp);
 }
