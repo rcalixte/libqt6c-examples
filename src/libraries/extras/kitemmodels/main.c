@@ -15,7 +15,7 @@ static void timer_callback() {
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
-    void* row_0_items[] = {
+    QStandardItem* row_0_items[] = {
         q_standarditem_new2("A0"),
         q_standarditem_new2("B0"),
         q_standarditem_new2("C0"),
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     };
     libqt_list row_0 = qlist(row_0_items, 5);
 
-    void* row_1_items[] = {
+    QStandardItem* row_1_items[] = {
         q_standarditem_new2("A1"),
         q_standarditem_new2("B1"),
         q_standarditem_new2("C1"),
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     };
     libqt_list row_1 = qlist(row_1_items, 5);
 
-    void* row_2_items[] = {
+    QStandardItem* row_2_items[] = {
         q_standarditem_new2("A2"),
         q_standarditem_new2("B2"),
         q_standarditem_new2("C2"),
