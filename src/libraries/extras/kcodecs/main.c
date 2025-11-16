@@ -1,7 +1,7 @@
 #include <libqt6c.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     KCharsets* charsets = k_charsets_charsets();
 
@@ -29,9 +29,12 @@ int main(int argc, char* argv[]) {
 
     q_widget_delete(widget);
 
-    for (int i = 0; names[i] != NULL; i++) {
+    for (size_t i = 0; names[i] != NULL; i++) {
         free((char*)names[i]);
     }
     free(names);
+
+    q_application_delete(qapp);
+
     return result;
 }
