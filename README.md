@@ -1,4 +1,4 @@
-#
+###
 
 <div align="center">
 <img alt="libqt6c-examples" src="assets/libqt6c-examples.png" height="128px;" />
@@ -15,12 +15,16 @@ These examples can be thought of as instructive templates for using the main lib
 
 ---
 
-TABLE OF CONTENTS
------------------
+### TABLE OF CONTENTS
 
 - [License](#license)
 - [Building](#building)
 - [FAQ](#faq)
+  - [Q1. How long does it take to compile the examples?](#q1-how-long-does-it-take-to-compile-the-examples)
+  - [Q2. What build modes are supported by the build system used by the examples?](#q2-what-build-modes-are-supported-by-the-build-system-used-by-the-examples)
+  - [Q3. Can I use another build system to compile the examples or another application?](#q3-can-i-use-another-build-system-to-compile-the-examples-or-another-application)
+  - [Q4. Are translations supported?](#q4-are-translations-supported)
+  - [Q5. Do the applications built with this library support theming?](#q5-do-the-applications-built-with-this-library-support-theming)
 - [Special Thanks](#special-thanks)
 
 License
@@ -125,6 +129,8 @@ This should produce a binary executable named `helloworld` that can be run from 
 ### Q4. Are translations supported?
 
 Several options are available to implement translations ranging from functions available in the main library to well-supported systems such as [GNU gettext](https://www.gnu.org/software/gettext/) to [Qt's internationalization options](https://doc.qt.io/qt-6/internationalization.html). Developers are free to use any of the available options or implement their own solution.
+
+The [lupdate](https://github.com/rcalixte/libqt6c-examples/tree/master/src/lupdate) example application demonstrates how to use the `lupdate-c` tool to generate translation files from the source code for use with Qt's translation system. Refer to the main library's [Tools](https://github.com/rcalixte/libqt6c#tools) section for more information.
 
 ### Q5. Do the applications built with this library support theming?
 
