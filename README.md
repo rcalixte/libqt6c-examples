@@ -24,7 +24,7 @@ These examples can be thought of as instructive templates for using the main lib
   - [Q2. What build modes are supported by the build system used by the examples?](#q2-what-build-modes-are-supported-by-the-build-system-used-by-the-examples)
   - [Q3. Can I use another build system to compile the examples or another application?](#q3-can-i-use-another-build-system-to-compile-the-examples-or-another-application)
   - [Q4. Are translations supported?](#q4-are-translations-supported)
-  - [Q5. Do the applications built with this library support theming?](#q5-do-the-applications-built-with-this-library-support-theming)
+  - [Q5. Do the applications built with this library support native styling or theming?](#q5-do-the-applications-built-with-this-library-support-native-styling-or-theming)
 - [Special Thanks](#special-thanks)
 
 License
@@ -67,6 +67,12 @@ or
 
 ```bash
 zig build -Dextra-paths={"/opt/qt6","/opt/lib/qt6"}
+```
+
+For Windows hosts, there is an additional option to specify the Qt installation directory. This is only required if passing in an alternate extra library path meant to override the default Qt library path:
+
+```bash
+zig build -Dextra-paths="C:/Qt/6/llvm-mingw_64" -DQTDIR="C:/Qt/6/llvm-mingw_64"
 ```
 
 Example applications can also be built and run independently:
@@ -132,17 +138,17 @@ Several options are available to implement translations ranging from functions a
 
 The [lupdate](https://github.com/rcalixte/libqt6c-examples/tree/master/src/lupdate) example application demonstrates how to use the `lupdate-c` tool to generate translation files from the source code for use with Qt's translation system. Refer to the main library's [Tools](https://github.com/rcalixte/libqt6c#tools) section for more information.
 
-### Q5. Do the applications built with this library support theming?
+### Q5. Do the applications built with this library support native styling or theming?
 
 <table align="center">
 
-| ![debian_cinnamon_helloworld](assets/debian_cinnamon_helloworld.png) | ![endeavour_kde_helloworld](assets/endeavour_kde_helloworld.png) |
-| :------------------------------------------------------------------: | :--------------------------------------------------------------: |
-|              Debian + Cinnamon + Qt 6.8 (custom theme)               |                    EndeavourOS + KDE + Qt 6.8                    |
-|      ![fedora_kde_helloworld](assets/fedora_kde_helloworld.png)      |  ![freebsd_xfce_helloworld](assets/freebsd_xfce_helloworld.png)  |
-|                        Fedora + KDE + Qt 6.8                         |                     FreeBSD + Xfce + Qt 6.8                      |
-|   ![mint_cinnamon_helloworld](assets/mint_cinnamon_helloworld.png)   |        ![ubuntu_helloworld](assets/ubuntu_helloworld.png)        |
-|                    Linux Mint + Cinnamon + Qt 6.4                    |                         Ubuntu + Qt 6.4                          |
+| ![endeavour_kde_helloworld](assets/endeavour_kde_helloworld.png) |    ![fedora_kde_helloworld](assets/fedora_kde_helloworld.png)    |
+| :--------------------------------------------------------------: | :--------------------------------------------------------------: |
+|                        EndeavourOS + KDE                         |                           Fedora + KDE                           |
+|  ![freebsd_xfce_helloworld](assets/freebsd_xfce_helloworld.png)  | ![mint_cinnamon_helloworld](assets/mint_cinnamon_helloworld.png) |
+|                          FreeBSD + Xfce                          |                      Linux Mint + Cinnamon                       |
+|         ![macos_helloworld](assets/macos_helloworld.png)         |       ![windows_helloworld](assets/windows_helloworld.png)       |
+|                              macOS                               |                             Windows                              |
 
 </table>
 
