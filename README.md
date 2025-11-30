@@ -4,14 +4,14 @@
 <img alt="libqt6c-examples" src="assets/libqt6c-examples.png" height="128px;" />
 
 ![MIT License](https://img.shields.io/badge/License-MIT-green)
-[![Static Badge](https://img.shields.io/badge/v0.15%20(stable)-f7a41d?logo=zig&logoColor=f7a41d&label=Zig)](https://ziglang.org/download/)
+[![Static Badge](https://img.shields.io/badge/v0.15%20(stable)-fdc009?logo=zig&logoColor=f7a41d&label=Zig)](https://ziglang.org/download/)
 </div>
 
 ---
 
 Example applications using the [MIT-licensed Qt 6 bindings for C](https://github.com/rcalixte/libqt6c)
 
-These examples can be thought of as instructive templates for using the main library. Though some of the examples have some complexity to them, the intention is to aim for simplicity while demonstrating valid uses of the library. All of source code for the examples are a single file by design. Any auxiliary files are placed in the same directory for either compilation or execution purposes. Please try out the sample applications and start a [discussion](https://github.com/rcalixte/libqt6c/discussions) if you have any questions or issues relevant to these examples.
+These examples can be thought of as instructive templates for using the main library. Though some of the examples have some complexity to them, the intention is to aim for simplicity while demonstrating valid uses of the library. All of source code for the examples are a single file by design. Any auxiliary files are placed in the same directory for either compilation or execution purposes. For a single-application implementation with a simpler build system and limited exercises, check out the [demo](https://github.com/rcalixte/libqt6c-demo). Please try out the sample applications and start a [discussion](https://github.com/rcalixte/libqt6c/discussions) if you have any questions or issues relevant to these examples.
 
 ---
 
