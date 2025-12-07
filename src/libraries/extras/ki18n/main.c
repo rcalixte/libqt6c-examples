@@ -4,28 +4,27 @@ static libqt_list all_countries;
 static KCountry** countries;
 static QLabel* emoji_flag_label;
 static QLabel* currency_label;
-static char emoji_buffer[24];
-static char currency_buffer[24];
+static char buffer[24];
 
 void on_current_index_changed(void* UNUSED self, int index) {
     KCountry* country = countries[index];
     const char* emoji_flag = k_country_emoji_flag(country);
-    snprintf(emoji_buffer, sizeof(emoji_buffer), "Emoji flag: %s", emoji_flag);
-    q_label_set_text(emoji_flag_label, emoji_buffer);
+    snprintf(buffer, sizeof(buffer), "Emoji flag: %s", emoji_flag);
+    q_label_set_text(emoji_flag_label, buffer);
     libqt_free(emoji_flag);
 
     const char* currency = k_country_currency_code(country);
     if (currency == NULL || currency[0] == '\0') {
         q_label_set_text(currency_label, "Currency code: ");
     } else {
-        snprintf(currency_buffer, sizeof(currency_buffer), "Currency code: %s", currency);
-        q_label_set_text(currency_label, currency_buffer);
+        snprintf(buffer, sizeof(buffer), "Currency code: %s", currency);
+        q_label_set_text(currency_label, buffer);
     }
     libqt_free(currency);
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     all_countries = k_country_all_countries();
     countries = (KCountry**)all_countries.data.ptr;
@@ -76,6 +75,7 @@ int main(int argc, char* argv[]) {
         k_country_delete(countries[i]);
     }
     libqt_free(all_countries.data.ptr);
+    q_application_delete(qapp);
 
     return result;
 }
