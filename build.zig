@@ -30,10 +30,6 @@ pub fn build(b: *std.Build) !void {
         };
     }
 
-    var arena = std.heap.ArenaAllocator.init(b.allocator);
-    defer arena.deinit();
-    const allocator = arena.allocator();
-
     const base_libs = switch (is_macos) {
         true => [_][]const u8{
             "QtCore",
@@ -52,7 +48,7 @@ pub fn build(b: *std.Build) !void {
     // Find all main.c files
     var dir = try b.build_root.handle.openDir("src", .{ .iterate = true });
     defer dir.close();
-    var walker = try dir.walk(allocator);
+    var walker = try dir.walk(b.allocator);
     defer walker.deinit();
 
     while (try walker.next()) |entry| {
@@ -70,7 +66,7 @@ pub fn build(b: *std.Build) !void {
                     continue;
 
                 const lib_name = std.mem.trimRight(u8, line, line_trim);
-                try qtlibs_contents.append(allocator, try allocator.dupe(u8, lib_name));
+                try qtlibs_contents.append(b.allocator, b.dupe(lib_name));
             } else |err| {
                 if (!qtlibs_file_reader.atEnd()) return err;
             }
@@ -88,17 +84,17 @@ pub fn build(b: *std.Build) !void {
                         continue;
 
                     const lib_name = std.mem.trimRight(u8, line, line_trim);
-                    try syslibs_contents.append(allocator, try allocator.dupe(u8, lib_name));
+                    try syslibs_contents.append(b.allocator, b.dupe(lib_name));
                 } else |err| {
                     if (!syslibs_file_reader.atEnd()) return err;
                 }
             }
 
-            try main_files.append(allocator, .{
-                .dir = try allocator.dupe(u8, parent_dir),
+            try main_files.append(b.allocator, .{
+                .dir = b.dupe(parent_dir),
                 .path = b.fmt("{s}/{s}", .{ "src", entry.path }),
-                .qt_libraries = try qtlibs_contents.toOwnedSlice(allocator),
-                .sys_libraries = try syslibs_contents.toOwnedSlice(allocator),
+                .qt_libraries = try qtlibs_contents.toOwnedSlice(b.allocator),
+                .sys_libraries = try syslibs_contents.toOwnedSlice(b.allocator),
             });
         } else if (entry.kind == .directory) {
             const is_special_dir = for (special_dirs) |dir_name| {
@@ -120,12 +116,12 @@ pub fn build(b: *std.Build) !void {
             var is_supported = true;
             if (is_windows and (std.mem.startsWith(u8, prefix, "foss-") or std.mem.startsWith(u8, prefix, "posix-"))) {
                 is_supported = false;
-                try disabled_paths.append(allocator, "foss-");
-                try disabled_paths.append(allocator, "posix-");
+                try disabled_paths.append(b.allocator, "foss-");
+                try disabled_paths.append(b.allocator, "posix-");
             }
             if (is_macos and std.mem.startsWith(u8, prefix, "foss-")) {
                 is_supported = false;
-                try disabled_paths.append(allocator, "foss-");
+                try disabled_paths.append(b.allocator, "foss-");
             }
 
             var is_enabled = true;
@@ -139,7 +135,7 @@ pub fn build(b: *std.Build) !void {
 
             if (!result_value) {
                 const path = b.fmt("/{s}", .{name});
-                try disabled_paths.append(allocator, path);
+                try disabled_paths.append(b.allocator, path);
             }
         }
     }
