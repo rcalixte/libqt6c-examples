@@ -1,10 +1,9 @@
 #include <libqt6c.h>
 #include "rcc.h"
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
     // Initialize Qt application
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     bool ok = qrc_rcc_init();
     if (!ok)
@@ -58,6 +57,7 @@ int main(int argc, char* argv[]) {
     q_size_delete(size3);
     q_icon_delete(icon3);
     q_widget_delete(widget);
+    q_application_delete(qapp);
 
     return result;
 }

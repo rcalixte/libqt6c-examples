@@ -1,6 +1,4 @@
 #include <libqt6c.h>
-#include <stdint.h>
-#include <stdio.h>
 
 #define BUFFER_SIZE 64
 

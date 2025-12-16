@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 static const char* MP3_PATH = "src/libraries/multimedia/pixabay-public-domain-strong-hit-36455.mp3";
 
@@ -13,7 +12,7 @@ void onPlaybackStateChanged(void* UNUSED player, int32_t state) {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QMediaPlayer* player = q_mediaplayer_new();
     if (!player) {
@@ -43,6 +42,7 @@ int main(int argc, char* argv[]) {
     q_url_delete(url);
     q_audiooutput_delete(output);
     q_mediaplayer_delete(player);
+    q_application_delete(qapp);
 
     return result;
 }

@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdint.h>
 
 QWizardPage* createIntroPage() {
     QWizardPage* page = q_wizardpage_new2();
@@ -62,7 +61,7 @@ QWizardPage* createConclusionPage() {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QWizard* wizard = q_wizard_new2();
 
@@ -80,6 +79,8 @@ int main(int argc, char* argv[]) {
     q_wizard_show(wizard);
 
     int ret = q_application_exec();
+
+    q_application_delete(qapp);
 
     return ret;
 }

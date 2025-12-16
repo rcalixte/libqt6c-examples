@@ -1,8 +1,5 @@
 #include <libqt6c.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define LINE_NUMBER_ROLE (QT_ITEMDATAROLE_USERROLE + 1)
 #define INITIAL_MAP_CAPACITY 32

@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 void onFinished(void* self, int UNUSED result) {
     q_printdialog_delete_later(self);
@@ -17,7 +16,7 @@ void onPressed() {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QPushButton* button = q_pushbutton_new3("QPrintSupport sample");
     if (!button) {
@@ -32,5 +31,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_pushbutton_delete(button);
+    q_application_delete(qapp);
+
     return result;
 }

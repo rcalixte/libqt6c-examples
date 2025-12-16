@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 int on_row_count(void* UNUSED self, void* UNUSED index) {
     return 1000;
@@ -46,7 +45,7 @@ QVariant* on_data(void* UNUSED self, void* index, int role) {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QAbstractListModel* model = q_abstractlistmodel_new();
 
@@ -62,6 +61,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_listview_delete(listview);
+    q_application_delete(qapp);
 
     return result;
 }

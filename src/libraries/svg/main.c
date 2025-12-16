@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);

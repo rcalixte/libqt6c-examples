@@ -1,8 +1,7 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QSplitter* splitter = q_splitter_new2();
     if (!splitter) {
@@ -72,6 +71,7 @@ int main(int argc, char* argv[]) {
     // Cleanup
     q_modelindex_delete(modelindex);
     q_filesystemmodel_delete(model);
+    q_application_delete(qapp);
 
     return result;
 }

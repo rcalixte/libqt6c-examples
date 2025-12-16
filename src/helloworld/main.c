@@ -1,6 +1,4 @@
 #include <libqt6c.h>
-#include <stdint.h>
-#include <stdio.h>
 
 #define BUFFER_SIZE 64
 
@@ -15,7 +13,7 @@ void button_callback(void* self) {
 
 int main(int argc, char* argv[]) {
     // Initialize Qt application
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QWidget* widget = q_widget_new2();
     if (!widget) {
@@ -37,7 +35,9 @@ int main(int argc, char* argv[]) {
     q_widget_show(widget);
 
     int result = q_application_exec();
+
     q_widget_delete(widget);
+    q_application_delete(qapp);
 
     printf("OK!\n");
 

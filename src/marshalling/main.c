@@ -1,7 +1,5 @@
 #include <libqt6c.h>
 #include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
     // Initialize Qt application

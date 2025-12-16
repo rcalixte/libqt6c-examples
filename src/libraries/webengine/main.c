@@ -1,8 +1,7 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QWebEngineView* webengine = q_webengineview_new2();
     if (!webengine) {
@@ -25,5 +24,7 @@ int main(int argc, char* argv[]) {
 
     q_webengineview_delete(webengine);
     q_url_delete(url);
+    q_application_delete(qapp);
+
     return result;
 }

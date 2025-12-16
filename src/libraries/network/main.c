@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 void onFinished(void* dns) {
     q_dnslookup_delete_later(dns);
@@ -28,7 +27,7 @@ void onFinished(void* dns) {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     printf("Looking up DNS info, please wait...");
 
@@ -36,5 +35,9 @@ int main(int argc, char* argv[]) {
     q_dnslookup_on_finished(dns, onFinished);
     q_dnslookup_lookup(dns);
 
-    return q_application_exec();
+    int result = q_application_exec();
+
+    q_application_delete(qapp);
+
+    return result;
 }

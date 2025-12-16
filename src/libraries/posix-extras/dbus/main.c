@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 #define BUS_NAME "org.freedesktop.Notifications"
 #define BUS_PATH "/org/freedesktop/Notifications"

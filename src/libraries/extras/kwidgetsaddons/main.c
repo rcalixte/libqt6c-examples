@@ -1,8 +1,7 @@
 #include <libqt6c.h>
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     KGuiItem* primaryAction = k_guiitem_new7("Hello", "view-filter", "This is a tooltip", "This is a WhatsThis help text.");
 
@@ -15,6 +14,8 @@ int main(int argc, char* argv[]) {
     } else {
         printf("You clicked Bye\n");
     }
+
+    q_application_delete(qapp);
 
     return 0;
 }

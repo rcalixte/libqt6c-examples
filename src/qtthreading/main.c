@@ -1,11 +1,7 @@
 #include <libqt6c.h>
 #include <pthread.h>
-#include <stdint.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <time.h>
-#include <string.h>
-#include <stdio.h>
 #include <unistd.h>
 
 typedef struct Counter {
