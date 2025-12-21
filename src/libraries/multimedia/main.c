@@ -7,7 +7,7 @@ void onPlaybackStateChanged(void* UNUSED player, int32_t state) {
 
     if (state == QMEDIAPLAYER_PLAYBACKSTATE_STOPPEDSTATE) {
         printf("Playback complete.\n");
-        q_coreapplication_exit();
+        q_application_exit();
     }
 }
 
@@ -17,6 +17,12 @@ int main(int argc, char* argv[]) {
     QMediaPlayer* player = q_mediaplayer_new();
     if (!player) {
         fprintf(stderr, "Failed to create media player\n");
+        return 1;
+    }
+
+    if (q_mediaplayer_error(player) != QMEDIAPLAYER_ERROR_NOERROR) {
+        fprintf(stderr, "Failed to create player.\n");
+        q_mediaplayer_delete(player);
         return 1;
     }
 
