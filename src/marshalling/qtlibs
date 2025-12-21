@@ -1,4 +1,6 @@
 qabstractbutton
+qabstractitemview
+qabstractscrollarea
 qaction
 qapplication
 qcheckbox
@@ -6,15 +8,15 @@ qcoreapplication
 qdialog
 qfile
 qfiledevice
+qframe
 qguiapplication
 qinputdialog
 qiodevice
-qjsonobject
 qkeysequence
 qobject
 qpaintdevice
-qsettings
 qsize
-qvariant
+qtableview
+qtablewidget
 qversionnumber
 qwidget

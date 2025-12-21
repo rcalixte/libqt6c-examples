@@ -1,6 +1,20 @@
 #include <libqt6c.h>
 #include <stdbool.h>
 
+const char** on_mime_types() {
+    const char** ret = (const char**)malloc(4 * sizeof(char*));
+    if (ret == NULL) {
+        return NULL;
+    }
+
+    ret[0] = "image/gif";
+    ret[1] = "image/jpeg";
+    ret[2] = "image/png";
+    ret[3] = NULL;
+
+    return ret;
+}
+
 int main(int argc, char* argv[]) {
     // Initialize Qt application
     QApplication* qapp = q_application_new(&argc, argv);
@@ -63,6 +77,18 @@ int main(int argc, char* argv[]) {
     }
     free(items);
     q_inputdialog_delete(dialog);
+
+    // QStringList callback
+    QTableWidget* table = q_tablewidget_new2();
+    q_tablewidget_on_mime_types(table, on_mime_types);
+    const char** table_mime_types = q_tablewidget_mime_types(table);
+    size_t table_mime_len = libqt_strv_length(table_mime_types);
+    for (size_t i = 0; i < table_mime_len; i++) {
+        printf("MimeTypes[%zu]: %s\n", i, table_mime_types[i]);
+        libqt_free(table_mime_types[i]);
+    }
+    free(table_mime_types);
+    q_tablewidget_delete(table);
 
     // QList<Qt type>
     QKeySequence* keyData[] = {
