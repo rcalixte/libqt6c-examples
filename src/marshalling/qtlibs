@@ -12,11 +12,13 @@ qframe
 qguiapplication
 qinputdialog
 qiodevice
+qjsonobject
 qkeysequence
 qobject
 qpaintdevice
 qsize
 qtableview
 qtablewidget
+qvariant
 qversionnumber
 qwidget

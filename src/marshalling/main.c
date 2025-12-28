@@ -127,6 +127,47 @@ int main(int argc, char* argv[]) {
     libqt_free(value);
     q_object_delete(object);
 
+    // QMap
+    libqt_map input_map;
+    input_map.len = 3;
+    const char** map_key = (const char**)malloc(input_map.len * sizeof(char*));
+    if (map_key == NULL) {
+        fprintf(stderr, "Failed to allocate memory for map key\n");
+        exit(1);
+    }
+    map_key[0] = "foo";
+    map_key[1] = "bar";
+    map_key[2] = "baz";
+    QVariant** map_value = (QVariant**)malloc(input_map.len * sizeof(QVariant*));
+    if (map_value == NULL) {
+        fprintf(stderr, "Failed to allocate memory for map value\n");
+        free(map_key);
+        exit(1);
+    }
+    map_value[0] = q_variant_new24("FOO");
+    map_value[1] = q_variant_new24("BAR");
+    map_value[2] = q_variant_new24("BAZ");
+    input_map.keys = (void*)map_key;
+    input_map.values = (void*)map_value;
+    QJsonObject* qtobj = q_jsonobject_from_variant_map(input_map);
+    libqt_map output_map = q_jsonobject_to_variant_map(qtobj);
+    const char** keys = (const char**)output_map.keys;
+    QVariant** values = (QVariant**)output_map.values;
+    for (size_t i = 0; i < output_map.len; i++) {
+        const char* key = keys[i];
+        QVariant* value = values[i];
+        const char* value_str = q_variant_to_string(value);
+        printf("QMap[%s]: %s\n", key, value_str);
+        libqt_free(value_str);
+        q_variant_delete(value);
+        libqt_free(key);
+    }
+    free(values);
+    libqt_free(keys);
+    q_jsonobject_delete(qtobj);
+    free(map_value);
+    free(map_key);
+
     q_application_delete(qapp);
 
     return 0;
