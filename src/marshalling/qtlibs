@@ -10,6 +10,7 @@ qfile
 qfiledevice
 qframe
 qguiapplication
+qhttpheaders
 qinputdialog
 qiodevice
 qjsonobject

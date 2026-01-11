@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
     libqt_free(value);
     q_object_delete(object);
 
-    // QMap
+    // QMap<QString, QVariant>
     libqt_map input_map;
     input_map.len = 3;
     const char** map_key = (const char**)malloc(input_map.len * sizeof(char*));
@@ -159,14 +159,74 @@ int main(int argc, char* argv[]) {
         const char* value_str = q_variant_to_string(value);
         printf("QMap[%s]: %s\n", key, value_str);
         libqt_free(value_str);
-        q_variant_delete(value);
         libqt_free(key);
+        free(value);
     }
     free(values);
-    libqt_free(keys);
+    free(keys);
     q_jsonobject_delete(qtobj);
     free(map_value);
     free(map_key);
+
+    // QMultiMap<QString, QString>
+    char** map_keys = (char**)malloc(2 * sizeof(char*));
+    if (map_keys == NULL) {
+        fprintf(stderr, "Failed to allocate memory for keys\n");
+        abort();
+    }
+    map_keys[0] = "Accept";
+    map_keys[1] = NULL;
+    char*** map_values = (char***)malloc(1 * sizeof(const char**));
+    if (map_values == NULL) {
+        free(map_keys);
+        fprintf(stderr, "Failed to allocate memory for values\n");
+        abort();
+    }
+    map_values[0] = (char**)malloc(4 * sizeof(char*));
+    if (map_values[0] == NULL) {
+        free(map_keys);
+        free(map_values);
+        fprintf(stderr, "Failed to allocate memory for values[0]\n");
+        abort();
+    }
+    map_values[0][0] = "text/html";
+    map_values[0][1] = "application/xhtml+xml";
+    map_values[0][2] = "application/xml;";
+    map_values[0][3] = NULL;
+    libqt_map map = {
+        .len = 1,
+        .keys = map_keys,
+        .values = map_values,
+    };
+    QHttpHeaders* qheaders = q_httpheaders_from_multi_map(map);
+    for (size_t i = 0; i < map.len; i++) {
+        free(map_values[i]);
+    }
+    free(map_keys);
+    free(map_values);
+    libqt_map header_map = q_httpheaders_to_multi_map(qheaders);
+    char** header_keys = header_map.keys;
+    char*** header_values = header_map.values;
+    for (size_t i = 0; i < header_map.len; i++) {
+        printf("HTTP Header: %s: ", header_keys[i]);
+        size_t count = 0;
+        while (header_values[i][count] != NULL) {
+            count++;
+        }
+        for (size_t j = 0; j < count; j++) {
+            printf("%s", header_values[i][j]);
+            libqt_free(header_values[i][j]);
+            if (j < count - 1) {
+                printf(",");
+            }
+        }
+        printf("\n");
+        free(header_values[i]);
+        libqt_free(header_keys[i]);
+    }
+    free(header_values);
+    free(header_keys);
+    q_httpheaders_delete(qheaders);
 
     q_application_delete(qapp);
 
