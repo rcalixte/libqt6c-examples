@@ -3,7 +3,7 @@
 <div align="center">
 <img alt="libqt6c-examples" src="assets/libqt6c-examples.png" height="128px;" />
 
-![MIT License](https://img.shields.io/badge/License-MIT-green)
+[![MIT License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/rcalixte/libqt6c-examples/blob/master/LICENSE)
 [![Static Badge](https://img.shields.io/badge/v0.15%20(stable)-fdc009?logo=zig&logoColor=f7a41d&label=Zig)](https://ziglang.org/download/)
 </div>
 
