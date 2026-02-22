@@ -32,7 +32,7 @@ void* run_counter(void* arg) {
         q_threading_async(counter, update_label_text);
 
         counter->counter++;
-        usleep(1 * 1000);
+        usleep(1000);
     }
     return NULL;
 }
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
     q_mainwindow_set_central_widget(window, widget);
 
     // Create counters array
-    Counter** counters = calloc(thread_count, sizeof(Counter*));
+    Counter** counters = (Counter**)malloc(thread_count * sizeof(Counter*));
     if (!counters) {
         fprintf(stderr, "Failed to allocate counters array\n");
         return 1;
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
 
     // Initialize counters
     for (size_t i = 0; i < thread_count; i++) {
-        counters[i] = calloc(1, sizeof(Counter));
+        counters[i] = (Counter*)malloc(sizeof(Counter));
         if (!counters[i]) {
             fprintf(stderr, "Failed to allocate counter %zu\n", i);
             // Cleanup previously allocated counters
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Setup button data
-    ButtonData* button_data = calloc(1, sizeof(ButtonData));
+    ButtonData* button_data = (ButtonData*)malloc(sizeof(ButtonData));
     if (!button_data) {
         fprintf(stderr, "Failed to allocate button data\n");
         // Cleanup
