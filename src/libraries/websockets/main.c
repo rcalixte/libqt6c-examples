@@ -2,6 +2,8 @@
 #include <string.h>
 #include <ctype.h>
 
+static const char* WS_URL = "ws://localhost:";
+static const char* CLIENT_STR = "Qt 6 WebSockets Example Client #";
 static uint16_t LOCAL_PORT = 12345;
 static size_t NUM_CLIENTS = 3;
 static size_t MAX_CLIENTS = 10;
@@ -12,7 +14,7 @@ static size_t client_num = 0;
 static libqt_list client_dialogs;
 
 typedef struct {
-    const char* name;
+    char* name;
     QDialog* dialog;
     QWebSocket* socket;
     QTextEdit* messages;
@@ -90,17 +92,29 @@ void send_message(ClientDialog* self) {
     if (strlen(trimmed_text) == 0)
         return;
 
-    char* out_message = NULL;
-    asprintf(&out_message, "(%s): %s", self->name, trimmed_text);
+    size_t out_message_len = strlen(self->name) + strlen(trimmed_text) + 5;
+    char* out_message = (char*)malloc(out_message_len);
+    if (out_message == NULL) {
+        fprintf(stderr, "Failed to allocate memory for out_message\n");
+        abort();
+    }
+    snprintf(out_message, out_message_len, "(%s): %s", self->name, trimmed_text);
 
     q_websocket_send_text_message(self->socket, out_message);
+    free(out_message);
 
-    char* self_entry = NULL;
-    asprintf(&self_entry, ">> %s", trimmed_text);
+    size_t self_entry_len = strlen(trimmed_text) + 4;
+    char* self_entry = (char*)malloc(self_entry_len);
+    if (self_entry == NULL) {
+        fprintf(stderr, "Failed to allocate memory for self_entry\n");
+        abort();
+    }
+    snprintf(self_entry, self_entry_len, ">> %s", trimmed_text);
 
     q_textedit_append(self->messages, self_entry);
     q_lineedit_clear(self->input);
 
+    free(self_entry);
     libqt_free(message);
 }
 
@@ -116,17 +130,37 @@ void on_send_clicked(void* self) {
 
 void connect_to_server(ClientDialog* self) {
     q_textedit_append(self->messages, "Connecting...");
-    char* ws = NULL;
-    asprintf(&ws, "ws://localhost:%d", LOCAL_PORT);
+    char* port_str = (char*)malloc(6);
+    if (port_str == NULL) {
+        fprintf(stderr, "Failed to allocate memory for port_str\n");
+        abort();
+    }
+    snprintf(port_str, 6, "%d", LOCAL_PORT);
+    size_t ws_len = strlen(WS_URL) + strlen(port_str) + 1;
+    char* ws = (char*)malloc(ws_len);
+    if (ws == NULL) {
+        free(port_str);
+        fprintf(stderr, "Failed to allocate memory for ws\n");
+        abort();
+    }
+    snprintf(ws, ws_len, "%s%s", WS_URL, port_str);
 
     QUrl* url = q_url_new3(ws);
     q_websocket_open(self->socket, url);
 
+    free(ws);
+    free(port_str);
     q_url_delete(url);
 }
 
 void initialize_dialog(ClientDialog* self, const char* name, const char* num_str) {
-    self->name = strndup(num_str, strlen(num_str));
+    self->name = (char*)malloc(strlen(num_str) + 1);
+    if (self->name == NULL) {
+        fprintf(stderr, "Failed to allocate memory for name\n");
+        abort();
+    }
+    strncpy(self->name, num_str, strlen(num_str));
+    self->name[strlen(num_str)] = '\0';
 
     self->dialog = q_dialog_new2();
     q_dialog_set_window_title(self->dialog, name);
@@ -234,12 +268,23 @@ int main(int argc, char* argv[]) {
 
         ClientDialog* client_dialog = client_dialog_data[i];
 
-        char* client_name = NULL;
-        char* num_str = NULL;
-        asprintf(&num_str, "%zu", i + 1);
-        asprintf(&client_name, "Qt 6 WebSockets Example Client #%s", num_str);
+        char* num_str = (char*)malloc(2);
+        if (num_str == NULL) {
+            fprintf(stderr, "Failed to allocate memory for num_str\n");
+            abort();
+        }
+        snprintf(num_str, 2, "%zu", i + 1);
+        size_t client_name_len = strlen(CLIENT_STR) + strlen(num_str) + 1;
+        char* client_name = (char*)malloc(client_name_len);
+        if (client_name == NULL) {
+            free(num_str);
+            fprintf(stderr, "Failed to allocate memory for client_name\n");
+            abort();
+        }
+        snprintf(client_name, client_name_len, "%s%s", CLIENT_STR, num_str);
         initialize_dialog(client_dialog, client_name, num_str);
-        libqt_free(client_name);
+        free(client_name);
+        free(num_str);
 
         connect_to_server(client_dialog);
 
@@ -263,7 +308,7 @@ int main(int argc, char* argv[]) {
     for (size_t i = 0; i < NUM_CLIENTS; i++) {
         ClientDialog** client_dialog_data = (ClientDialog**)client_dialogs.data.ptr;
         q_dialog_delete_later(client_dialog_data[i]->dialog);
-        libqt_free(client_dialog_data[i]->name);
+        free(client_dialog_data[i]->name);
         free(client_dialog_data[i]);
     }
     free(client_dialogs.data.ptr);
