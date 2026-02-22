@@ -5,22 +5,16 @@
 #define INITIAL_MAP_CAPACITY 32
 #define MAX_LINE_LENGTH 4096
 
-// Forward declarations
-struct AppTab;
-struct AppWindow;
-typedef struct AppTab AppTab;
-typedef struct AppWindow AppWindow;
-
-struct AppTab {
+typedef struct {
     QWidget* tab;
     QListWidget* outline;
     QTextEdit* textArea;
-};
+} AppTab;
 
-struct AppWindow {
+typedef struct {
     QMainWindow* w;
     QTabWidget* tabs;
-};
+} AppWindow;
 
 // Global state
 static AppWindow* main_window = NULL;
@@ -33,8 +27,8 @@ static struct {
 
 // Map functions
 static void map_init(size_t initial_capacity) {
-    app_tab_map.keys = (void**)calloc(initial_capacity, sizeof(void*));
-    app_tab_map.values = (AppTab**)calloc(initial_capacity, sizeof(AppTab*));
+    app_tab_map.keys = (void**)malloc(initial_capacity * sizeof(void*));
+    app_tab_map.values = (AppTab**)malloc(initial_capacity * sizeof(AppTab*));
     app_tab_map.capacity = initial_capacity;
     app_tab_map.size = 0;
 }
