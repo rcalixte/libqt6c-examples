@@ -21,7 +21,7 @@ void update_buttons(void* UNUSED self, int index) {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QWidget* widget = q_widget_new2();
 
@@ -116,6 +116,7 @@ int main(int argc, char* argv[]) {
     q_sqlquery_delete(query);
     q_sqldatabase_delete(db);
     q_widget_delete(widget);
+    q_application_delete(qapp);
 
     return result;
 }
