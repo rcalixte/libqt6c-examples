@@ -63,7 +63,7 @@ void on_client_close_event(void* UNUSED self, void* event) {
     for (size_t i = 0; i < client_dialogs.len; i++) {
         q_websocket_close(client_dialog_data[i]->socket);
         q_websocket_delete(client_dialog_data[i]->socket);
-        q_dialog_qbase_close_event(client_dialog_data[i]->dialog, event);
+        q_dialog_super_close_event(client_dialog_data[i]->dialog, event);
     }
 }
 
