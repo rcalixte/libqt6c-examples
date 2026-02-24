@@ -1,7 +1,7 @@
 #include <libqt6c.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     KPlotWidget* kplot = k_plotwidget_new2();
 
@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
     q_color_delete(color1);
     q_color_delete(color2);
     k_plotwidget_delete(kplot);
+    q_application_delete(qapp);
 
     return result;
 }
