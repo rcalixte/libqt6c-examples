@@ -16,7 +16,7 @@ static const Qt__GlobalColor useColors[] = {
 void on_paint_event(void* self, void* ev) {
     // Call the base class's PaintEvent to get initial content
     // (Comment this out to see the QGroupBox disappear)
-    q_groupbox_qbase_paint_event(self, ev);
+    q_groupbox_super_paint_event(self, ev);
 
     // Then, draw on top of it
     QStylePainter* painter = q_stylepainter_new(self);
@@ -30,7 +30,7 @@ void on_paint_event(void* self, void* ev) {
 }
 
 void on_context_menu_event(void* self, void* ev) {
-    q_groupbox_qbase_context_menu_event(self, ev);
+    q_groupbox_super_context_menu_event(self, ev);
 
     currentColor++;
     if (currentColor >= COLOR_COUNT) {
@@ -40,7 +40,7 @@ void on_context_menu_event(void* self, void* ev) {
 }
 
 void on_key_press_event(void* self, void* ev) {
-    q_groupbox_qbase_key_press_event(self, ev);
+    q_groupbox_super_key_press_event(self, ev);
 
     snprintf(buffer, BUFFER_SIZE, "Keypress %d", q_keyevent_key(ev));
     q_groupbox_set_title(self, buffer);
