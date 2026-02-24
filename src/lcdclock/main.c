@@ -19,7 +19,7 @@ void show_time() {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QWidget* widget = q_widget_new2();
 
@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_widget_delete(widget);
+    q_application_delete(qapp);
 
     return result;
 }
