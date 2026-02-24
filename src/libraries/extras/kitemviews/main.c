@@ -21,7 +21,7 @@ static void on_rejected() {
 }
 
 static void show_event(void* self, void* event) {
-    q_dialog_qbase_show_event(self, event);
+    q_dialog_super_show_event(self, event);
 
     QHeaderView* headerview = q_treewidget_header(treewidget);
     for (size_t i = 0; i < (size_t)q_headerview_count(headerview); i++) {
