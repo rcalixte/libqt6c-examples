@@ -2,8 +2,7 @@
 #include "design.h"
 
 int main(int argc, char* argv[]) {
-    // Initialize Qt application
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     MainWindowUi* uic = new_main_window_ui();
     if (uic == NULL) {
@@ -16,6 +15,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     free(uic);
+    q_application_delete(qapp);
 
     return result;
 }
