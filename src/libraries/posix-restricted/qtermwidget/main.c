@@ -1,7 +1,7 @@
 #include <libqt6c.h>
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QTermWidget* term = q_termwidget_new3();
     q_termwidget_set_window_title(term, "Qt 6 QTermWidget Example");
@@ -14,5 +14,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     q_termwidget_delete(term);
+    q_application_delete(qapp);
+
     return result;
 }
