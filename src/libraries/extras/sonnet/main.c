@@ -9,7 +9,7 @@ static void on_dictionary_changed(void* UNUSED self, const char* dictionary) {
 }
 
 int main(int argc, char* argv[]) {
-    q_application_new(&argc, argv);
+    QApplication* qapp = q_application_new(&argc, argv);
 
     QWidget* widget = q_widget_new2();
     q_widget_set_window_title(widget, "Qt 6 Sonnet Example");
@@ -41,6 +41,9 @@ int main(int argc, char* argv[]) {
     q_widget_show(widget);
 
     int ret = q_application_exec();
+
+    q_widget_delete(widget);
+    q_application_delete(qapp);
 
     return ret;
 }
