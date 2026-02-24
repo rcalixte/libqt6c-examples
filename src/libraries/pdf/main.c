@@ -1,10 +1,19 @@
 #include <libqt6c.h>
 
+static const char* PDF_FILE = "assets/example.pdf";
+
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
     QPdfDocument* document = q_pdfdocument_new();
-    q_pdfdocument_load(document, "assets/example.pdf");
+
+    int err = q_pdfdocument_load(document, PDF_FILE);
+    if (err != QPDFDOCUMENT_ERROR_NONE) {
+        q_pdfdocument_delete(document);
+        q_application_delete(qapp);
+        fprintf(stderr, "Failed to load document: %s\n", PDF_FILE);
+        return 1;
+    }
 
     QPdfView* pdfview = q_pdfview_new2();
 
@@ -18,6 +27,7 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
+    q_pdfview_delete(pdfview);
     q_pdfdocument_delete(document);
     q_application_delete(qapp);
 
