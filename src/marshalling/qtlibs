@@ -6,6 +6,7 @@ qapplication
 qcheckbox
 qcoreapplication
 qdialog
+qeasingcurve
 qfile
 qfiledevice
 qframe

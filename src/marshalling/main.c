@@ -15,6 +15,10 @@ const char** on_mime_types() {
     return ret;
 }
 
+double easing_function(double d) {
+    return d * d;
+}
+
 int main(int argc, char* argv[]) {
     // Initialize Qt application
     QApplication* qapp = q_application_new(&argc, argv);
@@ -119,7 +123,7 @@ int main(int argc, char* argv[]) {
     libqt_free(f_output);
     free(bat);
 
-    // QAnyStringView parameter
+    // QAnyStringView
     QObject* object = q_object_new();
     q_object_set_object_name(object, "QAnyStringView Name");
     const char* value = q_object_object_name(object);
@@ -227,6 +231,20 @@ int main(int argc, char* argv[]) {
     free(header_values);
     free(header_keys);
     q_httpheaders_delete(qheaders);
+
+    // Qt function pointer
+    QEasingCurve* easing = q_easingcurve_new();
+    q_easingcurve_set_custom_type(easing, easing_function);
+    QEasingCurve__EasingFunction easing_func = q_easingcurve_custom_type(easing);
+    if (easing_func == NULL) {
+        q_easingcurve_delete(easing);
+        fprintf(stderr, "Failed to get easing function\n");
+        abort();
+    }
+    for (double i = 0; i < 3.0; i += 1.0) {
+        printf("Easing function value: %f\n", easing_func(i));
+    }
+    q_easingcurve_delete(easing);
 
     q_application_delete(qapp);
 
