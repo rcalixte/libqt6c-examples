@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
-    free(uic);
+    cleanup_main_window_ui(uic);
     q_application_delete(qapp);
 
     return result;

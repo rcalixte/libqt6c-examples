@@ -5,10 +5,8 @@
 
 #include <libqt6c.h>
 
-struct MainWindowUi;
-typedef struct MainWindowUi MainWindowUi;
-
-struct MainWindowUi {
+/// The type definition for MainWindowUi
+typedef struct {
     QMainWindow* MainWindow;
     QWidget* centralwidget;
     QGridLayout* gridLayout;
@@ -30,10 +28,16 @@ struct MainWindowUi {
     QCalendarWidget* calendarWidget;
     QAction* action_New;
     QAction* actionE_xit;
-};
+} MainWindowUi;
 
-// Retranslate reapplies all text translations
-static void retranslate_main_window(MainWindowUi* ui) {
+/// Cleanup the memory allocated for MainWindowUi and the child Qt objects
+static void cleanup_main_window_ui(MainWindowUi* ui) {
+    q_mainwindow_delete(ui->MainWindow);
+    free(ui);
+}
+
+/// Retranslate reapplies all text translations
+static void retranslate_main_window_ui(MainWindowUi* ui) {
     const char* text0 = q_coreapplication_translate("MainWindow", "MainWindow");
     q_mainwindow_set_window_title(ui->MainWindow, text0);
     libqt_free(text0);
@@ -74,7 +78,7 @@ static void retranslate_main_window(MainWindowUi* ui) {
     libqt_free(text11);
 }
 
-// new_main_window_ui creates all the Qt objects for MainWindowUi
+/// new_main_window_ui creates all the Qt objects for MainWindowUi
 static MainWindowUi* new_main_window_ui() {
     MainWindowUi* ui = (MainWindowUi*)malloc(sizeof(MainWindowUi));
     if (ui == NULL)
@@ -174,7 +178,7 @@ static MainWindowUi* new_main_window_ui() {
     q_menu_add_separator(ui->menu_File);
     q_menu_add_action(ui->menu_File, ui->actionE_xit);
 
-    retranslate_main_window(ui);
+    retranslate_main_window_ui(ui);
 
     return ui;
 }
