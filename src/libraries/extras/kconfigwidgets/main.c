@@ -2,7 +2,7 @@
 
 struct KColorSchemeManager* manager;
 
-void on_clicked(void* UNUSED self, void* index) {
+void on_clicked(void* self UNUSED, void* index) {
     k_colorschememanager_activate_scheme(manager, index);
 }
 

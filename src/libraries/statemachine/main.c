@@ -13,7 +13,7 @@ typedef struct {
     QWidget* widget;
 } TrafficWidget;
 
-void on_paint_event(void* self, void* UNUSED event) {
+void on_paint_event(void* self, void* event UNUSED) {
     QVariant* on_variant = q_widget_property(self, "on");
     uint64_t on_value = q_variant_to_long_long(on_variant);
     bool* on = (bool*)on_value;

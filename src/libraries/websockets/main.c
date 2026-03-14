@@ -45,7 +45,7 @@ void on_client_message_received(void* self, const char* message) {
     }
 }
 
-void on_client_error_occurred(void* self, int32_t UNUSED error_val) {
+void on_client_error_occurred(void* self, int32_t error_val UNUSED) {
     const char* err_str = q_websocket_error_string(self);
     ClientDialog** client_dialog_data = (ClientDialog**)client_dialogs.data.ptr;
     for (size_t i = 0; i < client_dialogs.len; i++) {
@@ -58,7 +58,7 @@ void on_client_error_occurred(void* self, int32_t UNUSED error_val) {
     libqt_free(err_str);
 }
 
-void on_client_close_event(void* UNUSED self, void* event) {
+void on_client_close_event(void* self UNUSED, void* event) {
     ClientDialog** client_dialog_data = (ClientDialog**)client_dialogs.data.ptr;
     for (size_t i = 0; i < client_dialogs.len; i++) {
         q_websocket_close(client_dialog_data[i]->socket);

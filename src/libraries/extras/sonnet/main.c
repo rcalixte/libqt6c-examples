@@ -3,7 +3,7 @@
 static Sonnet__Highlighter* highlighter1;
 static Sonnet__Highlighter* highlighter2;
 
-static void on_dictionary_changed(void* UNUSED self, const char* dictionary) {
+static void on_dictionary_changed(void* self UNUSED, const char* dictionary) {
     k_sonnet__highlighter_set_current_language(highlighter1, dictionary);
     k_sonnet__highlighter_set_current_language(highlighter2, dictionary);
 }
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 
     int ret = q_application_exec();
 
-    q_widget_delete(widget);
+    q_widget_delete_later(widget);
     q_application_delete(qapp);
 
     return ret;

@@ -6,7 +6,7 @@ static QLabel* emoji_flag_label;
 static QLabel* currency_label;
 static char buffer[24];
 
-void on_current_index_changed(void* UNUSED self, int index) {
+void on_current_index_changed(void* self UNUSED, int index) {
     KCountry* country = countries[index];
     const char* emoji_flag = k_country_emoji_flag(country);
     snprintf(buffer, sizeof(buffer), "Emoji flag: %s", emoji_flag);

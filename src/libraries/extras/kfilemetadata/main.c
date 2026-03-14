@@ -23,7 +23,7 @@ const char** on_mimetypes() {
     return ret;
 }
 
-void on_extract(void* UNUSED self, void* result) {
+void on_extract(void* self UNUSED, void* result) {
     QImageReader* reader = q_imagereader_new5(FILENAME, "png");
 
     if (!q_imagereader_can_read(reader)) {

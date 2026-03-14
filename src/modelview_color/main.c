@@ -1,14 +1,14 @@
 #include <libqt6c.h>
 
-int on_row_count(void* UNUSED self, void* UNUSED index) {
+int on_row_count(void* self UNUSED, void* index UNUSED) {
     return 1000;
 }
 
-int on_column_count(void* UNUSED self, void* UNUSED index) {
+int on_column_count(void* self UNUSED, void* index UNUSED) {
     return 1;
 }
 
-QVariant* on_data(void* UNUSED self, void* index, int role) {
+QVariant* on_data(void* self UNUSED, void* index, int role) {
     switch (role) {
     case QT_ITEMDATAROLE_FOREGROUNDROLE:
         if (q_modelindex_row(index) % 2 == 0) {

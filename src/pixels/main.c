@@ -15,7 +15,7 @@ static QStatusBar* status_bar = NULL;
 static QGraphicsScene* scene = NULL;
 static QGraphicsView* view = NULL;
 
-void scene_key_press_event(void* UNUSED self, void* event) {
+void scene_key_press_event(void* self UNUSED, void* event) {
     int key = q_keyevent_key(event);
     switch (key) {
     case QT_KEY_Key_0:
@@ -27,7 +27,7 @@ void scene_key_press_event(void* UNUSED self, void* event) {
     }
 }
 
-void scene_wheel_event(void* UNUSED self, void* event) {
+void scene_wheel_event(void* self UNUSED, void* event) {
     if ((q_application_query_keyboard_modifiers() & QT_KEYBOARDMODIFIER_SHIFTMODIFIER) != 0) {
         if (q_graphicsscenewheelevent_delta(event) > 0) {
             q_graphicsview_scale(view, zoom_in_scale, zoom_in_scale);
@@ -37,7 +37,7 @@ void scene_wheel_event(void* UNUSED self, void* event) {
     }
 }
 
-void view_resize_event(void* self, void* UNUSED event) {
+void view_resize_event(void* self, void* event UNUSED) {
     QRectF* rect = q_graphicsscene_items_bounding_rect(scene);
     q_graphicsview_fit_in_view22(self, rect, QT_ASPECTRATIOMODE_KEEPASPECTRATIO);
 

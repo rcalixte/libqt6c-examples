@@ -75,7 +75,7 @@ static void map_cleanup() {
 }
 
 // AppTab methods
-static void handle_jump_to_bookmark(void* self, void* UNUSED current, void* UNUSED previous) {
+static void handle_jump_to_bookmark(void* self, void* current UNUSED, void* previous UNUSED) {
     AppTab* tab = map_get(self);
     if (!tab)
         return;

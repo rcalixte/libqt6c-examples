@@ -2,7 +2,7 @@
 
 static QLabel* status_label = NULL;
 
-void transaction_finished(void* UNUSED self, int status, uint UNUSED runtime) {
+void transaction_finished(void* self UNUSED, int status, uint runtime UNUSED) {
     if (status == PACKAGEKIT_TRANSACTION_EXIT_EXITSUCCESS) {
         q_label_set_text(status_label, "✅ Update check successful!");
     } else {

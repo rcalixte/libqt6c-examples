@@ -9,7 +9,7 @@ static QPushButton* right_button;
 static QAction* exit_action;
 static QMenu* file_menu;
 
-void on_triggered(void* UNUSED self) {
+void on_triggered(void* self UNUSED) {
     q_mainwindow_close(window);
 }
 
@@ -50,7 +50,7 @@ void retranslate() {
     libqt_free(quit_bind);
 }
 
-void on_current_text_changed(void* UNUSED self, const char* text) {
+void on_current_text_changed(void* self UNUSED, const char* text) {
     QLocale* locale = q_locale_new2(text);
     QTranslator* translator = q_translator_new();
     if (q_translator_load42(translator, locale, "lupdate", "_", "src/lupdate")) {

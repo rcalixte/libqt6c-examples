@@ -13,7 +13,7 @@ void to_next() {
     q_datawidgetmapper_to_next(mapper);
 }
 
-void update_buttons(void* UNUSED self, int index) {
+void update_buttons(void* self UNUSED, int index) {
     q_pushbutton_set_enabled(previous_button, index > 0);
     QModelIndex* model_index = q_modelindex_new3();
     q_pushbutton_set_enabled(next_button, index < q_sqlrelationaltablemodel_row_count(model, model_index) - 1);

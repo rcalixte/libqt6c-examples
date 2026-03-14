@@ -4,7 +4,7 @@ static QLabel* label;
 #define BUFFER_SIZE 64
 static char buffer[BUFFER_SIZE];
 
-void mouse_press_event(void* UNUSED self, void* event) {
+void mouse_press_event(void* self UNUSED, void* event) {
     int button = q_mouseevent_button(event);
     switch (button) {
     case QT_MOUSEBUTTON_LEFTBUTTON:
@@ -21,7 +21,7 @@ void mouse_press_event(void* UNUSED self, void* event) {
     }
 }
 
-void key_press_event(void* UNUSED self, void* event) {
+void key_press_event(void* self UNUSED, void* event) {
     int key = q_keyevent_key(event);
     snprintf(buffer, BUFFER_SIZE, "## You pressed key code: %d", key);
     q_label_set_text(label, buffer);

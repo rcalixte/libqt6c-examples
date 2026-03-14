@@ -4,11 +4,11 @@ static QDialog* dialog;
 static QTreeWidget* treewidget;
 static KTreeWidgetSearchLine* m_searchline;
 
-static void switch_case_sensitivity(void* UNUSED self, bool checked) {
+static void switch_case_sensitivity(void* self UNUSED, bool checked) {
     k_treewidgetsearchline_set_case_sensitivity(m_searchline, checked ? QT_CASESENSITIVITY_CASESENSITIVE : QT_CASESENSITIVITY_CASEINSENSITIVE);
 }
 
-static void switch_keep_parents_visible(void* UNUSED self, bool checked) {
+static void switch_keep_parents_visible(void* self UNUSED, bool checked) {
     k_treewidgetsearchline_set_keep_parents_visible(m_searchline, checked);
 }
 

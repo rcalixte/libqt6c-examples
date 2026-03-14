@@ -2,7 +2,7 @@
 
 static KTextEditor__Editor* editor;
 
-void toolbar_triggered(void* self, void* UNUSED action) {
+void toolbar_triggered(void* self, void* action UNUSED) {
     k_texteditor__editor_config_dialog(editor, self);
 }
 

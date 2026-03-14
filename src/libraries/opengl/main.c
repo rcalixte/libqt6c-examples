@@ -9,7 +9,7 @@ void initialize_g_l() {
     q_openglextrafunctions_gl_clear_color(glfuncs, 0.33, 0.33, 0.33, 1.0);
 }
 
-void resize_g_l(void* UNUSED self, int width, int height) {
+void resize_g_l(void* self UNUSED, int width, int height) {
     q_openglextrafunctions_gl_viewport(glfuncs, 0, 0, width, height);
 }
 

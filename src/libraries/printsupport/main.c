@@ -1,6 +1,6 @@
 #include <libqt6c.h>
 
-void onFinished(void* self, int UNUSED result) {
+void onFinished(void* self, int result UNUSED) {
     q_printdialog_delete_later(self);
 }
 

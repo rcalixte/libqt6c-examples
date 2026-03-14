@@ -2,7 +2,7 @@
 
 static const char* MP3_PATH = "src/libraries/multimedia/pixabay-public-domain-strong-hit-36455.mp3";
 
-void onPlaybackStateChanged(void* UNUSED player, int32_t state) {
+void onPlaybackStateChanged(void* player UNUSED, int32_t state) {
     printf("Playback state: %d\n", state);
 
     if (state == QMEDIAPLAYER_PLAYBACKSTATE_STOPPEDSTATE) {
