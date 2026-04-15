@@ -1,10 +1,11 @@
 .{
     .name = .libqt6c_examples,
     .version = "6.8.2",
+    .fingerprint = 0x221fd13f404bd8f9,
     .dependencies = .{
         .libqt6c = .{
-            .url = "https://github.com/rcalixte/libqt6c/archive/bb5a60c32c5424d751c22b6eaeb8dcf385a1a9c9.tar.gz",
-            .hash = "libqt6c-6.8.2-DLhhNhubnxOQlsnv_6r3JsTxJXRTLVloAEOvEyZn6xDI",
+            .url = "git+https://github.com/rcalixte/libqt6c#16e7bcc62f89c4f95aebbc5aa1eaa0cd75173169",
+            .hash = "libqt6c-6.8.2-DLhhNt0xoRNU5toFg3A_l28Klxqfz2giJ_ss-49v90HK",
         },
     },
     .paths = .{
@@ -15,5 +16,4 @@
         "build.zig.zon",
         "src",
     },
-    .fingerprint = 0x221fd13f404bd8f9,
 }
