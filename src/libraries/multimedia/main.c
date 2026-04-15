@@ -7,18 +7,14 @@ void onPlaybackStateChanged(void* player UNUSED, int32_t state) {
 
     if (state == QMEDIAPLAYER_PLAYBACKSTATE_STOPPEDSTATE) {
         printf("Playback complete.\n");
-        q_application_exit();
+        q_coreapplication_exit();
     }
 }
 
 int main(int argc, char* argv[]) {
-    QApplication* qapp = q_application_new(&argc, argv);
+    QCoreApplication* qapp = q_coreapplication_new(&argc, argv);
 
     QMediaPlayer* player = q_mediaplayer_new();
-    if (!player) {
-        fprintf(stderr, "Failed to create media player\n");
-        return 1;
-    }
 
     if (q_mediaplayer_error(player) != QMEDIAPLAYER_ERROR_NOERROR) {
         fprintf(stderr, "Failed to create player.\n");
@@ -27,11 +23,6 @@ int main(int argc, char* argv[]) {
     }
 
     QAudioOutput* output = q_audiooutput_new();
-    if (!output) {
-        fprintf(stderr, "Failed to create audio output\n");
-        q_mediaplayer_delete(player);
-        return 1;
-    }
 
     q_mediaplayer_set_audio_output(player, output);
     QUrl* url = q_url_new3(MP3_PATH);
@@ -43,12 +34,12 @@ int main(int argc, char* argv[]) {
     fprintf(stdout, "Playing %s\n", MP3_PATH);
     q_mediaplayer_play(player);
 
-    int result = q_application_exec();
+    int result = q_coreapplication_exec();
 
     q_url_delete(url);
     q_audiooutput_delete(output);
     q_mediaplayer_delete(player);
-    q_application_delete(qapp);
+    q_coreapplication_delete(qapp);
 
     return result;
 }

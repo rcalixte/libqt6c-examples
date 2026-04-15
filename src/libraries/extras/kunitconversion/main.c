@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
     QWidget* widget = q_widget_new2();
-    q_widget_set_window_title(widget, "Qt 6 KunitConversion Example");
+    q_widget_set_window_title(widget, "Qt 6 KUnitConversion Example");
     q_widget_set_fixed_size2(widget, 450, 300);
 
     QVBoxLayout* layout = q_vboxlayout_new(widget);

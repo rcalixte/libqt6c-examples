@@ -8,11 +8,10 @@ static char buffer[64];
 void on_value_changed(void* self, double value) {
     const char* name = q_doublespinbox_object_name(self);
 
-    if (strcmp(name, "lat") == 0) {
+    if (strcmp(name, "lat") == 0)
         q_geocoordinate_set_latitude(coord, value);
-    } else if (strcmp(name, "lon") == 0) {
+    else if (strcmp(name, "lon") == 0)
         q_geocoordinate_set_longitude(coord, value);
-    }
 
     const char* geotext = q_geocoordinate_to_string1(coord,
                                                      QGEOCOORDINATE_COORDINATEFORMAT_DEGREESWITHHEMISPHERE);

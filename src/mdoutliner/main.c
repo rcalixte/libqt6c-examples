@@ -46,23 +46,20 @@ static void map_put(void* key, AppTab* value) {
 }
 
 static AppTab* map_get(void* key) {
-    for (size_t i = 0; i < app_tab_map.size; i++) {
-        if (app_tab_map.keys[i] == key) {
+    for (size_t i = 0; i < app_tab_map.size; i++)
+        if (app_tab_map.keys[i] == key)
             return app_tab_map.values[i];
-        }
-    }
     return NULL;
 }
 
 static void map_remove(void* key) {
-    for (size_t i = 0; i < app_tab_map.size; i++) {
+    for (size_t i = 0; i < app_tab_map.size; i++)
         if (app_tab_map.keys[i] == key) {
             app_tab_map.keys[i] = app_tab_map.keys[app_tab_map.size - 1];
             app_tab_map.values[i] = app_tab_map.values[app_tab_map.size - 1];
             app_tab_map.size--;
             return;
         }
-    }
 }
 
 static void map_cleanup() {
@@ -117,9 +114,8 @@ static void update_outline_for_content(AppTab* tab, const char* content) {
 
     while (*ptr) {
         size_t i = 0;
-        while (*ptr && *ptr != '\n' && i < MAX_LINE_LENGTH - 1) {
+        while (*ptr && *ptr != '\n' && i < MAX_LINE_LENGTH - 1)
             line[i++] = *ptr++;
-        }
         line[i] = '\0';
         if (*ptr == '\n')
             ptr++;
@@ -233,9 +229,8 @@ static void handle_tab_close(void* self, int index) {
 static void handle_close_current_tab() {
     if (main_window) {
         int current_index = q_tabwidget_current_index(main_window->tabs);
-        if (current_index >= 0) {
+        if (current_index >= 0)
             handle_tab_close(main_window->tabs, current_index);
-        }
     }
 }
 

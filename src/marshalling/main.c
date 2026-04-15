@@ -3,9 +3,8 @@
 
 const char** on_mime_types() {
     const char** ret = (const char**)malloc(4 * sizeof(char*));
-    if (ret == NULL) {
+    if (ret == NULL)
         return NULL;
-    }
 
     ret[0] = "image/gif";
     ret[1] = "image/jpeg";
@@ -59,11 +58,9 @@ int main(int argc, char* argv[]) {
     QVersionNumber* version = q_versionnumber_new2(numbers);
     libqt_list segs_list = q_versionnumber_segments(version);
     int* segs = (int*)segs_list.data.ints;
-    for (size_t i = 0; i < segs_list.len; i++) {
-        if (segs[i]) {
+    for (size_t i = 0; i < segs_list.len; i++)
+        if (segs[i])
             printf("Segment %zu: %d\n", i, segs[i]);
-        }
-    }
     free(segs_list.data.ints);
     q_versionnumber_delete(version);
 
@@ -73,12 +70,11 @@ int main(int argc, char* argv[]) {
     q_inputdialog_set_combo_box_items(dialog, text);
     const char** items = q_inputdialog_combo_box_items(dialog);
     size_t items_len = libqt_strv_length(items);
-    for (size_t i = 0; i < items_len; i++) {
+    for (size_t i = 0; i < items_len; i++)
         if (items[i]) {
             printf("Combo box item %zu: %s\n", i + 1, items[i]);
             libqt_free(items[i]);
         }
-    }
     free(items);
     q_inputdialog_delete(dialog);
 
@@ -108,9 +104,8 @@ int main(int argc, char* argv[]) {
     QKeySequence** shortcuts_list = (QKeySequence**)shortcuts.data.ptr;
     for (size_t i = 0; i < shortcuts.len; i++) {
         QKeySequence* shortcut = shortcuts_list[i];
-        if (shortcut) {
+        if (shortcut)
             printf("Shortcut %zu: %s\n", i, q_keysequence_to_string(shortcut));
-        }
         q_keysequence_delete(shortcut);
     }
     q_action_delete(action);
@@ -203,9 +198,8 @@ int main(int argc, char* argv[]) {
         .values = map_values,
     };
     QHttpHeaders* qheaders = q_httpheaders_from_multi_map(map);
-    for (size_t i = 0; i < map.len; i++) {
+    for (size_t i = 0; i < map.len; i++)
         free(map_values[i]);
-    }
     free(map_keys);
     free(map_values);
     libqt_map header_map = q_httpheaders_to_multi_map(qheaders);
@@ -214,15 +208,13 @@ int main(int argc, char* argv[]) {
     for (size_t i = 0; i < header_map.len; i++) {
         printf("HTTP Header: %s: ", header_keys[i]);
         size_t count = 0;
-        while (header_values[i][count] != NULL) {
+        while (header_values[i][count] != NULL)
             count++;
-        }
         for (size_t j = 0; j < count; j++) {
             printf("%s", header_values[i][j]);
             libqt_free(header_values[i][j]);
-            if (j < count - 1) {
+            if (j < count - 1)
                 printf(",");
-            }
         }
         printf("\n");
         free(header_values[i]);
@@ -241,9 +233,8 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Failed to get easing function\n");
         abort();
     }
-    for (double i = 0; i < 3.0; i += 1.0) {
+    for (double i = 0; i < 3.0; i += 1.0)
         printf("Easing function value: %f\n", easing_func(i));
-    }
     q_easingcurve_delete(easing);
 
     q_application_delete(qapp);

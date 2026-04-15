@@ -5,11 +5,6 @@ int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
     QLineSeries* series = q_lineseries_new();
-    if (!series) {
-        fprintf(stderr, "Failed to create line series\n");
-        return 1;
-    }
-
     q_lineseries_set_name(series, "Sine Wave");
 
     double x = 0;

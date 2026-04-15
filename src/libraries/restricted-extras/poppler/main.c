@@ -8,9 +8,8 @@ int main(int argc, char* argv[]) {
 
     Poppler__Document* document = q_poppler__document_load(FILENAME);
     if (document == NULL || q_poppler__document_is_locked(document)) {
-        if (document != NULL) {
+        if (document != NULL)
             q_poppler__document_delete(document);
-        }
         fprintf(stderr, "Failed to load document: %s\n", FILENAME);
         q_application_quit();
         return 1;

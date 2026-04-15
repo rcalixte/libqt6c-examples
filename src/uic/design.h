@@ -5,7 +5,7 @@
 
 #include <libqt6c.h>
 
-/// The type definition for MainWindowUi
+/// The type definition for MainWindowUi containing all of the Qt objects
 typedef struct {
     QMainWindow* MainWindow;
     QWidget* centralwidget;
@@ -81,8 +81,10 @@ static void retranslate_main_window_ui(MainWindowUi* ui) {
 /// new_main_window_ui creates all the Qt objects for MainWindowUi
 static MainWindowUi* new_main_window_ui() {
     MainWindowUi* ui = (MainWindowUi*)malloc(sizeof(MainWindowUi));
-    if (ui == NULL)
-        return NULL;
+    if (ui == NULL) {
+        fprintf(stderr, "Failed to create MainWindowUi\n");
+        abort();
+    }
 
     ui->MainWindow = q_mainwindow_new2();
     q_mainwindow_set_object_name(ui->MainWindow, "MainWindow");

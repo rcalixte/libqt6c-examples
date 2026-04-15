@@ -24,7 +24,7 @@ typedef struct {
 
 void on_client_connected(void* self) {
     ClientDialog** client_dialog_data = (ClientDialog**)client_dialogs.data.ptr;
-    for (size_t i = 0; i < client_dialogs.len; i++) {
+    for (size_t i = 0; i < client_dialogs.len; i++)
         if (client_dialog_data[i]->socket == self) {
             q_textedit_append(client_dialog_data[i]->messages, "Connected!");
             q_lineedit_set_enabled(client_dialog_data[i]->input, true);
@@ -32,29 +32,26 @@ void on_client_connected(void* self) {
             q_lineedit_set_focus(client_dialog_data[i]->input);
             return;
         }
-    }
 }
 
 void on_client_message_received(void* self, const char* message) {
     ClientDialog** client_dialog_data = (ClientDialog**)client_dialogs.data.ptr;
-    for (size_t i = 0; i < client_dialogs.len; i++) {
+    for (size_t i = 0; i < client_dialogs.len; i++)
         if (client_dialog_data[i]->socket == self) {
             q_textedit_append(client_dialog_data[i]->messages, message);
             return;
         }
-    }
 }
 
 void on_client_error_occurred(void* self, int32_t error_val UNUSED) {
     const char* err_str = q_websocket_error_string(self);
     ClientDialog** client_dialog_data = (ClientDialog**)client_dialogs.data.ptr;
-    for (size_t i = 0; i < client_dialogs.len; i++) {
+    for (size_t i = 0; i < client_dialogs.len; i++)
         if (client_dialog_data[i]->socket == self) {
             q_textedit_append(client_dialog_data[i]->messages, "= Error =");
             q_textedit_append(client_dialog_data[i]->messages, err_str);
             return;
         }
-    }
     libqt_free(err_str);
 }
 
@@ -120,12 +117,11 @@ void send_message(ClientDialog* self) {
 
 void on_send_clicked(void* self) {
     ClientDialog** client_dialog_data = (ClientDialog**)client_dialogs.data.ptr;
-    for (size_t i = 0; i < client_dialogs.len; i++) {
+    for (size_t i = 0; i < client_dialogs.len; i++)
         if (client_dialog_data[i]->button == self) {
             send_message(client_dialog_data[i]);
             return;
         }
-    }
 }
 
 void connect_to_server(ClientDialog* self) {
@@ -258,9 +254,8 @@ int main(int argc, char* argv[]) {
         client_dialog_data[i] = (ClientDialog*)malloc(sizeof(ClientDialog));
         if (client_dialog_data[i] == NULL) {
             fprintf(stderr, "Failed to allocate memory for client dialog\n");
-            for (size_t j = 0; j < i; j++) {
+            for (size_t j = 0; j < i; j++)
                 free(client_dialog_data[j]);
-            }
             free(clients.data.ptr);
             free(client_dialogs.data.ptr);
             abort();
@@ -300,9 +295,8 @@ int main(int argc, char* argv[]) {
 
     for (size_t i = 0; i < clients.len; i++) {
         QWebSocket** client_data = (QWebSocket**)clients.data.ptr;
-        if (client_data[i] != NULL) {
+        if (client_data[i] != NULL)
             client_data[i] = NULL;
-        }
     }
     free(clients.data.ptr);
     for (size_t i = 0; i < NUM_CLIENTS; i++) {

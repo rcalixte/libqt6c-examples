@@ -23,11 +23,11 @@ void onFinished(void* dns) {
     }
     q_dnshostaddressrecord_delete(records.data.ptr);
 
-    q_application_exit();
+    q_coreapplication_exit();
 }
 
 int main(int argc, char* argv[]) {
-    QApplication* qapp = q_application_new(&argc, argv);
+    QCoreApplication* qapp = q_coreapplication_new(&argc, argv);
 
     printf("Looking up DNS info, please wait...");
 
@@ -35,9 +35,9 @@ int main(int argc, char* argv[]) {
     q_dnslookup_on_finished(dns, onFinished);
     q_dnslookup_lookup(dns);
 
-    int result = q_application_exec();
+    int result = q_coreapplication_exec();
 
-    q_application_delete(qapp);
+    q_coreapplication_delete(qapp);
 
     return result;
 }

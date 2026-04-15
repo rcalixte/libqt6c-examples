@@ -33,9 +33,8 @@ void on_context_menu_event(void* self, void* ev) {
     q_groupbox_super_context_menu_event(self, ev);
 
     currentColor++;
-    if (currentColor >= COLOR_COUNT) {
+    if (currentColor >= COLOR_COUNT)
         currentColor = 0;
-    }
     q_groupbox_update(self);
 }
 

@@ -13,18 +13,16 @@ void on_toggled(void* self UNUSED, bool checked) {
     q_pushbutton_set_enabled(button, checked);
     q_listwidget_set_enabled(list, checked);
 
-    if (!checked && q_bluetoothdevicediscoveryagent_is_active(agent)) {
+    if (!checked && q_bluetoothdevicediscoveryagent_is_active(agent))
         q_bluetoothdevicediscoveryagent_stop(agent);
-    }
 
     const char* text = checked ? "Bluetooth enabled." : "Bluetooth disabled.";
     q_label_set_text(status, text);
 }
 
 void on_clicked(void* self) {
-    if (q_bluetoothdevicediscoveryagent_is_active(agent)) {
+    if (q_bluetoothdevicediscoveryagent_is_active(agent))
         return;
-    }
 
     q_listwidget_clear(list);
     q_label_set_text(status, "Scanning...");

@@ -71,9 +71,8 @@ int main(int argc, char* argv[]) {
 
     q_widget_delete(widget);
 
-    for (size_t i = 0; i < all_countries.len; ++i) {
+    for (size_t i = 0; i < all_countries.len; ++i)
         k_country_delete(countries[i]);
-    }
     libqt_free(all_countries.data.ptr);
     q_application_delete(qapp);
 

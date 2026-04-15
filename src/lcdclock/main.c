@@ -7,9 +7,8 @@ void show_time() {
     lcd_time = q_time_current_time();
     char lcd_format[6] = "hh:mm";
 
-    if (q_time_second(lcd_time) % 2 == 0) {
+    if (q_time_second(lcd_time) % 2 == 0)
         lcd_format[2] = ' ';
-    }
 
     const char* text = q_time_to_string2(lcd_time, lcd_format);
     q_lcdnumber_display(lcd, text);

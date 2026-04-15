@@ -24,11 +24,9 @@ static void show_event(void* self, void* event) {
     q_dialog_super_show_event(self, event);
 
     QHeaderView* headerview = q_treewidget_header(treewidget);
-    for (size_t i = 0; i < (size_t)q_headerview_count(headerview); i++) {
-        if (!q_headerview_is_section_hidden(headerview, i)) {
+    for (size_t i = 0; i < (size_t)q_headerview_count(headerview); i++)
+        if (!q_headerview_is_section_hidden(headerview, i))
             q_treewidget_resize_column_to_contents(treewidget, i);
-        }
-    }
 }
 
 static void create3rdLevel(QTreeWidgetItem* item) {

@@ -1,6 +1,4 @@
-qapplication
 qcoreapplication
 qdnslookup
-qguiapplication
 qhostaddress
 qobject

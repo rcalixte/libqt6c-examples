@@ -7,8 +7,7 @@ int main(int argc, char* argv[]) {
 
     QPdfDocument* document = q_pdfdocument_new();
 
-    int err = q_pdfdocument_load(document, PDF_FILE);
-    if (err != QPDFDOCUMENT_ERROR_NONE) {
+    if (q_pdfdocument_load(document, PDF_FILE) != QPDFDOCUMENT_ERROR_NONE) {
         q_pdfdocument_delete(document);
         q_application_delete(qapp);
         fprintf(stderr, "Failed to load document: %s\n", PDF_FILE);

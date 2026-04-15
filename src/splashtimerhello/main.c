@@ -1,12 +1,11 @@
 #include <libqt6c.h>
 
 #define BUFFER_SIZE 64
+static size_t counter = 0;
+static char buffer[BUFFER_SIZE];
 
-static long counter = 0;
-
-void button_callback(void* self) {
+void on_clicked(void* self) {
     counter++;
-    char buffer[BUFFER_SIZE];
     snprintf(buffer, BUFFER_SIZE, "You have clicked the button %ld time(s)", counter);
     q_pushbutton_set_text(self, buffer);
 }
@@ -27,50 +26,23 @@ void timer_callback(void* self) {
 }
 
 int main(int argc, char* argv[]) {
-    // Initialize Qt application
     QApplication* qapp = q_application_new(&argc, argv);
 
     QPixmap* pixmap = q_pixmap_new4("assets/libqt6c-examples.png");
-    if (!pixmap) {
-        fprintf(stderr, "Failed to load pixmap\n");
-        return 1;
-    }
 
     QSplashScreen* splash = q_splashscreen_new4(pixmap, QT_WINDOWTYPE_WINDOWSTAYSONTOPHINT);
-    if (!splash) {
-        fprintf(stderr, "Failed to create splash screen\n");
-        return 1;
-    }
-
     q_splashscreen_on_mouse_press_event(splash, splash_mouse_press_event);
 
     QWidget* widget = q_widget_new2();
-    if (!widget) {
-        // we can use assert or check for null to simulate exception handling
-        // assert(widget != NULL);
-        fprintf(stderr, "Failed to create widget\n");
-        return 1;
-    }
-
-    // We don't need to free the button, it's a child of the widget
-    QPushButton* button = q_pushbutton_new5("Hello world!", widget);
-    if (!button) {
-        fprintf(stderr, "Failed to create button\n");
-        return 1;
-    }
-
     q_widget_set_window_title(widget, "Hello world");
 
+    QPushButton* button = q_pushbutton_new5("Hello world!", widget);
     q_pushbutton_set_fixed_width(button, 320);
-    q_pushbutton_on_clicked(button, button_callback);
+    q_pushbutton_on_clicked(button, on_clicked);
 
     q_splashscreen_show(splash);
 
     QTimer* timer = q_timer_new();
-    if (!timer) {
-        fprintf(stderr, "Failed to create timer\n");
-        return 1;
-    }
 
     QVariant* splash_qv = q_variant_new7((intptr_t)splash);
     q_timer_set_property(timer, "splash", splash_qv);

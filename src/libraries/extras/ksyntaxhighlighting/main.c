@@ -37,11 +37,10 @@ int main(int argc, char* argv[]) {
 
     KSyntaxHighlighting__Theme* theme;
 
-    if (lightness < 128) {
+    if (lightness < 128)
         theme = k_syntaxhighlighting__repository_default_theme1(repository, KSYNTAXHIGHLIGHTING_REPOSITORY_DEFAULTTHEME_DARKTHEME);
-    } else {
+    else
         theme = k_syntaxhighlighting__repository_default_theme1(repository, KSYNTAXHIGHLIGHTING_REPOSITORY_DEFAULTTHEME_LIGHTTHEME);
-    }
 
     k_syntaxhighlighting__syntaxhighlighter_set_theme(highlighter, theme);
     k_syntaxhighlighting__syntaxhighlighter_set_definition(highlighter, k_syntaxhighlighting__repository_definition_for_file_name(repository, SRCFILE));

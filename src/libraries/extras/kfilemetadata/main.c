@@ -13,9 +13,8 @@ static TextMapping text_mapping[] = {
 
 const char** on_mimetypes() {
     const char** ret = (const char**)malloc(2 * sizeof(char*));
-    if (ret == NULL) {
+    if (ret == NULL)
         return NULL;
-    }
 
     ret[0] = "image/png";
     ret[1] = NULL;

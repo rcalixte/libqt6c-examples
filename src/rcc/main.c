@@ -2,7 +2,6 @@
 #include "rcc.h"
 
 int main(int argc, char* argv[]) {
-    // Initialize Qt application
     QApplication* qapp = q_application_new(&argc, argv);
 
     bool ok = qrc_rcc_init();
@@ -14,21 +13,21 @@ int main(int argc, char* argv[]) {
 
     QHBoxLayout* hbox = q_hboxlayout_new(widget);
 
-    QRadioButton* radio1 = q_radiobutton_new(widget);
+    QRadioButton* radio1 = q_radiobutton_new2();
     q_radiobutton_set_tool_tip(radio1, "Qt");
     QIcon* icon1 = q_icon_new4(":/images/qt.png");
     q_radiobutton_set_icon(radio1, icon1);
     QSize* size1 = q_size_new4(50, 50);
     q_radiobutton_set_icon_size(radio1, size1);
 
-    QRadioButton* radio2 = q_radiobutton_new(widget);
+    QRadioButton* radio2 = q_radiobutton_new2();
     q_radiobutton_set_tool_tip(radio2, "C");
     QIcon* icon2 = q_icon_new4(":/images/c.png");
     q_radiobutton_set_icon(radio2, icon2);
     QSize* size2 = q_size_new4(50, 50);
     q_radiobutton_set_icon_size(radio2, size2);
 
-    QRadioButton* radio3 = q_radiobutton_new(widget);
+    QRadioButton* radio3 = q_radiobutton_new2();
     q_radiobutton_set_tool_tip(radio3, "libqt6c");
     QIcon* icon3 = q_icon_new4(":/images/libqt6c.png");
     q_radiobutton_set_icon(radio3, icon3);

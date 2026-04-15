@@ -29,11 +29,10 @@ void scene_key_press_event(void* self UNUSED, void* event) {
 
 void scene_wheel_event(void* self UNUSED, void* event) {
     if ((q_application_query_keyboard_modifiers() & QT_KEYBOARDMODIFIER_SHIFTMODIFIER) != 0) {
-        if (q_graphicsscenewheelevent_delta(event) > 0) {
+        if (q_graphicsscenewheelevent_delta(event) > 0)
             q_graphicsview_scale(view, zoom_in_scale, zoom_in_scale);
-        } else {
+        else
             q_graphicsview_scale(view, zoom_out_scale, zoom_out_scale);
-        }
     }
 }
 
@@ -55,9 +54,8 @@ void draw_pixel(QGraphicsPixmapItem* item, QPointF* pos) {
     int height = q_image_height(img);
     int width = q_image_width(img);
 
-    if (x < 0 || y < 0 || x >= width || y >= height) {
+    if (x < 0 || y < 0 || x >= width || y >= height)
         return;
-    }
 
     snprintf(buffer, MAX_BUFFER_SIZE, "x: %d, y: %d, r: %d, g: %d, b: %d", x, y, replacement_r, replacement_g, replacement_b);
     q_statusbar_show_message(status_bar, buffer);
@@ -93,9 +91,8 @@ void item_hover_move_event(void* self, void* event) {
     int height = q_image_height(img);
     int width = q_image_width(img);
 
-    if (x < 0 || y < 0 || x >= width || y >= height) {
+    if (x < 0 || y < 0 || x >= width || y >= height)
         return;
-    }
 
     QColor* color_value = q_image_pixel_color(img, x, y);
 
@@ -132,13 +129,12 @@ int main(int argc, char* argv[]) {
 
     QImage* image = q_image_new3(dX, dY, QIMAGE_FORMAT_FORMAT_ARGB32);
 
-    for (int x = 0; x < dX; x++) {
+    for (int x = 0; x < dX; x++)
         for (int y = 0; y < dY; y++) {
             QColor* color = q_color_new13(x, y * 3, x * 4, 255);
             q_image_set_pixel_color(image, x, y, color);
             q_color_delete(color);
         }
-    }
 
     QPixmap* pixmap = q_pixmap_from_image(image);
     QGraphicsPixmapItem* item = q_graphicspixmapitem_new2(pixmap);

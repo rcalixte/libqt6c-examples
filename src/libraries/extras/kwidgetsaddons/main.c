@@ -9,11 +9,10 @@ int main(int argc, char* argv[]) {
 
     int32_t res = k_messagebox_question_two_actions(NULL, "Description to tell you to click<br />on <b>either</b> button", "Qt 6 KMessageBox Example", primaryAction, secondaryAction, "", KMESSAGEBOX_OPTION_NOTIFY);
 
-    if (res == KMESSAGEBOX_BUTTONCODE_PRIMARYACTION) {
+    if (res == KMESSAGEBOX_BUTTONCODE_PRIMARYACTION)
         printf("You clicked Hello\n");
-    } else {
+    else
         printf("You clicked Bye\n");
-    }
 
     q_application_delete(qapp);
 

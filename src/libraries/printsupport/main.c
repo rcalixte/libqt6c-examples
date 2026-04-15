@@ -6,11 +6,6 @@ void onFinished(void* self, int result UNUSED) {
 
 void onPressed() {
     QPrintDialog* dialog = q_printdialog_new3();
-    if (!dialog) {
-        fprintf(stderr, "Failed to create print dialog\n");
-        return;
-    }
-
     q_printdialog_on_finished(dialog, onFinished);
     q_printdialog_show(dialog);
 }
@@ -19,11 +14,6 @@ int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
     QPushButton* button = q_pushbutton_new3("QPrintSupport sample");
-    if (!button) {
-        fprintf(stderr, "Failed to create button\n");
-        return 1;
-    }
-
     q_pushbutton_set_fixed_width(button, 320);
     q_pushbutton_on_pressed(button, onPressed);
     q_pushbutton_show(button);
