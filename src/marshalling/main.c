@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Failed to get easing function\n");
         abort();
     }
-    for (double i = 0; i < 3.0; i += 1.0)
+    for (double i = 0; i < 3; i += 1)
         printf("Easing function value: %f\n", easing_func(i));
     q_easingcurve_delete(easing);
 
