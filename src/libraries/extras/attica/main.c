@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     k_attica__project_set_license(project, "MIT");
 
     QWidget* widget = q_widget_new2();
-    q_widget_set_window_title(widget, "Qt 6 Example for Attica");
+    q_widget_set_window_title(widget, "Qt 6 Attica Example");
     q_widget_set_minimum_size2(widget, 350, 250);
 
     QLabel* desc = q_label_new3("Description:");
