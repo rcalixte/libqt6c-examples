@@ -1,7 +1,7 @@
 #include <libqt6c.h>
 
 static const char* FILENAME = "assets/example.pdf";
-static double DPI = 150.0;
+static double DPI = 150;
 
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
