@@ -35,16 +35,16 @@ int main(int argc, char* argv[]) {
 
     QDoubleSpinBox* lat = q_doublespinbox_new2();
     q_doublespinbox_set_object_name(lat, "lat");
-    q_doublespinbox_set_range(lat, -90.0, 90.0);
+    q_doublespinbox_set_range(lat, -90, 90);
     q_doublespinbox_set_decimals(lat, 5);
-    q_doublespinbox_set_value(lat, 0.0);
+    q_doublespinbox_set_value(lat, 0);
     q_doublespinbox_on_value_changed(lat, on_value_changed);
 
     QDoubleSpinBox* lon = q_doublespinbox_new2();
     q_doublespinbox_set_object_name(lon, "lon");
-    q_doublespinbox_set_range(lon, -180.0, 180.0);
+    q_doublespinbox_set_range(lon, -180, 180);
     q_doublespinbox_set_decimals(lon, 5);
-    q_doublespinbox_set_value(lon, 0.0);
+    q_doublespinbox_set_value(lon, 0);
     q_doublespinbox_on_value_changed(lon, on_value_changed);
 
     coord = q_geocoordinate_new2(q_doublespinbox_value(lat), q_doublespinbox_value(lon));
