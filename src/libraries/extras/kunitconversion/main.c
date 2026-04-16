@@ -17,7 +17,7 @@ void on_text_changed(void* self UNUSED, const char* param1 UNUSED) {
     }
 
     double value = atof(text);
-    if (value == 0.0 && strcmp(text, "0") != 0) {
+    if (value == 0 && strcmp(text, "0") != 0) {
         q_label_set_text(result, "### Invalid input");
         libqt_free(text);
         return;
