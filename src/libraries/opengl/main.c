@@ -6,7 +6,7 @@ void initialize_g_l() {
     glfuncs = q_openglcontext_extra_functions(q_openglcontext_current_context());
 
     q_openglextrafunctions_initialize_open_g_l_functions(glfuncs);
-    q_openglextrafunctions_gl_clear_color(glfuncs, 0.33, 0.33, 0.33, 1.0);
+    q_openglextrafunctions_gl_clear_color(glfuncs, 0.33, 0.33, 0.33, 1);
 }
 
 void resize_g_l(void* self UNUSED, int width, int height) {
