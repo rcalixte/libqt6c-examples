@@ -78,7 +78,9 @@ int main(int argc, char* argv[]) {
 
         q_variant_delete(data);
         libqt_free(description);
+        k_unitconversion__unit_delete(unit_data[i]);
     }
+    free(unit_data);
 
     input = q_lineedit_new2();
     q_lineedit_set_placeholder_text(input, "Enter a value");
