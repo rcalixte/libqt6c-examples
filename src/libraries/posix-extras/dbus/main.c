@@ -16,15 +16,23 @@ int main(int argc, char* argv[]) {
         .values = NULL,
     };
 
+    QVariant* variant_name = q_variant_new24("Qt 6 D-Bus Example");
+    QVariant* variant_id = q_variant_new5(0);
+    QVariant* variant_icon = q_variant_new24("dialog-information");
+    QVariant* variant_body = q_variant_new24("This is a test notification sent via D-Bus.");
+    QVariant* variant_actions = q_variant_new25(actions);
+    QVariant* variant_hints = q_variant_new22(hints);
+    QVariant* variant_timeout = q_variant_new4(-1);
+
     QVariant* arguments[] = {
-        q_variant_new24("Qt 6 D-Bus Example"),
-        q_variant_new5(0),
-        q_variant_new24("dialog-information"),
-        q_variant_new24("Qt 6 D-Bus Example"),
-        q_variant_new24("This is a test notification sent via D-Bus."),
-        q_variant_new25(actions),
-        q_variant_new22(hints),
-        q_variant_new4(-1),
+        variant_name,
+        variant_id,
+        variant_icon,
+        variant_name,
+        variant_body,
+        variant_actions,
+        variant_hints,
+        variant_timeout,
         NULL,
     };
     libqt_list args = qlist(arguments, 8);
@@ -38,6 +46,13 @@ int main(int argc, char* argv[]) {
         q_application_quit();
     }
 
+    q_variant_delete(variant_name);
+    q_variant_delete(variant_id);
+    q_variant_delete(variant_icon);
+    q_variant_delete(variant_body);
+    q_variant_delete(variant_actions);
+    q_variant_delete(variant_hints);
+    q_variant_delete(variant_timeout);
     q_dbusmessage_delete(reply);
     q_dbusmessage_delete(message);
     q_dbusconnection_delete(session_bus);
