@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
 
     int ret = q_application_exec();
 
+    k_colorschememanager_delete(manager);
     q_mainwindow_delete(window);
     q_application_delete(qapp);
 
