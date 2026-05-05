@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     QFile* file = q_file_new2(FORMFILE);
 
     if (q_file_open(file, QIODEVICEBASE_OPENMODEFLAG_READONLY)) {
-        QWidget* parent = q_widget_new2();
+        QWidget* parent = q_widget_new(widget);
         QWidget* form = q_formbuilder_load(builder, file, parent);
         q_vboxlayout_add_widget(layout, form);
         q_widget_resize(widget, 850, 550);
