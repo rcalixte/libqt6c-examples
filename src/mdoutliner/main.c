@@ -28,7 +28,15 @@ static struct {
 // Map functions
 static void map_init(size_t initial_capacity) {
     app_tab_map.keys = (void**)malloc(initial_capacity * sizeof(void*));
+    if (!app_tab_map.keys) {
+        fprintf(stderr, "Failed to allocate memory for app_tab_map.keys\n");
+        abort();
+    }
     app_tab_map.values = (AppTab**)malloc(initial_capacity * sizeof(AppTab*));
+    if (!app_tab_map.values) {
+        fprintf(stderr, "Failed to allocate memory for app_tab_map.values\n");
+        abort();
+    }
     app_tab_map.capacity = initial_capacity;
     app_tab_map.size = 0;
 }
@@ -78,27 +86,20 @@ static void handle_jump_to_bookmark(void* self, void* current UNUSED, void* prev
         return;
 
     QListWidgetItem* item = q_listwidget_current_item(self);
-    if (!item)
-        return;
 
     QVariant* line_number_variant = q_listwidgetitem_data(item, LINE_NUMBER_ROLE);
     int line_number = q_variant_to_int(line_number_variant);
     q_variant_delete(line_number_variant);
+
     QTextDocument* doc = q_textedit_document(tab->textArea);
-    if (!doc)
-        return;
-
     QTextBlock* block = q_textdocument_find_block_by_line_number(doc, line_number);
-    if (!block)
-        return;
-
     QTextCursor* cursor = q_textcursor_new4(block);
-    if (!cursor)
-        return;
 
     q_textcursor_set_position(cursor, q_textblock_position(block));
     q_textedit_set_text_cursor(tab->textArea, cursor);
     q_textedit_set_focus(tab->textArea);
+
+    q_textblock_delete(block);
     q_textcursor_delete(cursor);
 }
 
@@ -108,17 +109,16 @@ static void update_outline_for_content(AppTab* tab, const char* content) {
     char line[MAX_LINE_LENGTH];
     char prev_line[MAX_LINE_LENGTH];
     char tooltip[32];
-    const char* ptr = content;
     bool in_code_block = false;
     int line_number = 0;
 
-    while (*ptr) {
+    while (*content) {
         size_t i = 0;
-        while (*ptr && *ptr != '\n' && i < MAX_LINE_LENGTH - 1)
-            line[i++] = *ptr++;
+        while (*content && *content != '\n' && i < MAX_LINE_LENGTH - 1)
+            line[i++] = *content++;
         line[i] = '\0';
-        if (*ptr == '\n')
-            ptr++;
+        if (*content == '\n')
+            content++;
 
         if (!in_code_block) {
             if (line[0] == '#') {
@@ -163,8 +163,10 @@ static void handle_text_changed(void* self) {
 
 static AppTab* new_app_tab() {
     AppTab* tab = (AppTab*)malloc(sizeof(AppTab));
-    if (!tab)
-        return NULL;
+    if (!tab) {
+        fprintf(stderr, "Failed to allocate memory for AppTab\n");
+        abort();
+    }
 
     tab->tab = q_widget_new2();
     QHBoxLayout* layout = q_hboxlayout_new(tab->tab);
@@ -226,7 +228,7 @@ static void handle_tab_close(void* self, int index) {
     }
 }
 
-static void handle_close_current_tab() {
+static void handle_close_current_tab(void* self UNUSED) {
     if (main_window) {
         int current_index = q_tabwidget_current_index(main_window->tabs);
         if (current_index >= 0)
@@ -237,8 +239,6 @@ static void handle_close_current_tab() {
 static void create_tab_with_contents(AppWindow* window, const char* title, const char* content) {
     AppTab* tab = new_app_tab();
     // the new tab is cleaned up during handle_tab_close
-    if (!tab)
-        return;
 
     q_textedit_set_text(tab->textArea, content);
 
@@ -247,13 +247,14 @@ static void create_tab_with_contents(AppWindow* window, const char* title, const
     q_icon_delete(icon);
 
     q_tabwidget_set_current_index(window->tabs, idx);
+    map_put(tab->textArea, tab);
 }
 
-static void handle_new_tab() {
+static void handle_new_tab(void* self UNUSED) {
     create_tab_with_contents(main_window, "New Document", "");
 }
 
-static void handle_file_open() {
+static void handle_file_open(void* self UNUSED) {
     const char* fname = q_filedialog_get_open_file_name4(
         main_window->w,
         "Open markdown file...",
@@ -294,10 +295,20 @@ static void handle_file_open() {
     libqt_free(fname);
 }
 
+static void handle_exit(void* self UNUSED) {
+    q_application_quit();
+}
+
+static void handle_about(void* self UNUSED) {
+    q_application_about_qt();
+}
+
 static AppWindow* new_app_window() {
     AppWindow* window = (AppWindow*)malloc(sizeof(AppWindow));
-    if (!window)
-        return NULL;
+    if (!window) {
+        fprintf(stderr, "Failed to allocate memory for AppWindow\n");
+        abort();
+    }
 
     window->w = q_mainwindow_new2();
     q_mainwindow_set_window_title(window->w, "Markdown Outliner");
@@ -335,7 +346,7 @@ static AppWindow* new_app_window() {
     QIcon* exit_icon = q_icon_from_theme("application-exit");
     q_action_set_icon(exit_action, exit_icon);
     q_icon_delete(exit_icon);
-    q_action_on_triggered(exit_action, q_coreapplication_quit);
+    q_action_on_triggered(exit_action, handle_exit);
 
     // Help menu
     QMenu* help_menu = q_menubar_add_menu2(menubar, "&Help");
@@ -346,7 +357,7 @@ static AppWindow* new_app_window() {
     QKeySequence* about_shortcut = q_keysequence_new2("F1");
     q_action_set_shortcut(about_action, about_shortcut);
     q_keysequence_delete(about_shortcut);
-    q_action_on_triggered(about_action, q_application_about_qt);
+    q_action_on_triggered(about_action, handle_about);
 
     q_mainwindow_set_menu_bar(window->w, menubar);
 
@@ -365,7 +376,9 @@ static AppWindow* new_app_window() {
     q_mainwindow_set_central_widget(window->w, window->tabs);
 
     // Add initial tab
-    const char* readme = "# Welcome\n\n## This is a basic markdown editor.\n\n- You can use the outline on the left to jump to parts of the document\n- Demonstrates use of the Qt library bindings for C\n";
+    const char* readme = "# Welcome\n\n## This is a basic markdown editor.\n\n"
+                         "- You can use the outline on the left to jump to parts of the document\n"
+                         "- Demonstrates use of the Qt library bindings for C\n";
     create_tab_with_contents(window, "README.md", readme);
 
     main_window = window;
@@ -378,16 +391,15 @@ int main(int argc, char* argv[]) {
     map_init(INITIAL_MAP_CAPACITY);
 
     AppWindow* app = new_app_window();
-    if (!app) {
-        fprintf(stderr, "Failed to create application window\n");
-        return 1;
-    }
 
     q_mainwindow_show(app->w);
     int result = q_application_exec();
 
     // Cleanup
+    for (size_t i = 0; i < app_tab_map.size; i++)
+        handle_tab_close(main_window->tabs, 0);
     map_cleanup();
+    q_mainwindow_delete(app->w);
     free(app);
 
     q_application_delete(qapp);
