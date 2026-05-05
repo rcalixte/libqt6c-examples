@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
+    k_completion_delete(completion);
     q_widget_delete(widget);
     q_application_delete(qapp);
 
