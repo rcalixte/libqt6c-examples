@@ -91,6 +91,12 @@ void on_locale_changed(void* self UNUSED, void* locale) {
     reset();
     q_combobox_clear(ui->voice);
 
+    if (voices.len > 0) {
+        QVoice** voice_data = voices.data.ptr;
+        for (size_t i = 0; i < voices.len; i++)
+            free(voices.data.ptr);
+    }
+
     voices = q_texttospeech_available_voices(speech);
     QVoice** voice_data = voices.data.ptr;
     QVoice* current = q_texttospeech_voice(speech);
@@ -151,6 +157,7 @@ void on_engine_ready() {
         char* name = malloc(len + 1);
         if (!name) {
             fprintf(stderr, "Failed to allocate memory for text\n");
+            free(locale_data);
             abort();
         }
 
@@ -159,14 +166,16 @@ void on_engine_ready() {
         q_combobox_add_item22(ui->language, name, variant);
         const char* locale_name = q_locale_name(locale_data[i]);
         if (strcmp(locale_name, current_name) == 0)
-            current = locale_data[i];
+            q_locale_operator_assign(current, locale_data[i]);
 
+        q_locale_delete(locale_data[i]);
         libqt_free(locale_name);
         q_variant_delete(variant);
         libqt_free(name);
         libqt_free(territory);
         libqt_free(language);
     }
+    free(locale_data);
 
     on_rate_changed(ui->rate, q_slider_value(ui->rate));
     on_pitch_changed(ui->pitch, q_slider_value(ui->pitch));
@@ -195,13 +204,14 @@ void on_engine_selected(void* self, int index) {
         q_texttospeech_delete(speech);
 
     speech = q_texttospeech_new5(engine_name, ui->MainWindow);
+
+    libqt_free(engine_name);
+    q_variant_delete(variant);
+
     if (q_texttospeech_state(speech) == QTEXTTOSPEECH_STATE_READY)
         on_engine_ready();
     else
         q_texttospeech_on_state_changed(speech, on_state_changed);
-
-    libqt_free(engine_name);
-    q_variant_delete(variant);
 }
 
 int main(int argc, char* argv[]) {
@@ -232,6 +242,15 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
+    if (voices.len > 0) {
+        QVoice** voice_data = voices.data.ptr;
+        for (size_t i = 0; i < voices.len; i++)
+            q_voice_delete(voice_data[i]);
+        free(voices.data.ptr);
+    }
+
+    if (speech != NULL)
+        q_texttospeech_delete(speech);
     cleanup_main_window_ui(ui);
     q_application_delete(qapp);
 
