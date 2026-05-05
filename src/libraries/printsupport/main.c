@@ -1,19 +1,16 @@
 #include <libqt6c.h>
 
-void onFinished(void* self, int result UNUSED) {
-    q_printdialog_delete_later(self);
-}
+static QPushButton* button = NULL;
 
 void onPressed() {
-    QPrintDialog* dialog = q_printdialog_new3();
-    q_printdialog_on_finished(dialog, onFinished);
+    QPrintDialog* dialog = q_printdialog_new(button);
     q_printdialog_show(dialog);
 }
 
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
-    QPushButton* button = q_pushbutton_new3("QPrintSupport sample");
+    button = q_pushbutton_new3("QPrintSupport sample");
     q_pushbutton_set_fixed_width(button, 320);
     q_pushbutton_on_pressed(button, onPressed);
     q_pushbutton_show(button);
