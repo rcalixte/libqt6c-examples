@@ -104,10 +104,14 @@ int main(int argc, char* argv[]) {
     QKeySequence** shortcuts_list = (QKeySequence**)shortcuts.data.ptr;
     for (size_t i = 0; i < shortcuts.len; i++) {
         QKeySequence* shortcut = shortcuts_list[i];
-        if (shortcut)
-            printf("Shortcut %zu: %s\n", i, q_keysequence_to_string(shortcut));
+        const char* qkey_tostring = q_keysequence_to_string(shortcut);
+        printf("Shortcut %zu: %s\n", i, qkey_tostring);
+        libqt_free(qkey_tostring);
         q_keysequence_delete(shortcut);
     }
+    free(shortcuts_list);
+    for (size_t i = 0; i < keyList.len; i++)
+        q_keysequence_delete(keyData[i]);
     q_action_delete(action);
 
     // QByteArray
@@ -158,12 +162,14 @@ int main(int argc, char* argv[]) {
         const char* value_str = q_variant_to_string(value);
         printf("QMap[%s]: %s\n", key, value_str);
         libqt_free(value_str);
+        q_variant_delete(value);
         libqt_free(key);
-        free(value);
     }
     free(values);
     free(keys);
     q_jsonobject_delete(qtobj);
+    for (size_t i = 0; i < input_map.len; i++)
+        q_variant_delete(map_value[i]);
     free(map_value);
     free(map_key);
 
@@ -200,8 +206,8 @@ int main(int argc, char* argv[]) {
     QHttpHeaders* qheaders = q_httpheaders_from_multi_map(map);
     for (size_t i = 0; i < map.len; i++)
         free(map_values[i]);
-    free(map_keys);
     free(map_values);
+    free(map_keys);
     libqt_map header_map = q_httpheaders_to_multi_map(qheaders);
     char** header_keys = header_map.keys;
     char*** header_values = header_map.values;
