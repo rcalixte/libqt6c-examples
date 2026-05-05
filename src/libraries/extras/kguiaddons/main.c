@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     q_label_set_alignment(label, QT_ALIGNMENTFLAG_ALIGNCENTER);
     q_label_set_style_sheet(label, "font: bold;");
 
-    KDateValidator* validator = k_datevalidator_new();
+    KDateValidator* validator = k_datevalidator_new2(input);
     q_lineedit_set_validator(input, validator);
 
     QVBoxLayout* layout = q_vboxlayout_new(widget);
