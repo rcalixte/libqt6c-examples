@@ -20,6 +20,7 @@ void onFinished(void* dns) {
         printf("- %s\n", addr_str);
         libqt_free(addr_str);
         q_hostaddress_delete(value);
+        q_dnshostaddressrecord_delete(results[i]);
     }
     q_dnshostaddressrecord_delete(records.data.ptr);
 
