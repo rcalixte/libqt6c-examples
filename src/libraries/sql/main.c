@@ -112,6 +112,8 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
+    q_styleditemdelegate_delete(relational_delegate);
+    q_sqltablemodel_delete(rel_model);
     q_sqlrelation_delete(relation);
     q_sqlquery_delete(query);
     q_sqldatabase_delete(db);
