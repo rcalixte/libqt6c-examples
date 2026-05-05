@@ -94,9 +94,10 @@ int main(int argc, char* argv[]) {
             free(text);
             libqt_free(value_str);
             libqt_free(name);
-            free(values[i][j]);
+            q_variant_delete(values[i][j]);
         }
         k_filemetadata__propertyinfo_delete(info);
+        free(values[i]);
     }
 
     q_listwidget_show(listwidget);
