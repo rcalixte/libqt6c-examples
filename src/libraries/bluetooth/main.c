@@ -44,6 +44,7 @@ void on_device_discovered(void* self UNUSED, void* info) {
 
     q_listwidget_add_item(list, title);
 
+    q_bluetoothaddress_delete(address);
     libqt_free(address_str);
     libqt_free(name);
 }
