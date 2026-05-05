@@ -6,7 +6,7 @@ int main(int argc, char* argv[]) {
     KFileCustomDialog* dialog = k_filecustomdialog_new2();
     k_filecustomdialog_set_window_title(dialog, "Qt 6 KIO Example");
 
-    QLabel* label = q_label_new3("Select a file or directory");
+    QLabel* label = q_label_new5("Select a file or directory", dialog);
 
     k_filecustomdialog_set_custom_widget(dialog, label);
 
