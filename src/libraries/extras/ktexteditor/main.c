@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
 
     QMainWindow* window = q_mainwindow_new2();
     q_mainwindow_set_window_title(window, "Qt 6 KTextEditor Example");
-    q_mainwindow_set_minimum_size2(window, 1100, 900);
+    q_mainwindow_set_minimum_size2(window, 1100, 920);
 
     editor = k_texteditor__editor_instance();
     KTextEditor__Document* doc = k_texteditor__editor_create_document(editor, window);
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 
     k_texteditor__document_set_modified_on_disk_warning(doc, true);
 
-    KTextEditor__View* view = k_texteditor__document_create_view(doc, window, window);
+    KTextEditor__View* view = k_texteditor__document_create_view(doc, window, NULL);
 
     QToolBar* toolbar = q_toolbar_new3();
     q_toolbar_add_action2(toolbar, "Configure");
@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
+    k_texteditor__editor_delete_later(editor);
     q_mainwindow_delete(window);
     q_application_delete(qapp);
 
