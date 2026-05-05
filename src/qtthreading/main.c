@@ -71,7 +71,8 @@ int main(int argc, char* argv[]) {
 
     // Get CPU count for thread count
     size_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
-    thread_count = thread_count < 2 ? 2 : thread_count > 16 ? 16 : thread_count;
+    thread_count = thread_count < 2 ? 2 : thread_count > 16 ? 16
+                                                            : thread_count;
 
     // This will serve as our parent object. When we deallocate it, all the
     // children will be deallocated as well. Because this is not
