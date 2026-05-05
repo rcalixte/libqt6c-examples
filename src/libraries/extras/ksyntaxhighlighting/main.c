@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    QPlainTextEdit* plain_text_edit = q_plaintextedit_new2();
+    QPlainTextEdit* plain_text_edit = q_plaintextedit_new(window);
 
     QFont* font = q_font_new6("DejaVu Sans Mono", 13);
 
@@ -43,13 +43,18 @@ int main(int argc, char* argv[]) {
         theme = k_syntaxhighlighting__repository_default_theme1(repository, KSYNTAXHIGHLIGHTING_REPOSITORY_DEFAULTTHEME_LIGHTTHEME);
 
     k_syntaxhighlighting__syntaxhighlighter_set_theme(highlighter, theme);
-    k_syntaxhighlighting__syntaxhighlighter_set_definition(highlighter, k_syntaxhighlighting__repository_definition_for_file_name(repository, SRCFILE));
+    KSyntaxHighlighting__Definition* definition = k_syntaxhighlighting__repository_definition_for_file_name(repository, SRCFILE);
+    k_syntaxhighlighting__syntaxhighlighter_set_definition(highlighter, definition);
 
     q_mainwindow_show(window);
 
     int result = q_application_exec();
 
+    k_syntaxhighlighting__definition_delete(definition);
+    k_syntaxhighlighting__theme_delete(theme);
+    k_syntaxhighlighting__repository_delete(repository);
     k_syntaxhighlighting__syntaxhighlighter_delete(highlighter);
+    q_textdocument_delete(document);
     libqt_free(text);
     q_file_close(file);
     q_mainwindow_delete(window);
