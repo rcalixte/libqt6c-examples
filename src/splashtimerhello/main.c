@@ -13,7 +13,7 @@ void on_clicked(void* self) {
 void splash_mouse_press_event() {
 }
 
-void timer_callback(void* self) {
+void on_timeout(void* self) {
     QVariant* splash_qv = q_timer_property(self, "splash");
     uint64_t splash = q_variant_to_u_long_long(splash_qv);
 
@@ -23,6 +23,9 @@ void timer_callback(void* self) {
     q_splashscreen_close((QSplashScreen*)splash);
     q_widget_show((QWidget*)widget);
     q_timer_stop(self);
+
+    q_variant_delete(widget_qv);
+    q_variant_delete(splash_qv);
 }
 
 int main(int argc, char* argv[]) {
@@ -51,7 +54,7 @@ int main(int argc, char* argv[]) {
     q_timer_set_property(timer, "widget", widget_qv);
 
     q_timer_start(timer, 3000);
-    q_timer_on_timeout(timer, timer_callback);
+    q_timer_on_timeout(timer, on_timeout);
 
     int result = q_application_exec();
 
