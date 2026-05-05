@@ -33,7 +33,7 @@ void on_activate_requested(void* self UNUSED, bool active, void* pos) {
 
     snprintf(text, len + 1, fmt, active_str, x, y);
     q_textedit_append(text_edit, text);
-    libqt_free(text);
+    free(text);
 }
 
 void on_secondary_activate_requested(void* self UNUSED, void* pos) {
@@ -50,7 +50,7 @@ void on_secondary_activate_requested(void* self UNUSED, void* pos) {
 
     snprintf(text, len + 1, fmt, x, y);
     q_textedit_append(text_edit, text);
-    libqt_free(text);
+    free(text);
 }
 
 void on_scroll_requested(void* self UNUSED, int delta, int32_t orientation) {
@@ -66,7 +66,7 @@ void on_scroll_requested(void* self UNUSED, int delta, int32_t orientation) {
 
     snprintf(text, len + 1, fmt, orientation_str, delta);
     q_textedit_append(text_edit, text);
-    libqt_free(text);
+    free(text);
 }
 
 void on_close_event(void* self UNUSED, void* event UNUSED) {
@@ -145,6 +145,7 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
+    q_menu_delete(sub_menu);
     q_textedit_delete(text_edit);
     k_statusnotifieritem_delete(status_notifier_item);
     q_application_delete(qapp);
