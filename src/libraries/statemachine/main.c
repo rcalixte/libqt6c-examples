@@ -17,8 +17,10 @@ void on_paint_event(void* self, void* event UNUSED) {
     QVariant* on_variant = q_widget_property(self, "on");
     uint64_t on_value = q_variant_to_long_long(on_variant);
     bool* on = (bool*)on_value;
-    if (!*on)
+    if (!*on) {
+        q_variant_delete(on_variant);
         return;
+    }
 
     QVariant* color_variant = q_widget_property(self, "color");
     int32_t color = q_variant_to_int(color_variant);
@@ -37,6 +39,8 @@ void on_paint_event(void* self, void* event UNUSED) {
     int32_t y = (height - size) / 2;
     q_stylepainter_draw_ellipse3(painter, x, y, size, size);
 
+    q_variant_delete(color_variant);
+    q_variant_delete(on_variant);
     q_brush_delete(brush);
     q_stylepainter_delete(painter);
 }
@@ -151,6 +155,9 @@ void on_entered(void* self) {
 
     turn_on(light);
     q_timer_start2(timer);
+
+    q_variant_delete(timer_variant);
+    q_variant_delete(light_variant);
 }
 
 void on_exited(void* self) {
@@ -159,6 +166,8 @@ void on_exited(void* self) {
     LightWidget* light = (LightWidget*)light_value;
 
     turn_off(light);
+
+    q_variant_delete(light_variant);
 }
 
 QState* create_light_state(LightWidget* light, int32_t duration) {
@@ -222,6 +231,9 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
+    q_state_delete(yellow_going_red);
+    q_state_delete(green_going_yellow);
+    q_state_delete(red_going_green);
     cleanup_traffic_widget(traffic_widget);
     q_widget_delete(traffic_light);
     q_application_delete(qapp);
