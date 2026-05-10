@@ -4,7 +4,7 @@
 #include <time.h>
 
 typedef struct Counter {
-    int32_t counter;
+    uint32_t counter;
     QLabel* label;
     bool running;
     pthread_t thread;
@@ -19,6 +19,7 @@ typedef struct ButtonData {
 
 void async_update(void* ctx) {
     Counter* counter = (Counter*)ctx;
+    counter->counter++;
     snprintf(counter->buffer, sizeof(counter->buffer), "%d %ld", counter->counter, time(NULL));
     q_label_set_text(counter->label, counter->buffer);
 }
@@ -27,7 +28,6 @@ void* run_counter(void* arg) {
     Counter* counter = (Counter*)arg;
     while (counter->running) {
         q_threading_async(counter, async_update);
-        counter->counter++;
         usleep(100);
     }
     return NULL;
