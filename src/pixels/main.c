@@ -49,7 +49,7 @@ void draw_pixel(QGraphicsPixmapItem* item, QPointF* pos) {
 
     QPixmap* pm = q_graphicspixmapitem_pixmap(item);
     QImage* img = q_pixmap_to_image(pm);
-    QColor* color = q_color_new14(replacement_r, replacement_g, replacement_b, 255);
+    QColor* color = q_color_new15(replacement_r, replacement_g, replacement_b, 255);
 
     int height = q_image_height(img);
     int width = q_image_width(img);
@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
 
     for (int x = 0; x < dX; x++)
         for (int y = 0; y < dY; y++) {
-            QColor* color = q_color_new14(x, y * 3, x * 4, 255);
+            QColor* color = q_color_new15(x, y * 3, x * 4, 255);
             q_image_set_pixel_color(image, x, y, color);
             q_color_delete(color);
         }
