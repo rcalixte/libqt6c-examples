@@ -4,6 +4,7 @@ qabstractscrollarea
 qaction
 qapplication
 qcheckbox
+qcolor
 qcoreapplication
 qdialog
 qeasingcurve
@@ -16,6 +17,7 @@ qinputdialog
 qiodevice
 qjsonobject
 qkeysequence
+qlocale
 qobject
 qpaintdevice
 qsize
@@ -24,3 +26,4 @@ qtablewidget
 qvariant
 qversionnumber
 qwidget
+qxmlstream

@@ -69,12 +69,10 @@ int main(int argc, char* argv[]) {
     const char* text[] = {"foo", "bar", "baz", "quux", NULL};
     q_inputdialog_set_combo_box_items(dialog, text);
     const char** items = q_inputdialog_combo_box_items(dialog);
-    size_t items_len = libqt_strv_length(items);
-    for (size_t i = 0; i < items_len; i++)
-        if (items[i]) {
-            printf("Combo box item %zu: %s\n", i + 1, items[i]);
-            libqt_free(items[i]);
-        }
+    for (size_t i = 0; items[i] != NULL; i++) {
+        printf("Combo box item %zu: %s\n", i + 1, items[i]);
+        libqt_free(items[i]);
+    }
     free(items);
     q_inputdialog_delete(dialog);
 
@@ -82,8 +80,7 @@ int main(int argc, char* argv[]) {
     QTableWidget* table = q_tablewidget_new2();
     q_tablewidget_on_mime_types(table, on_mime_types);
     const char** table_mime_types = q_tablewidget_mime_types(table);
-    size_t table_mime_len = libqt_strv_length(table_mime_types);
-    for (size_t i = 0; i < table_mime_len; i++) {
+    for (size_t i = 0; table_mime_types[i] != NULL; i++) {
         printf("MimeTypes[%zu]: %s\n", i, table_mime_types[i]);
         libqt_free(table_mime_types[i]);
     }
@@ -129,6 +126,24 @@ int main(int argc, char* argv[]) {
     printf("Value: %s\n", value);
     libqt_free(value);
     q_object_delete(object);
+
+    // QLatin1StringView
+    QColor* color = q_color_new11("blue");
+    const char* color_name = q_color_name(color);
+    printf("Color name: %s\n", color_name);
+    libqt_free(color_name);
+    q_color_delete(color);
+
+    // QStringView
+    uint16_t locale = q_locale_code_to_script("Latn");
+    printf("Locale script: %d\n", locale);
+    QXmlStreamReader* reader = q_xmlstreamreader_new3("<?xml version=\"1.0\"?><foo>bar</foo>");
+    if (q_xmlstreamreader_read_next_start_element(reader)) {
+        const char* name = q_xmlstreamreader_name(reader);
+        printf("XML Name: %s\n", name);
+        libqt_free(name);
+    }
+    q_xmlstreamreader_delete(reader);
 
     // QMap<QString, QVariant>
     libqt_map input_map;
