@@ -6,7 +6,7 @@ static char buffer[BUFFER_SIZE];
 
 void on_clicked(void* self) {
     counter++;
-    snprintf(buffer, BUFFER_SIZE, "You have clicked the button %ld time(s)", counter);
+    snprintf(buffer, BUFFER_SIZE, "You have clicked the button %zu time(s)", counter);
     q_pushbutton_set_text(self, buffer);
 }
 
