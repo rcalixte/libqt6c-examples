@@ -4,7 +4,7 @@
 #define BUS_PATH "/org/freedesktop/Notifications"
 
 int main(int argc, char* argv[]) {
-    QApplication* qapp = q_application_new(&argc, argv);
+    QCoreApplication* qapp = q_coreapplication_new(&argc, argv);
 
     QDBusConnection* session_bus = q_dbusconnection_session_bus();
     QDBusMessage* message = q_dbusmessage_create_method_call(BUS_NAME, BUS_PATH, BUS_NAME, "Notify");
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 
     if (q_dbusmessage_type(reply) != QDBUSMESSAGE_MESSAGETYPE_REPLYMESSAGE) {
         printf("Failed to send message\n");
-        q_application_quit();
+        q_coreapplication_quit();
     }
 
     q_variant_delete(variant_name);
@@ -56,5 +56,5 @@ int main(int argc, char* argv[]) {
     q_dbusmessage_delete(reply);
     q_dbusmessage_delete(message);
     q_dbusconnection_delete(session_bus);
-    q_application_delete(qapp);
+    q_coreapplication_delete(qapp);
 }

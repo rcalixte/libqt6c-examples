@@ -1,7 +1,5 @@
-qapplication
 qcoreapplication
 qdbusconnection
 qdbusmessage
-qguiapplication
 qobject
 qvariant
