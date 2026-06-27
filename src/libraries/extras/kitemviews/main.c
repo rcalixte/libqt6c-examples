@@ -133,6 +133,9 @@ int main(int argc, char* argv[]) {
     q_dialog_resize(dialog, 350, 600);
     q_dialog_on_show_event(dialog, show_event);
 
-    q_dialog_exec(dialog);
+    int result = q_dialog_exec(dialog);
+
     q_application_delete(qapp);
+
+    return result;
 }
