@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     QAudioOutput* output = q_audiooutput_new();
 
     q_mediaplayer_set_audio_output(player, output);
-    QUrl* url = q_url_new3(MP3_PATH);
+    QUrl* url = q_url_from_local_file(MP3_PATH);
     q_mediaplayer_set_source(player, url);
     q_audiooutput_set_volume(output, 50);
 
