@@ -1,12 +1,12 @@
 #include <libqt6c.h>
 
 void onFinished(void* dns) {
-    q_dnslookup_delete_later(dns);
-
     if (q_dnslookup_error(dns) != QDNSLOOKUP_ERROR_NOERROR) {
         const char* error_str = q_dnslookup_error_string(dns);
-        printf("DNS lookup failed: %s\n", error_str);
+        printf("\nDNS lookup failed: %s\n", error_str);
         libqt_free(error_str);
+        q_dnslookup_delete_later(dns);
+        q_coreapplication_exit1(q_dnslookup_error(dns));
         return;
     }
 
@@ -24,6 +24,7 @@ void onFinished(void* dns) {
     }
     q_dnshostaddressrecord_delete(records.data.ptr);
 
+    q_dnslookup_delete_later(dns);
     q_coreapplication_exit();
 }
 
