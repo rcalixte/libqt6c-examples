@@ -6,10 +6,6 @@ int on_row_count(void* self UNUSED, void* index UNUSED) {
     return 1000;
 }
 
-int on_column_count(void* self UNUSED, void* index UNUSED) {
-    return 1;
-}
-
 QVariant* on_data(void* self UNUSED, void* index, int role) {
     switch (role) {
     case QT_ITEMDATAROLE_FOREGROUNDROLE:
@@ -52,7 +48,6 @@ int main(int argc, char* argv[]) {
 
     QAbstractListModel* model = q_abstractlistmodel_new();
 
-    q_abstractlistmodel_on_column_count(model, on_column_count);
     q_abstractlistmodel_on_row_count(model, on_row_count);
     q_abstractlistmodel_on_data(model, on_data);
 
