@@ -94,7 +94,8 @@ void on_locale_changed(void* self UNUSED, void* locale) {
     if (voices.len > 0) {
         QVoice** voice_data = voices.data.ptr;
         for (size_t i = 0; i < voices.len; i++)
-            free(voices.data.ptr);
+            q_voice_delete(voice_data[i]);
+        free(voices.data.ptr);
     }
 
     voices = q_texttospeech_available_voices(speech);
