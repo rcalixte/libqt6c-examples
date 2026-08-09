@@ -6,6 +6,10 @@ void on_clicked(void* self UNUSED, void* index) {
     k_colorschememanager_activate_scheme(manager, index);
 }
 
+void on_rejected(void* self UNUSED) {
+    q_application_quit();
+}
+
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
@@ -19,7 +23,7 @@ int main(int argc, char* argv[]) {
     q_listview_on_clicked(listview, on_clicked);
 
     QDialogButtonBox* box = q_dialogbuttonbox_new7(QDIALOGBUTTONBOX_STANDARDBUTTON_CLOSE, window);
-    q_dialogbuttonbox_on_rejected(box, q_application_quit);
+    q_dialogbuttonbox_on_rejected(box, on_rejected);
 
     QWidget* widget = q_widget_new2();
     QVBoxLayout* layout = q_vboxlayout_new(widget);
