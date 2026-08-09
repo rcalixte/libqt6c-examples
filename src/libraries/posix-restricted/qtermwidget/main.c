@@ -1,5 +1,9 @@
 #include <libqt6c.h>
 
+void on_finished(void* self) {
+    q_termwidget_close(self);
+}
+
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
@@ -7,7 +11,7 @@ int main(int argc, char* argv[]) {
     q_termwidget_set_window_title(term, "Qt 6 QTermWidget Example");
     q_termwidget_set_minimum_size2(term, 640, 480);
     q_termwidget_set_color_scheme(term, "WhiteOnBlack");
-    q_termwidget_on_finished(term, q_application_quit);
+    q_termwidget_on_finished(term, on_finished);
 
     q_termwidget_show(term);
 
