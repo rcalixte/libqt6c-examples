@@ -35,7 +35,6 @@ int main(int argc, char* argv[]) {
 
     // Ownership of the created widgets will be transferred to the widget via the layout
     QVBoxLayout* vboxlayout = q_vboxlayout_new2();
-    QLabel* label = q_label_new3("Select a country:");
     QComboBox* country_combo = q_combobox_new2();
     emoji_flag_label = q_label_new2();
     QFont* font = q_font_new2("Noto Color Emoji");
@@ -57,7 +56,7 @@ int main(int argc, char* argv[]) {
 
     q_combobox_on_current_index_changed(country_combo, on_current_index_changed);
 
-    q_vboxlayout_add_widget(vboxlayout, label);
+    q_vboxlayout_add_widget(vboxlayout, q_label_new3("Select a country:"));
     q_vboxlayout_add_widget(vboxlayout, country_combo);
     q_vboxlayout_add_stretch(vboxlayout);
     q_vboxlayout_add_widget(vboxlayout, emoji_flag_label);
