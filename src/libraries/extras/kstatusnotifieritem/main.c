@@ -131,9 +131,10 @@ int main(int argc, char* argv[]) {
     k_statusnotifieritem_on_secondary_activate_requested(status_notifier_item, on_secondary_activate_requested);
     k_statusnotifieritem_on_scroll_requested(status_notifier_item, on_scroll_requested);
 
-    q_messagebox_information(NULL, title,
-                             "Check your system tray for the status notifier item icon.\n\n"
-                             "In order to quit the example, close the text edit window or quit via the system tray menu.");
+    q_messagebox_information(
+        NULL, title,
+        "Check your system tray for the status notifier item icon.\n\n"
+        "In order to quit the example, close the text edit window or quit via the system tray menu.");
 
     text_edit = q_textedit_new3("Logged activity:");
     q_textedit_set_read_only(text_edit, true);
