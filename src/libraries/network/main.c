@@ -1,6 +1,6 @@
 #include <libqt6c.h>
 
-void onFinished(void* dns) {
+void on_finished(void* dns) {
     if (q_dnslookup_error(dns) != QDNSLOOKUP_ERROR_NOERROR) {
         const char* error_str = q_dnslookup_error_string(dns);
         printf("\nDNS lookup failed: %s\n", error_str);
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     printf("Looking up DNS info, please wait...");
 
     QDnsLookup* dns = q_dnslookup_new2(QDNSLOOKUP_TYPE_A, "google.com");
-    q_dnslookup_on_finished(dns, onFinished);
+    q_dnslookup_on_finished(dns, on_finished);
     q_dnslookup_lookup(dns);
 
     int result = q_coreapplication_exec();
