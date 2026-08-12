@@ -1,6 +1,5 @@
 #include <libqt6c.h>
 #include <pthread.h>
-#include <stdbool.h>
 #include <time.h>
 
 static char buffer[32];
@@ -35,7 +34,7 @@ void* run_counter(void* arg) {
 }
 
 void on_clicked(void* button) {
-    QVariant* variant = q_pushbutton_property(button, "buttonData");
+    QVariant* variant = q_pushbutton_property(button, "button_data");
     uint64_t ptr_val = q_variant_to_u_long_long(variant);
     ButtonData* data = (ButtonData*)ptr_val;
     q_variant_delete(variant);
@@ -139,7 +138,7 @@ int main(int argc, char* argv[]) {
     // Create a QVariant to store the pointer and use Qt's property system
     // to store it on the button
     QVariant* variant = q_variant_new7((intptr_t)button_data);
-    q_pushbutton_set_property(button, "buttonData", variant);
+    q_pushbutton_set_property(button, "button_data", variant);
 
     q_mainwindow_show(window);
 
