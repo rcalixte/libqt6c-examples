@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdbool.h>
 
 const char** on_mime_types() {
     const char** ret = (const char**)malloc(4 * sizeof(char*));
@@ -224,8 +223,8 @@ int main(int argc, char* argv[]) {
     free(map_values);
     free(map_keys);
     libqt_map header_map = q_httpheaders_to_multi_map(qheaders);
-    char** header_keys = header_map.keys;
-    char*** header_values = header_map.values;
+    char** header_keys = (char**)header_map.keys;
+    char*** header_values = (char***)header_map.values;
     for (size_t i = 0; i < header_map.len; i++) {
         printf("HTTP Header: %s: ", header_keys[i]);
         size_t count = 0;
