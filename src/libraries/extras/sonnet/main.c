@@ -16,7 +16,8 @@ int main(int argc, char* argv[]) {
 
     Sonnet__DictionaryComboBox* comboBox = k_sonnet__dictionarycombobox_new2();
     QTextEdit* textedit1 = q_textedit_new2();
-    q_textedit_set_text(textedit1, "This is a sample buffer. Whih this thingg will be checkin for misstakes. Whih, Enviroment, covermant. Whih.");
+    q_textedit_set_text(textedit1, "This is a sample buffer. Whih this thingg will be checkin for misstakes."
+                                   " Whih, Enviroment, covermant. Whih.");
 
     Sonnet__SpellCheckDecorator* installer1 = k_sonnet__spellcheckdecorator_new(textedit1);
     highlighter1 = k_sonnet__spellcheckdecorator_highlighter(installer1);
