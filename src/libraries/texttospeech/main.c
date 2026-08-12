@@ -79,7 +79,8 @@ void on_state_changed(void* self UNUSED, int32_t state) {
 
     q_pushbutton_set_enabled(ui->pauseButton, state == QTEXTTOSPEECH_STATE_SPEAKING);
     q_pushbutton_set_enabled(ui->resumeButton, state == QTEXTTOSPEECH_STATE_PAUSED);
-    q_pushbutton_set_enabled(ui->stopButton, state == QTEXTTOSPEECH_STATE_SPEAKING || state == QTEXTTOSPEECH_STATE_PAUSED);
+    q_pushbutton_set_enabled(ui->stopButton,
+                             state == QTEXTTOSPEECH_STATE_SPEAKING || state == QTEXTTOSPEECH_STATE_PAUSED);
 }
 
 void on_locale_changed(void* self UNUSED, void* locale) {
