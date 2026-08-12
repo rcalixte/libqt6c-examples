@@ -59,7 +59,9 @@ int main(int argc, char* argv[]) {
     KUnitConversion__Converter* converter = k_unitconversion__converter_new();
 
     // Update the category type to change the units!
-    KUnitConversion__UnitCategory* category = k_unitconversion__converter_category2(converter, KUNITCONVERSION_CATEGORYID_LENGTHCATEGORY);
+    KUnitConversion__UnitCategory* category = k_unitconversion__converter_category2(
+        converter,
+        KUNITCONVERSION_CATEGORYID_LENGTHCATEGORY);
 
     from = q_combobox_new2();
     to = q_combobox_new2();
