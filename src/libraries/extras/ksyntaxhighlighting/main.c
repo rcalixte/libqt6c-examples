@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
 
     QMainWindow* window = q_mainwindow_new2();
     q_mainwindow_set_window_title(window, "Qt 6 KSyntaxHighlighting Example");
-    q_mainwindow_set_minimum_size2(window, 1600, 750);
+    q_mainwindow_set_minimum_size2(window, 1200, 750);
 
     QFile* file = q_file_new4(SRCFILE, window);
 
@@ -33,17 +33,25 @@ int main(int argc, char* argv[]) {
     KSyntaxHighlighting__SyntaxHighlighter* highlighter = k_syntaxhighlighting__syntaxhighlighter_new2(document);
     KSyntaxHighlighting__Repository* repository = k_syntaxhighlighting__repository_new();
 
-    int lightness = q_color_lightness((void*)q_palette_color2((void*)q_plaintextedit_palette(plain_text_edit), QPALETTE_COLORROLE_BASE));
+    int lightness = q_color_lightness((void*)q_palette_color2(
+        (void*)q_plaintextedit_palette(plain_text_edit),
+        QPALETTE_COLORROLE_BASE));
 
     KSyntaxHighlighting__Theme* theme;
 
     if (lightness < 128)
-        theme = k_syntaxhighlighting__repository_default_theme1(repository, KSYNTAXHIGHLIGHTING_REPOSITORY_DEFAULTTHEME_DARKTHEME);
+        theme = k_syntaxhighlighting__repository_default_theme1(
+            repository,
+            KSYNTAXHIGHLIGHTING_REPOSITORY_DEFAULTTHEME_DARKTHEME);
     else
-        theme = k_syntaxhighlighting__repository_default_theme1(repository, KSYNTAXHIGHLIGHTING_REPOSITORY_DEFAULTTHEME_LIGHTTHEME);
+        theme = k_syntaxhighlighting__repository_default_theme1(
+            repository,
+            KSYNTAXHIGHLIGHTING_REPOSITORY_DEFAULTTHEME_LIGHTTHEME);
 
     k_syntaxhighlighting__syntaxhighlighter_set_theme(highlighter, theme);
-    KSyntaxHighlighting__Definition* definition = k_syntaxhighlighting__repository_definition_for_file_name(repository, SRCFILE);
+    KSyntaxHighlighting__Definition* definition = k_syntaxhighlighting__repository_definition_for_file_name(
+        repository,
+        SRCFILE);
     k_syntaxhighlighting__syntaxhighlighter_set_definition(highlighter, definition);
 
     q_mainwindow_show(window);
