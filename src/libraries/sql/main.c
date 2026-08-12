@@ -16,7 +16,8 @@ void to_next() {
 void update_buttons(void* self UNUSED, int index) {
     q_pushbutton_set_enabled(previous_button, index > 0);
     QModelIndex* model_index = q_modelindex_new3();
-    q_pushbutton_set_enabled(next_button, index < q_sqlrelationaltablemodel_row_count(model, model_index) - 1);
+    q_pushbutton_set_enabled(next_button,
+                             index < q_sqlrelationaltablemodel_row_count(model, model_index) - 1);
     q_modelindex_delete(model_index);
 }
 
@@ -31,7 +32,8 @@ int main(int argc, char* argv[]) {
         q_messagebox_critical42(
             widget,
             "Cannot open database",
-            "Unable to establish a database connection.\nThis example needs SQLite support. Please read the Qt SQL driver documentation for information on how to build it.",
+            "Unable to establish a database connection.\nThis example needs SQLite support. "
+            "Please read the Qt SQL driver documentation for information on how to build it.",
             QMESSAGEBOX_STANDARDBUTTON_CANCEL);
 
         q_widget_delete(widget);
@@ -41,18 +43,28 @@ int main(int argc, char* argv[]) {
 
     // Setup the main table
     QSqlQuery* query = q_sqlquery_new2();
-    q_sqlquery_exec(query, "create table person (id int primary key, name varchar(20), address varchar(200), typeid int)");
-    q_sqlquery_exec(query, "insert into person values(1, 'Alice', '<qt>123 Main Street<br/>Market Town</qt>', 101)");
-    q_sqlquery_exec(query, "insert into person values(2, 'Bob', '<qt>PO Box 32<br/>Mail Handling Service<br/>Service City</qt>', 102)");
-    q_sqlquery_exec(query, "insert into person values(3, 'Carol', '<qt>The Lighthouse<br/>Remote Island</qt>', 103)");
-    q_sqlquery_exec(query, "insert into person values(4, 'Donald', '<qt>47338 Park Avenue<br/>Big City</qt>', 101)");
-    q_sqlquery_exec(query, "insert into person values(5, 'Emma', '<qt>Research Station<br/>Base Camp<br/>Big Mountain</qt>', 103)");
+    q_sqlquery_exec(query,
+                    "create table person (id int primary key, name varchar(20), address varchar(200), typeid int)");
+    q_sqlquery_exec(query,
+                    "insert into person values(1, 'Alice', '<qt>123 Main Street<br/>Market Town</qt>', 101)");
+    q_sqlquery_exec(query,
+                    "insert into person values(2, 'Bob', '<qt>PO Box 32<br/>Mail Handling Service<br/>Service City</qt>', 102)");
+    q_sqlquery_exec(query,
+                    "insert into person values(3, 'Carol', '<qt>The Lighthouse<br/>Remote Island</qt>', 103)");
+    q_sqlquery_exec(query,
+                    "insert into person values(4, 'Donald', '<qt>47338 Park Avenue<br/>Big City</qt>', 101)");
+    q_sqlquery_exec(query,
+                    "insert into person values(5, 'Emma', '<qt>Research Station<br/>Base Camp<br/>Big Mountain</qt>', 103)");
 
     // Setup the address table
-    q_sqlquery_exec(query, "create table addresstype (id int, description varchar(20))");
-    q_sqlquery_exec(query, "insert into addresstype values(101, 'Home')");
-    q_sqlquery_exec(query, "insert into addresstype values(102, 'Work')");
-    q_sqlquery_exec(query, "insert into addresstype values(103, 'Other')");
+    q_sqlquery_exec(query,
+                    "create table addresstype (id int, description varchar(20))");
+    q_sqlquery_exec(query,
+                    "insert into addresstype values(101, 'Home')");
+    q_sqlquery_exec(query,
+                    "insert into addresstype values(102, 'Work')");
+    q_sqlquery_exec(query,
+                    "insert into addresstype values(103, 'Other')");
 
     model = q_sqlrelationaltablemodel_new2(widget);
     q_sqlrelationaltablemodel_set_table(model, "person");
@@ -80,14 +92,17 @@ int main(int argc, char* argv[]) {
 
     QSqlTableModel* rel_model = q_sqlrelationaltablemodel_relation_model(model, type_index);
     q_combobox_set_model(type_combobox, rel_model);
-    q_combobox_set_model_column(type_combobox, q_sqltablemodel_field_index(rel_model, "description"));
+    q_combobox_set_model_column(type_combobox,
+                                q_sqltablemodel_field_index(rel_model, "description"));
 
     mapper = q_datawidgetmapper_new2(widget);
     q_datawidgetmapper_set_model(mapper, model);
     QStyledItemDelegate* relational_delegate = q_styleditemdelegate_new2(mapper);
     q_datawidgetmapper_set_item_delegate(mapper, relational_delegate);
-    q_datawidgetmapper_add_mapping(mapper, name_edit, q_sqlrelationaltablemodel_field_index(model, "name"));
-    q_datawidgetmapper_add_mapping(mapper, address_edit, q_sqlrelationaltablemodel_field_index(model, "address"));
+    q_datawidgetmapper_add_mapping(mapper, name_edit,
+                                   q_sqlrelationaltablemodel_field_index(model, "name"));
+    q_datawidgetmapper_add_mapping(mapper, address_edit,
+                                   q_sqlrelationaltablemodel_field_index(model, "address"));
     q_datawidgetmapper_add_mapping(mapper, type_combobox, type_index);
 
     q_pushbutton_on_clicked(previous_button, to_previous);
