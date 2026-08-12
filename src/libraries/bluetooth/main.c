@@ -29,7 +29,8 @@ void on_clicked(void* self) {
     q_pushbutton_set_enabled(self, false);
     q_bluetoothdevicediscoveryagent_start2(
         agent,
-        QBLUETOOTHDEVICEDISCOVERYAGENT_DISCOVERYMETHOD_CLASSICMETHOD | QBLUETOOTHDEVICEDISCOVERYAGENT_DISCOVERYMETHOD_LOWENERGYMETHOD);
+        QBLUETOOTHDEVICEDISCOVERYAGENT_DISCOVERYMETHOD_CLASSICMETHOD |
+            QBLUETOOTHDEVICEDISCOVERYAGENT_DISCOVERYMETHOD_LOWENERGYMETHOD);
 }
 
 void on_device_discovered(void* self UNUSED, void* info) {
