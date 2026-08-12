@@ -7,7 +7,10 @@ int main(int argc, char* argv[]) {
     QCoreApplication* qapp = q_coreapplication_new(&argc, argv);
 
     QDBusConnection* session_bus = q_dbusconnection_session_bus();
-    QDBusMessage* message = q_dbusmessage_create_method_call(BUS_NAME, BUS_PATH, BUS_NAME, "Notify");
+    QDBusMessage* message = q_dbusmessage_create_method_call(BUS_NAME,
+                                                             BUS_PATH,
+                                                             BUS_NAME,
+                                                             "Notify");
 
     const char* actions[] = {NULL};
     libqt_map hints = {
