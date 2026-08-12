@@ -2,14 +2,16 @@
 
 static QDialog* dialog;
 static QTreeWidget* treewidget;
-static KTreeWidgetSearchLine* m_searchline;
+static KTreeWidgetSearchLine* searchline;
 
 static void switch_case_sensitivity(void* self UNUSED, bool checked) {
-    k_treewidgetsearchline_set_case_sensitivity(m_searchline, checked ? QT_CASESENSITIVITY_CASESENSITIVE : QT_CASESENSITIVITY_CASEINSENSITIVE);
+    k_treewidgetsearchline_set_case_sensitivity(searchline, checked
+                                                                ? QT_CASESENSITIVITY_CASESENSITIVE
+                                                                : QT_CASESENSITIVITY_CASEINSENSITIVE);
 }
 
 static void switch_keep_parents_visible(void* self UNUSED, bool checked) {
-    k_treewidgetsearchline_set_keep_parents_visible(m_searchline, checked);
+    k_treewidgetsearchline_set_keep_parents_visible(searchline, checked);
 }
 
 static void on_accepted() {
@@ -29,7 +31,7 @@ static void show_event(void* self, void* event) {
             q_treewidget_resize_column_to_contents(treewidget, i);
 }
 
-static void create3rdLevel(QTreeWidgetItem* item) {
+static void create_third_level(QTreeWidgetItem* item) {
     const char* growing[] = {"Growing", "$2.00", "", "Farmer", NULL};
     q_treewidgetitem_new7(item, growing);
     const char* ripe[] = {"Ripe", "$8.00", "", "Market", NULL};
@@ -40,26 +42,26 @@ static void create3rdLevel(QTreeWidgetItem* item) {
     q_treewidgetitem_new7(item, pickled);
 }
 
-static void create2ndLevel(QTreeWidgetItem* item) {
+static void create_second_level(QTreeWidgetItem* item) {
     const char* beans_s[] = {"Beans", NULL};
     QTreeWidgetItem* beans = q_treewidgetitem_new7(item, beans_s);
     q_treewidget_expand_item(treewidget, beans);
-    create3rdLevel(beans);
+    create_third_level(beans);
 
     const char* grapes_s[] = {"Grapes", NULL};
     QTreeWidgetItem* grapes = q_treewidgetitem_new7(item, grapes_s);
     q_treewidget_expand_item(treewidget, grapes);
-    create3rdLevel(grapes);
+    create_third_level(grapes);
 
     const char* plums_s[] = {"Plums", NULL};
     QTreeWidgetItem* plums = q_treewidgetitem_new7(item, plums_s);
     q_treewidget_expand_item(treewidget, plums);
-    create3rdLevel(plums);
+    create_third_level(plums);
 
     const char* bananas_s[] = {"Bananas", NULL};
     QTreeWidgetItem* bananas = q_treewidgetitem_new7(item, bananas_s);
     q_treewidget_expand_item(treewidget, bananas);
-    create3rdLevel(bananas);
+    create_third_level(bananas);
 }
 
 int main(int argc, char* argv[]) {
@@ -77,7 +79,7 @@ int main(int argc, char* argv[]) {
     q_treewidget_hide_column(treewidget, 2);
 
     KTreeWidgetSearchLineWidget* searchwidget = k_treewidgetsearchlinewidget_new3(dialog, treewidget);
-    m_searchline = k_treewidgetsearchlinewidget_search_line(searchwidget);
+    searchline = k_treewidgetsearchlinewidget_search_line(searchwidget);
 
     const char* red_s[] = {"Red", NULL};
     QTreeWidgetItem* red = q_treewidgetitem_new4(treewidget, red_s);
@@ -97,29 +99,28 @@ int main(int argc, char* argv[]) {
     QTreeWidgetItem* yellow = q_treewidgetitem_new4(treewidget, yellow_s);
     q_treewidget_expand_item(treewidget, yellow);
 
-    create2ndLevel(red);
-    create2ndLevel(blue);
-    create2ndLevel(green);
-    create2ndLevel(yellow);
+    create_second_level(red);
+    create_second_level(blue);
+    create_second_level(green);
+    create_second_level(yellow);
 
     QVBoxLayout* vboxlayout = q_vboxlayout_new(dialog);
     QHBoxLayout* hboxlayout = q_hboxlayout_new2();
 
     QPushButton* case_sensitive = q_pushbutton_new5("&Case Sensitive", dialog);
-    q_hboxlayout_add_widget(hboxlayout, case_sensitive);
-
     q_pushbutton_set_checkable(case_sensitive, true);
     q_pushbutton_on_toggled(case_sensitive, switch_case_sensitivity);
+    q_hboxlayout_add_widget(hboxlayout, case_sensitive);
 
     QPushButton* keep_parents_visible = q_pushbutton_new5("Keep &Parents Visible", dialog);
-    q_hboxlayout_add_widget(hboxlayout, keep_parents_visible);
-
     q_pushbutton_set_checkable(keep_parents_visible, true);
     q_pushbutton_set_checked(keep_parents_visible, true);
     q_pushbutton_on_toggled(keep_parents_visible, switch_keep_parents_visible);
+    q_hboxlayout_add_widget(hboxlayout, keep_parents_visible);
 
     QDialogButtonBox* buttonbox = q_dialogbuttonbox_new(dialog);
-    q_dialogbuttonbox_set_standard_buttons(buttonbox, QDIALOGBUTTONBOX_STANDARDBUTTON_OK | QDIALOGBUTTONBOX_STANDARDBUTTON_CANCEL);
+    q_dialogbuttonbox_set_standard_buttons(buttonbox, QDIALOGBUTTONBOX_STANDARDBUTTON_OK |
+                                                          QDIALOGBUTTONBOX_STANDARDBUTTON_CANCEL);
 
     q_dialogbuttonbox_on_accepted(buttonbox, on_accepted);
     q_dialogbuttonbox_on_rejected(buttonbox, on_rejected);
@@ -129,7 +130,7 @@ int main(int argc, char* argv[]) {
     q_vboxlayout_add_layout(vboxlayout, hboxlayout);
     q_vboxlayout_add_widget(vboxlayout, buttonbox);
 
-    k_treewidgetsearchline_set_focus(m_searchline);
+    k_treewidgetsearchline_set_focus(searchline);
     q_dialog_resize(dialog, 350, 600);
     q_dialog_on_show_event(dialog, show_event);
 
