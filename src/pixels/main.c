@@ -2,8 +2,8 @@
 
 static float zoom_in_scale = 1.25;
 static float zoom_out_scale = 0.8;
-static int dX = 32;
-static int dY = 64;
+static int d_x = 32;
+static int d_y = 64;
 static int replacement_r = 255;
 static int replacement_g = 255;
 static int replacement_b = 255;
@@ -57,7 +57,9 @@ void draw_pixel(QGraphicsPixmapItem* item, QPointF* pos) {
     if (x < 0 || y < 0 || x >= width || y >= height)
         return;
 
-    snprintf(buffer, MAX_BUFFER_SIZE, "x: %d, y: %d, r: %d, g: %d, b: %d", x, y, replacement_r, replacement_g, replacement_b);
+    snprintf(buffer, MAX_BUFFER_SIZE,
+             "x: %d, y: %d, r: %d, g: %d, b: %d",
+             x, y, replacement_r, replacement_g, replacement_b);
     q_statusbar_show_message(status_bar, buffer);
 
     q_image_set_pixel_color(img, x, y, color);
@@ -100,7 +102,9 @@ void item_hover_move_event(void* self, void* event) {
     int g = q_color_green(color_value);
     int b = q_color_blue(color_value);
 
-    snprintf(buffer, MAX_BUFFER_SIZE, "x: %d, y: %d, r: %d, g: %d, b: %d", x, y, r, g, b);
+    snprintf(buffer, MAX_BUFFER_SIZE,
+             "x: %d, y: %d, r: %d, g: %d, b: %d",
+             x, y, r, g, b);
     q_statusbar_show_message(status_bar, buffer);
 
     q_color_delete(color_value);
@@ -127,10 +131,10 @@ int main(int argc, char* argv[]) {
     q_graphicsscene_on_wheel_event(scene, scene_wheel_event);
     q_graphicsview_on_resize_event(view, view_resize_event);
 
-    QImage* image = q_image_new3(dX, dY, QIMAGE_FORMAT_FORMAT_ARGB32);
+    QImage* image = q_image_new3(d_x, d_y, QIMAGE_FORMAT_FORMAT_ARGB32);
 
-    for (int x = 0; x < dX; x++)
-        for (int y = 0; y < dY; y++) {
+    for (int x = 0; x < d_x; x++)
+        for (int y = 0; y < d_y; y++) {
             QColor* color = q_color_new15(x, y * 3, x * 4, 255);
             q_image_set_pixel_color(image, x, y, color);
             q_color_delete(color);
