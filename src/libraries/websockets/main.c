@@ -223,7 +223,8 @@ void on_new_connection(void* self) {
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
-    QWebSocketServer* server = q_websocketserver_new("Example Qt WebSockets Server", QWEBSOCKETSERVER_SSLMODE_NONSECUREMODE);
+    QWebSocketServer* server = q_websocketserver_new("Example Qt WebSockets Server",
+                                                     QWEBSOCKETSERVER_SSLMODE_NONSECUREMODE);
     QHostAddress* localhost = q_hostaddress_new7(QHOSTADDRESS_SPECIALADDRESS_LOCALHOSTIPV6);
 
     if (!q_websocketserver_listen2(server, localhost, LOCAL_PORT)) {
