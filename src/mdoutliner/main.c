@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <stdbool.h>
 
 #define LINE_NUMBER_ROLE (QT_ITEMDATAROLE_USERROLE + 1)
 #define INITIAL_MAP_CAPACITY 32
@@ -80,14 +79,12 @@ static void map_cleanup() {
 }
 
 // AppTab methods
-static void handle_jump_to_bookmark(void* self, void* current UNUSED, void* previous UNUSED) {
+static void handle_jump_to_bookmark(void* self, void* current, void* previous UNUSED) {
     AppTab* tab = map_get(self);
-    if (!tab)
+    if (!tab || !current)
         return;
 
-    QListWidgetItem* item = q_listwidget_current_item(self);
-
-    QVariant* line_number_variant = q_listwidgetitem_data(item, LINE_NUMBER_ROLE);
+    QVariant* line_number_variant = q_listwidgetitem_data(current, LINE_NUMBER_ROLE);
     int line_number = q_variant_to_int(line_number_variant);
     q_variant_delete(line_number_variant);
 
@@ -129,7 +126,9 @@ static void update_outline_for_content(AppTab* tab, const char* content) {
                 QVariant* line_num = q_variant_new4(line_number);
                 q_listwidgetitem_set_data(bookmark, LINE_NUMBER_ROLE, line_num);
                 q_variant_delete(line_num);
-            } else if (((strncmp(line, "---", 3) == 0) || (strncmp(line, "===", 3) == 0)) && prev_line[0] != '\0') {
+            } else if (((strncmp(line, "---", 3) == 0) ||
+                        (strncmp(line, "===", 3) == 0)) &&
+                       prev_line[0] != '\0') {
                 QListWidgetItem* bookmark = q_listwidgetitem_new7(prev_line, tab->outline);
                 snprintf(tooltip, sizeof(tooltip), "Line %d", line_number);
                 q_listwidgetitem_set_tool_tip(bookmark, tooltip);
