@@ -2,15 +2,15 @@
 
 const char* wiggly_text = "Hello Wiggly Text";
 #define MAX_LENGTH 32
-static int sineValues[] = {
+static int sine_values[] = {
     0, 38, 71, 92,
     100, 92, 71, 38,
     0, -38, -71, -92,
     -100, -92, -71, -38};
 
-static libqt_list sineTable = {
+static libqt_list sine_table = {
     .len = 16,
-    .data.ints = sineValues,
+    .data.ints = sine_values,
 };
 
 typedef struct {
@@ -24,29 +24,29 @@ static WigglyWidget* wiggly = NULL;
 
 void on_paint_event(void* self, void* event UNUSED) {
     QFont* font = q_font_new();
-    QFontMetrics* fontMetrics = q_fontmetrics_new(font);
+    QFontMetrics* font_metrics = q_fontmetrics_new(font);
 
-    int32_t x = (q_widget_width(self) - q_fontmetrics_horizontal_advance(fontMetrics, wiggly->text)) / 4;
-    int32_t y = (q_widget_height(self) + q_fontmetrics_ascent(fontMetrics) - q_fontmetrics_descent(fontMetrics)) / 2;
+    int32_t x = (q_widget_width(self) - q_fontmetrics_horizontal_advance(font_metrics, wiggly->text)) / 4;
+    int32_t y = (q_widget_height(self) + q_fontmetrics_ascent(font_metrics) - q_fontmetrics_descent(font_metrics)) / 2;
 
     QColor* color = q_color_new3();
     QStylePainter* painter = q_stylepainter_new(self);
 
     for (size_t i = 0; i < strlen(wiggly->text); i++) {
-        int32_t index = (wiggly->step + i) % sineTable.len;
-        q_color_set_hsv(color, (63 - index) * (sineTable.len / 4), 255, 191);
+        int32_t index = (wiggly->step + i) % sine_table.len;
+        q_color_set_hsv(color, (63 - index) * (sine_table.len / 4), 255, 191);
         q_stylepainter_set_pen(painter, color);
         char ch_str[2] = {wiggly->text[i], '\0'};
         q_stylepainter_draw_text3(painter,
                                   x,
-                                  y - (sineTable.data.ints[index] * q_fontmetrics_height(fontMetrics) * 2) / 300,
+                                  y - (sine_table.data.ints[index] * q_fontmetrics_height(font_metrics) * 2) / 300,
                                   ch_str);
-        x += q_fontmetrics_horizontal_advance(fontMetrics, ch_str) * 3;
+        x += q_fontmetrics_horizontal_advance(font_metrics, ch_str) * 3;
     }
 
     q_stylepainter_delete(painter);
     q_color_delete(color);
-    q_fontmetrics_delete(fontMetrics);
+    q_fontmetrics_delete(font_metrics);
     q_font_delete(font);
 }
 
