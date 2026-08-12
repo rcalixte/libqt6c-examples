@@ -1,8 +1,7 @@
 #include <libqt6c.h>
 
-QWizardPage* createIntroPage() {
+QWizardPage* create_intro_page() {
     QWizardPage* page = q_wizardpage_new2();
-
     q_wizardpage_set_title(page, "Introduction");
 
     const char* text = "This wizard will help you register your copy of Super Product Two";
@@ -16,38 +15,24 @@ QWizardPage* createIntroPage() {
     return page;
 }
 
-QWizardPage* createRegistrationPage() {
+QWizardPage* create_registration_page() {
     QWizardPage* page = q_wizardpage_new2();
-
-    const char* title = "Registration";
-    q_wizardpage_set_title(page, title);
-
-    const char* subtitle = "Please fill both fields";
-    q_wizardpage_set_sub_title(page, subtitle);
-
-    const char* name = "Name:";
-    QLabel* nameLabel = q_label_new5(name, page);
-    QLineEdit* nameLineEdit = q_lineedit_new(page);
-
-    const char* email = "Email address:";
-    QLabel* emailLabel = q_label_new5(email, page);
-    QLineEdit* emailLineEdit = q_lineedit_new(page);
+    q_wizardpage_set_title(page, "Registration");
+    q_wizardpage_set_sub_title(page, "Please fill both fields");
 
     QGridLayout* layout = q_gridlayout_new(page);
-    q_gridlayout_add_widget2(layout, nameLabel, 0, 0);
-    q_gridlayout_add_widget2(layout, nameLineEdit, 0, 1);
-    q_gridlayout_add_widget2(layout, emailLabel, 1, 0);
-    q_gridlayout_add_widget2(layout, emailLineEdit, 1, 1);
+    q_gridlayout_add_widget2(layout, q_label_new5("Name:", page), 0, 0);
+    q_gridlayout_add_widget2(layout, q_lineedit_new(page), 0, 1);
+    q_gridlayout_add_widget2(layout, q_label_new5("Email address:", page), 1, 0);
+    q_gridlayout_add_widget2(layout, q_lineedit_new(page), 1, 1);
     q_wizardpage_set_layout(page, layout);
 
     return page;
 }
 
-QWizardPage* createConclusionPage() {
+QWizardPage* create_conclusion_page() {
     QWizardPage* page = q_wizardpage_new2();
-
-    const char* title = "Conclusion";
-    q_wizardpage_set_title(page, title);
+    q_wizardpage_set_title(page, "Conclusion");
 
     const char* success = "You are now successfully registered. Have a nice day!";
     QLabel* label = q_label_new5(success, page);
@@ -65,17 +50,16 @@ int main(int argc, char* argv[]) {
 
     QWizard* wizard = q_wizard_new2();
 
-    QWizardPage* intro_page = createIntroPage();
+    QWizardPage* intro_page = create_intro_page();
     q_wizard_add_page(wizard, intro_page);
 
-    QWizardPage* registration_page = createRegistrationPage();
+    QWizardPage* registration_page = create_registration_page();
     q_wizard_add_page(wizard, registration_page);
 
-    QWizardPage* conclusion_page = createConclusionPage();
+    QWizardPage* conclusion_page = create_conclusion_page();
     q_wizard_add_page(wizard, conclusion_page);
 
-    const char* title = "Trivial Wizard";
-    q_wizard_set_window_title(wizard, title);
+    q_wizard_set_window_title(wizard, "Qt 6 Trivial Wizard Example");
     q_wizard_show(wizard);
 
     int ret = q_application_exec();
