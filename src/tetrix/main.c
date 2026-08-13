@@ -34,10 +34,10 @@ typedef struct {
     TetrixPiece* next_piece;
     int16_t cur_x;
     int16_t cur_y;
-    u_int16_t num_lines_removed;
-    u_int16_t num_pieces_dropped;
-    u_int32_t score;
-    u_int16_t level;
+    uint16_t num_lines_removed;
+    uint16_t num_pieces_dropped;
+    uint32_t score;
+    uint16_t level;
 } TetrixBoard;
 
 typedef struct {
@@ -209,7 +209,7 @@ bool try_move(TetrixBoard* self, TetrixPiece* new_piece, int16_t new_x, int16_t 
 }
 
 void draw_square(TetrixBoard* self, QPainter* painter, int x, int y, TetrixShape shape) {
-    u_int32_t color_table[8] = {
+    uint32_t color_table[8] = {
         0x000000,
         0xCC6666,
         0x66CC66,
@@ -315,7 +315,7 @@ void remove_full_lines(TetrixBoard* self) {
     }
 }
 
-void piece_dropped(TetrixBoard* self, u_int8_t drop_height) {
+void piece_dropped(TetrixBoard* self, uint8_t drop_height) {
     for (int i = 0; i < NUM_CELLS; i++) {
         int x = self->cur_x + get_x(self->cur_piece, i);
         int y = self->cur_y - get_y(self->cur_piece, i);
@@ -343,7 +343,7 @@ void one_line_down(TetrixBoard* self) {
 }
 
 void drop_down(TetrixBoard* self) {
-    u_int8_t drop_height = 0;
+    uint8_t drop_height = 0;
     int16_t new_y = self->cur_y;
     while (new_y > 0) {
         if (!try_move(self, self->cur_piece, self->cur_x, new_y - 1))
