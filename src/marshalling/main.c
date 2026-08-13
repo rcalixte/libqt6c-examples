@@ -22,10 +22,10 @@ int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
     // Bool
-    QCheckBox* checkBox = q_checkbox_new2();
-    q_checkbox_set_checked(checkBox, true);
-    printf("Checkbox is checked: %d\n", q_checkbox_is_checked(checkBox));
-    q_checkbox_delete(checkBox);
+    QCheckBox* check_box = q_checkbox_new2();
+    q_checkbox_set_checked(check_box, true);
+    printf("Checkbox is checked: %d\n", q_checkbox_is_checked(check_box));
+    q_checkbox_delete(check_box);
 
     // Int
     QSize* size = q_size_new3();
@@ -87,15 +87,15 @@ int main(int argc, char* argv[]) {
     q_tablewidget_delete(table);
 
     // QList<Qt type>
-    QKeySequence* keyData[] = {
+    QKeySequence* key_data[] = {
         q_keysequence_from_string("F1"),
         q_keysequence_from_string("F2"),
         q_keysequence_from_string("F3"),
         NULL,
     };
-    libqt_list keyList = qlist(keyData, 3);
+    libqt_list key_list = qlist(key_data, 3);
     QAction* action = q_action_new();
-    q_action_set_shortcuts(action, keyList);
+    q_action_set_shortcuts(action, key_list);
     libqt_list shortcuts = q_action_shortcuts(action);
     QKeySequence** shortcuts_list = (QKeySequence**)shortcuts.data.ptr;
     for (size_t i = 0; i < shortcuts.len; i++) {
@@ -106,8 +106,8 @@ int main(int argc, char* argv[]) {
         q_keysequence_delete(shortcut);
     }
     free(shortcuts_list);
-    for (size_t i = 0; i < keyList.len; i++)
-        q_keysequence_delete(keyData[i]);
+    for (size_t i = 0; i < key_list.len; i++)
+        q_keysequence_delete(key_data[i]);
     q_action_delete(action);
 
     // QByteArray
