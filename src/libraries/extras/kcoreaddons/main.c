@@ -1,15 +1,15 @@
 #include <libqt6c.h>
 
-static QTextEdit* plainTextEditor;
+static QTextEdit* text_edit;
 static QTextBrowser* htmlview;
 static QTimer* timer;
 
 static void on_timeout() {
-    const char* plaintext = q_textedit_to_plain_text(plainTextEditor);
+    const char* text = q_textedit_to_plain_text(text_edit);
     int32_t options = KTEXTTOHTML_OPTION_HIGHLIGHTTEXT;
-    const char* html = k_texttohtml_convert_to_html(plaintext, &options, 4096, 255);
+    const char* html = k_texttohtml_convert_to_html(text, &options, 4096, 255);
     q_textbrowser_set_html(htmlview, html);
-    libqt_free(plaintext);
+    libqt_free(text);
     libqt_free(html);
 }
 
@@ -28,10 +28,10 @@ int main(int argc, char* argv[]) {
     q_mainwindow_set_central_widget(window, widget);
     q_widget_set_layout(widget, layout);
 
-    plainTextEditor = q_textedit_new2();
-    q_textedit_set_accept_rich_text(plainTextEditor, false);
+    text_edit = q_textedit_new2();
+    q_textedit_set_accept_rich_text(text_edit, false);
 
-    q_hboxlayout_add_widget(layout, plainTextEditor);
+    q_hboxlayout_add_widget(layout, text_edit);
 
     htmlview = q_textbrowser_new2();
     q_hboxlayout_add_widget(layout, htmlview);
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     q_timer_set_single_shot(timer, true);
     q_timer_set_interval(timer, 1000);
     q_timer_on_timeout(timer, on_timeout);
-    q_textedit_on_text_changed(plainTextEditor, on_text_changed);
+    q_textedit_on_text_changed(text_edit, on_text_changed);
 
     q_mainwindow_show(window);
 
