@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     QWidget* widget = q_widget_new2();
     q_widget_set_window_title(widget, "Qt 6 Sonnet Example");
 
-    Sonnet__DictionaryComboBox* comboBox = k_sonnet__dictionarycombobox_new2();
+    Sonnet__DictionaryComboBox* combo_box = k_sonnet__dictionarycombobox_new2();
     QTextEdit* textedit1 = q_textedit_new2();
     q_textedit_set_text(textedit1, "This is a sample buffer. Whih this thingg will be checkin for misstakes."
                                    " Whih, Enviroment, covermant. Whih.");
@@ -32,10 +32,10 @@ int main(int argc, char* argv[]) {
 
     k_sonnet__highlighter_set_current_language(highlighter2, "en_US");
 
-    k_sonnet__dictionarycombobox_on_dictionary_changed(comboBox, on_dictionary_changed);
+    k_sonnet__dictionarycombobox_on_dictionary_changed(combo_box, on_dictionary_changed);
 
     QVBoxLayout* layout = q_vboxlayout_new(widget);
-    q_vboxlayout_add_widget(layout, comboBox);
+    q_vboxlayout_add_widget(layout, combo_box);
     q_vboxlayout_add_widget(layout, textedit1);
     q_vboxlayout_add_widget(layout, textedit2);
 
