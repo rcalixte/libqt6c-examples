@@ -7,7 +7,7 @@
 typedef struct {
     QWidget* tab;
     QListWidget* outline;
-    QTextEdit* textArea;
+    QTextEdit* text_area;
 } AppTab;
 
 typedef struct {
@@ -16,7 +16,7 @@ typedef struct {
 } AppWindow;
 
 // Global state
-static AppWindow* main_window = NULL;
+static AppWindow* app_window = NULL;
 static struct {
     void** keys;
     AppTab** values;
@@ -88,13 +88,13 @@ static void handle_jump_to_bookmark(void* self, void* current, void* previous UN
     int line_number = q_variant_to_int(line_number_variant);
     q_variant_delete(line_number_variant);
 
-    QTextDocument* doc = q_textedit_document(tab->textArea);
+    QTextDocument* doc = q_textedit_document(tab->text_area);
     QTextBlock* block = q_textdocument_find_block_by_line_number(doc, line_number);
     QTextCursor* cursor = q_textcursor_new4(block);
 
     q_textcursor_set_position(cursor, q_textblock_position(block));
-    q_textedit_set_text_cursor(tab->textArea, cursor);
-    q_textedit_set_focus(tab->textArea);
+    q_textedit_set_text_cursor(tab->text_area, cursor);
+    q_textedit_set_focus(tab->text_area);
 
     q_textblock_delete(block);
     q_textcursor_delete(cursor);
@@ -177,12 +177,12 @@ static AppTab* new_app_tab() {
     q_splitter_add_widget(panes, tab->outline);
     q_listwidget_on_current_item_changed(tab->outline, handle_jump_to_bookmark);
 
-    tab->textArea = q_textedit_new(tab->tab);
-    map_put(tab->textArea, tab);
+    tab->text_area = q_textedit_new(tab->tab);
+    map_put(tab->text_area, tab);
     map_put(tab->outline, tab);
 
-    q_textedit_on_text_changed(tab->textArea, handle_text_changed);
-    q_splitter_add_widget(panes, tab->textArea);
+    q_textedit_on_text_changed(tab->text_area, handle_text_changed);
+    q_splitter_add_widget(panes, tab->text_area);
 
     int size_list[] = {250, 550};
     libqt_list sizes = {
@@ -209,23 +209,22 @@ static void handle_tab_close(void* self, int index) {
         AppTab* tab = app_tab_map.values[i];
         if (tab && tab->tab == widget) {
             // Remove from map before freeing
-            if (tab->textArea)
-                map_remove(tab->textArea);
+            if (tab->text_area)
+                map_remove(tab->text_area);
             if (tab->outline)
                 map_remove(tab->outline);
             q_widget_delete(tab->tab);
             free(tab);
-            app_tab_map.values[i] = NULL;
             break;
         }
     }
 }
 
 static void handle_close_current_tab(void* self UNUSED) {
-    if (main_window) {
-        int current_index = q_tabwidget_current_index(main_window->tabs);
+    if (app_window) {
+        int current_index = q_tabwidget_current_index(app_window->tabs);
         if (current_index >= 0)
-            handle_tab_close(main_window->tabs, current_index);
+            handle_tab_close(app_window->tabs, current_index);
     }
 }
 
@@ -233,7 +232,7 @@ static void create_tab_with_contents(AppWindow* window, const char* title, const
     AppTab* tab = new_app_tab();
     // the new tab is cleaned up during handle_tab_close
 
-    q_textedit_set_text(tab->textArea, content);
+    q_textedit_set_text(tab->text_area, content);
 
     QIcon* icon = q_icon_from_theme("text-markdown");
     int idx = q_tabwidget_add_tab2(window->tabs, tab->tab, icon, title);
@@ -243,12 +242,12 @@ static void create_tab_with_contents(AppWindow* window, const char* title, const
 }
 
 static void handle_new_tab(void* self UNUSED) {
-    create_tab_with_contents(main_window, "New Document", "");
+    create_tab_with_contents(app_window, "New Document", "");
 }
 
 static void handle_file_open(void* self UNUSED) {
     const char* fname = q_filedialog_get_open_file_name4(
-        main_window->w,
+        app_window->w,
         "Open markdown file...",
         "",
         "Markdown files (*.md *.txt);;All Files (*)");
@@ -281,7 +280,7 @@ static void handle_file_open(void* self UNUSED) {
     const char* basename = strrchr(fname, '/');
     basename = basename ? basename + 1 : fname;
 
-    create_tab_with_contents(main_window, basename, content);
+    create_tab_with_contents(app_window, basename, content);
 
     free(content);
     libqt_free(fname);
@@ -373,7 +372,6 @@ static AppWindow* new_app_window() {
                          "- Demonstrates use of the Qt library bindings for C\n";
     create_tab_with_contents(window, "README.md", readme);
 
-    main_window = window;
     return window;
 }
 
@@ -382,17 +380,18 @@ int main(int argc, char* argv[]) {
 
     map_init(INITIAL_MAP_CAPACITY);
 
-    AppWindow* app = new_app_window();
+    app_window = new_app_window();
 
-    q_mainwindow_show(app->w);
+    q_mainwindow_show(app_window->w);
+
     int result = q_application_exec();
 
     // Cleanup
-    for (size_t i = 0; i < app_tab_map.size; i++)
-        handle_tab_close(main_window->tabs, 0);
+    while (q_tabwidget_count(app_window->tabs) > 0)
+        handle_tab_close(app_window->tabs, 0);
     map_cleanup();
-    q_mainwindow_delete(app->w);
-    free(app);
+    q_mainwindow_delete(app_window->w);
+    free(app_window);
 
     q_application_delete(qapp);
 
