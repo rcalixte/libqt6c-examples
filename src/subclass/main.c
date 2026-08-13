@@ -2,16 +2,16 @@
 
 #define BUFFER_SIZE 32
 static char buffer[BUFFER_SIZE];
-static size_t currentColor = 0;
+static size_t current_color = 0;
 
-static const Qt__GlobalColor useColors[] = {
+static const Qt__GlobalColor colors_list[] = {
     QT_GLOBALCOLOR_BLACK,
     QT_GLOBALCOLOR_RED,
     QT_GLOBALCOLOR_GREEN,
     QT_GLOBALCOLOR_BLUE,
 };
 
-#define COLOR_COUNT (sizeof(useColors) / sizeof(useColors[0]))
+#define COLOR_COUNT (sizeof(colors_list) / sizeof(colors_list[0]))
 
 void on_paint_event(void* self, void* ev) {
     // Call the base class's PaintEvent to get initial content
@@ -20,7 +20,7 @@ void on_paint_event(void* self, void* ev) {
 
     // Then, draw on top of it
     QStylePainter* painter = q_stylepainter_new(self);
-    QBrush* brush = q_brush_new12(useColors[currentColor], QT_BRUSHSTYLE_SOLIDPATTERN);
+    QBrush* brush = q_brush_new12(colors_list[current_color], QT_BRUSHSTYLE_SOLIDPATTERN);
 
     q_stylepainter_set_brush(painter, brush);
     q_stylepainter_draw_rect2(painter, 80, 60, 160, 120);
@@ -32,9 +32,9 @@ void on_paint_event(void* self, void* ev) {
 void on_context_menu_event(void* self, void* ev) {
     q_groupbox_super_context_menu_event(self, ev);
 
-    currentColor++;
-    if (currentColor >= COLOR_COUNT)
-        currentColor = 0;
+    current_color++;
+    if (current_color >= COLOR_COUNT)
+        current_color = 0;
     q_groupbox_update(self);
 }
 
