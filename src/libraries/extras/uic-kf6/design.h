@@ -37,14 +37,15 @@ typedef struct {
     QAction* actionE_xit;
 } MainWindowUi;
 
-/// Cleanup the memory allocated for MainWindowUi and the child Qt objects
-static void cleanup_main_window_ui(MainWindowUi* ui) {
-    q_mainwindow_delete(ui->MainWindow);
-    free(ui);
+/// If there is no parent widget, delete the main widget for
+/// MainWindowUi and the child Qt objects
+static void cleanup_main_window_ui(const MainWindowUi* ui) {
+    if (q_mainwindow_parent_widget(ui->MainWindow) == NULL)
+        q_mainwindow_delete(ui->MainWindow);
 }
 
-/// Retranslate reapplies all text translations
-static void retranslate_main_window_ui(MainWindowUi* ui) {
+/// Reapply all text translations
+static void retranslate_main_window_ui(const MainWindowUi* ui) {
     const char* text0 = q_coreapplication_translate("MainWindow", "MainWindow");
     q_mainwindow_set_window_title(ui->MainWindow, text0);
     libqt_free(text0);
@@ -99,16 +100,15 @@ static void retranslate_main_window_ui(MainWindowUi* ui) {
     libqt_free(text13);
 }
 
-/// new_main_window_ui creates all the Qt objects for MainWindowUi
-static MainWindowUi* new_main_window_ui() {
-    MainWindowUi* ui = (MainWindowUi*)malloc(sizeof(MainWindowUi));
-    if (ui == NULL) {
-        fprintf(stderr, "Failed to create MainWindowUi\n");
-        abort();
-    }
-
+/// Initialize all of the Qt objects for MainWindowUi
+///
+/// @param ui MainWindowUi*
+/// @param parent QWidget* (can be NULL)
+///
+void initialize_main_window_ui(MainWindowUi* ui, void* parent) {
     ui->MainWindow = q_mainwindow_new2();
     q_mainwindow_set_object_name(ui->MainWindow, "MainWindow");
+    q_mainwindow_set_parent(ui->MainWindow, parent);
     q_mainwindow_resize(ui->MainWindow, 800, 600);
 
     ui->action_New = q_action_new4(ui->MainWindow);
@@ -237,6 +237,4 @@ static MainWindowUi* new_main_window_ui() {
     retranslate_main_window_ui(ui);
 
     q_tabwidget_set_current_index(ui->tabWidget, 0);
-
-    return ui;
 }
