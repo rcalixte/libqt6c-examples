@@ -1,13 +1,13 @@
 #include <libqt6c.h>
 #include "mainwindow.h"
 
-static MainWindowUi* ui = NULL;
+static MainWindowUi ui;
 static QTextToSpeech* speech = NULL;
 static libqt_list voices;
 
 void reset() {
-    q_pushbutton_set_enabled(ui->pauseButton, false);
-    q_pushbutton_set_enabled(ui->resumeButton, false);
+    q_pushbutton_set_enabled(ui.pauseButton, false);
+    q_pushbutton_set_enabled(ui.resumeButton, false);
     q_texttospeech_stop(speech);
 }
 
@@ -45,7 +45,7 @@ void on_voice_selected(void* self UNUSED, int index) {
 }
 
 void on_speak_clicked(void* self UNUSED) {
-    const char* text = q_plaintextedit_to_plain_text(ui->plainTextEdit);
+    const char* text = q_plaintextedit_to_plain_text(ui.plainTextEdit);
     q_texttospeech_say(speech, text);
     libqt_free(text);
 }
@@ -65,32 +65,32 @@ void on_resume_clicked(void* self UNUSED) {
 void on_state_changed(void* self UNUSED, int32_t state) {
     switch (state) {
     case QTEXTTOSPEECH_STATE_SPEAKING:
-        q_statusbar_show_message(ui->statusbar, "Speech started...");
+        q_statusbar_show_message(ui.statusbar, "Speech started...");
         break;
     case QTEXTTOSPEECH_STATE_READY:
-        q_statusbar_show_message2(ui->statusbar, "Speech stopped...", 2000);
+        q_statusbar_show_message2(ui.statusbar, "Speech stopped...", 2000);
         break;
     case QTEXTTOSPEECH_STATE_PAUSED:
-        q_statusbar_show_message(ui->statusbar, "Speech paused...");
+        q_statusbar_show_message(ui.statusbar, "Speech paused...");
         break;
     default:
-        q_statusbar_show_message(ui->statusbar, "Speech error!");
+        q_statusbar_show_message(ui.statusbar, "Speech error!");
     }
 
-    q_pushbutton_set_enabled(ui->pauseButton, state == QTEXTTOSPEECH_STATE_SPEAKING);
-    q_pushbutton_set_enabled(ui->resumeButton, state == QTEXTTOSPEECH_STATE_PAUSED);
-    q_pushbutton_set_enabled(ui->stopButton,
+    q_pushbutton_set_enabled(ui.pauseButton, state == QTEXTTOSPEECH_STATE_SPEAKING);
+    q_pushbutton_set_enabled(ui.resumeButton, state == QTEXTTOSPEECH_STATE_PAUSED);
+    q_pushbutton_set_enabled(ui.stopButton,
                              state == QTEXTTOSPEECH_STATE_SPEAKING || state == QTEXTTOSPEECH_STATE_PAUSED);
 }
 
 void on_locale_changed(void* self UNUSED, void* locale) {
     QVariant* variant = q_variant_new21(locale);
-    q_combobox_set_current_index(ui->language, q_combobox_find_data(ui->language, variant));
+    q_combobox_set_current_index(ui.language, q_combobox_find_data(ui.language, variant));
     q_variant_delete(variant);
 
-    QSignalBlocker* blocker = q_signalblocker_new(ui->voice);
+    QSignalBlocker* blocker = q_signalblocker_new(ui.voice);
     reset();
-    q_combobox_clear(ui->voice);
+    q_combobox_clear(ui.voice);
 
     if (voices.len > 0) {
         QVoice** voice_data = voices.data.ptr;
@@ -118,9 +118,9 @@ void on_locale_changed(void* self UNUSED, void* locale) {
         }
 
         snprintf(item, len + 1, fmt, name, gender_name, age_name);
-        q_combobox_add_item(ui->voice, item);
+        q_combobox_add_item(ui.voice, item);
         if (strcmp(name, current_name) == 0)
-            q_combobox_set_current_index(ui->voice, q_combobox_count(ui->voice) - 1);
+            q_combobox_set_current_index(ui.voice, q_combobox_count(ui.voice) - 1);
 
         libqt_free(item);
         libqt_free(age_name);
@@ -139,12 +139,12 @@ void on_engine_ready() {
         return;
     }
 
-    q_pushbutton_set_enabled(ui->pauseButton, false);
-    q_pushbutton_set_enabled(ui->resumeButton, false);
+    q_pushbutton_set_enabled(ui.pauseButton, false);
+    q_pushbutton_set_enabled(ui.resumeButton, false);
 
-    QSignalBlocker* blocker = q_signalblocker_new(ui->language);
+    QSignalBlocker* blocker = q_signalblocker_new(ui.language);
 
-    q_combobox_clear(ui->language);
+    q_combobox_clear(ui.language);
     libqt_list locales = q_texttospeech_available_locales(speech);
     QLocale** locale_data = locales.data.ptr;
     QLocale* current = q_texttospeech_locale(speech);
@@ -165,7 +165,7 @@ void on_engine_ready() {
 
         snprintf(name, len + 1, fmt, language, territory);
         QVariant* variant = q_variant_new21(locale_data[i]);
-        q_combobox_add_item22(ui->language, name, variant);
+        q_combobox_add_item22(ui.language, name, variant);
         const char* locale_name = q_locale_name(locale_data[i]);
         if (strcmp(locale_name, current_name) == 0)
             q_locale_operator_assign(current, locale_data[i]);
@@ -179,14 +179,14 @@ void on_engine_ready() {
     }
     free(locale_data);
 
-    on_rate_changed(ui->rate, q_slider_value(ui->rate));
-    on_pitch_changed(ui->pitch, q_slider_value(ui->pitch));
-    on_volume_changed(ui->volume, q_slider_value(ui->volume));
+    on_rate_changed(ui.rate, q_slider_value(ui.rate));
+    on_pitch_changed(ui.pitch, q_slider_value(ui.pitch));
+    on_volume_changed(ui.volume, q_slider_value(ui.volume));
 
-    q_pushbutton_on_clicked(ui->speakButton, on_speak_clicked);
-    q_pushbutton_on_clicked(ui->stopButton, on_stop_clicked);
-    q_pushbutton_on_clicked(ui->pauseButton, on_pause_clicked);
-    q_pushbutton_on_clicked(ui->resumeButton, on_resume_clicked);
+    q_pushbutton_on_clicked(ui.speakButton, on_speak_clicked);
+    q_pushbutton_on_clicked(ui.stopButton, on_stop_clicked);
+    q_pushbutton_on_clicked(ui.pauseButton, on_pause_clicked);
+    q_pushbutton_on_clicked(ui.resumeButton, on_resume_clicked);
 
     q_texttospeech_on_state_changed(speech, on_state_changed);
     q_texttospeech_on_locale_changed(speech, on_locale_changed);
@@ -205,7 +205,7 @@ void on_engine_selected(void* self, int index) {
     if (speech != NULL)
         q_texttospeech_delete(speech);
 
-    speech = q_texttospeech_new5(engine_name, ui->MainWindow);
+    speech = q_texttospeech_new5(engine_name, ui.MainWindow);
 
     libqt_free(engine_name);
     q_variant_delete(variant);
@@ -219,28 +219,28 @@ void on_engine_selected(void* self, int index) {
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
-    ui = new_main_window_ui();
+    initialize_main_window_ui(&ui, NULL);
 
     const char** engines = q_texttospeech_available_engines();
     for (size_t i = 0; engines[i] != NULL; i++) {
         QVariant* engine_variant = q_variant_new24(engines[i]);
-        q_combobox_add_item22(ui->engine, engines[i], engine_variant);
+        q_combobox_add_item22(ui.engine, engines[i], engine_variant);
         q_variant_delete(engine_variant);
         libqt_free(engines[i]);
     }
     free(engines);
 
-    q_combobox_set_current_index(ui->engine, 0);
-    on_engine_selected(ui->engine, 0);
+    q_combobox_set_current_index(ui.engine, 0);
+    on_engine_selected(ui.engine, 0);
 
-    q_slider_on_value_changed(ui->pitch, on_pitch_changed);
-    q_slider_on_value_changed(ui->rate, on_rate_changed);
-    q_slider_on_value_changed(ui->volume, on_volume_changed);
-    q_combobox_on_current_index_changed(ui->engine, on_engine_selected);
-    q_combobox_on_current_index_changed(ui->language, on_language_selected);
-    q_combobox_on_current_index_changed(ui->voice, on_voice_selected);
+    q_slider_on_value_changed(ui.pitch, on_pitch_changed);
+    q_slider_on_value_changed(ui.rate, on_rate_changed);
+    q_slider_on_value_changed(ui.volume, on_volume_changed);
+    q_combobox_on_current_index_changed(ui.engine, on_engine_selected);
+    q_combobox_on_current_index_changed(ui.language, on_language_selected);
+    q_combobox_on_current_index_changed(ui.voice, on_voice_selected);
 
-    q_mainwindow_show(ui->MainWindow);
+    q_mainwindow_show(ui.MainWindow);
 
     int result = q_application_exec();
 
@@ -253,7 +253,7 @@ int main(int argc, char* argv[]) {
 
     if (speech != NULL)
         q_texttospeech_delete(speech);
-    cleanup_main_window_ui(ui);
+    cleanup_main_window_ui(&ui);
     q_application_delete(qapp);
 
     return result;

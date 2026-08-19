@@ -33,14 +33,15 @@ typedef struct {
     QStatusBar* statusbar;
 } MainWindowUi;
 
-/// Cleanup the memory allocated for MainWindowUi and the child Qt objects
-static void cleanup_main_window_ui(MainWindowUi* ui) {
-    q_mainwindow_delete(ui->MainWindow);
-    free(ui);
+/// If there is no parent widget, delete the main widget for
+/// MainWindowUi and the child Qt objects
+static void cleanup_main_window_ui(const MainWindowUi* ui) {
+    if (q_mainwindow_parent_widget(ui->MainWindow) == NULL)
+        q_mainwindow_delete(ui->MainWindow);
 }
 
-/// Retranslate reapplies all text translations
-static void retranslate_main_window_ui(MainWindowUi* ui) {
+/// Reapply all text translations
+static void retranslate_main_window_ui(const MainWindowUi* ui) {
     const char* text0 = q_coreapplication_translate("MainWindow", "MainWindow");
     q_mainwindow_set_window_title(ui->MainWindow, text0);
     libqt_free(text0);
@@ -79,16 +80,15 @@ static void retranslate_main_window_ui(MainWindowUi* ui) {
     libqt_free(text11);
 }
 
-/// new_main_window_ui creates all the Qt objects for MainWindowUi
-static MainWindowUi* new_main_window_ui() {
-    MainWindowUi* ui = (MainWindowUi*)malloc(sizeof(MainWindowUi));
-    if (ui == NULL) {
-        fprintf(stderr, "Failed to create MainWindowUi\n");
-        abort();
-    }
-
+/// Initialize all of the Qt objects for MainWindowUi
+///
+/// @param ui MainWindowUi*
+/// @param parent QWidget* (can be NULL)
+///
+void initialize_main_window_ui(MainWindowUi* ui, void* parent) {
     ui->MainWindow = q_mainwindow_new2();
     q_mainwindow_set_object_name(ui->MainWindow, "MainWindow");
+    q_mainwindow_set_parent(ui->MainWindow, parent);
     q_mainwindow_resize(ui->MainWindow, 551, 448);
 
     ui->centralwidget = q_widget_new(ui->MainWindow);
@@ -99,14 +99,14 @@ static MainWindowUi* new_main_window_ui() {
 
     ui->plainTextEdit = q_plaintextedit_new(ui->centralwidget);
     q_plaintextedit_set_object_name(ui->plainTextEdit, "plainTextEdit");
-    QSizePolicy* sizePolicy0 = q_sizepolicy_new3();
-    q_sizepolicy_set_horizontal_policy(sizePolicy0, QSIZEPOLICY_POLICY_EXPANDING);
-    q_sizepolicy_set_vertical_policy(sizePolicy0, QSIZEPOLICY_POLICY_EXPANDING);
-    q_sizepolicy_set_horizontal_stretch(sizePolicy0, 0);
-    q_sizepolicy_set_vertical_stretch(sizePolicy0, 0);
+    QSizePolicy* size_policy0 = q_sizepolicy_new3();
+    q_sizepolicy_set_horizontal_policy(size_policy0, QSIZEPOLICY_POLICY_EXPANDING);
+    q_sizepolicy_set_vertical_policy(size_policy0, QSIZEPOLICY_POLICY_EXPANDING);
+    q_sizepolicy_set_horizontal_stretch(size_policy0, 0);
+    q_sizepolicy_set_vertical_stretch(size_policy0, 0);
     QSizePolicy* plainTextEdit_sp = q_plaintextedit_size_policy(ui->plainTextEdit);
-    q_sizepolicy_set_height_for_width(sizePolicy0, q_sizepolicy_has_height_for_width(plainTextEdit_sp));
-    q_plaintextedit_set_size_policy(ui->plainTextEdit, sizePolicy0);
+    q_sizepolicy_set_height_for_width(size_policy0, q_sizepolicy_has_height_for_width(plainTextEdit_sp));
+    q_plaintextedit_set_size_policy(ui->plainTextEdit, size_policy0);
     q_sizepolicy_delete(plainTextEdit_sp);
 
     q_vboxlayout_add_widget(ui->verticalLayout, ui->plainTextEdit);
@@ -116,14 +116,14 @@ static MainWindowUi* new_main_window_ui() {
 
     ui->label_5 = q_label_new(ui->centralwidget);
     q_label_set_object_name(ui->label_5, "label_5");
-    QSizePolicy* sizePolicy1 = q_sizepolicy_new3();
-    q_sizepolicy_set_horizontal_policy(sizePolicy1, QSIZEPOLICY_POLICY_MINIMUM);
-    q_sizepolicy_set_vertical_policy(sizePolicy1, QSIZEPOLICY_POLICY_PREFERRED);
-    q_sizepolicy_set_horizontal_stretch(sizePolicy1, 0);
-    q_sizepolicy_set_vertical_stretch(sizePolicy1, 0);
+    QSizePolicy* size_policy1 = q_sizepolicy_new3();
+    q_sizepolicy_set_horizontal_policy(size_policy1, QSIZEPOLICY_POLICY_MINIMUM);
+    q_sizepolicy_set_vertical_policy(size_policy1, QSIZEPOLICY_POLICY_PREFERRED);
+    q_sizepolicy_set_horizontal_stretch(size_policy1, 0);
+    q_sizepolicy_set_vertical_stretch(size_policy1, 0);
     QSizePolicy* label_5_sp = q_label_size_policy(ui->label_5);
-    q_sizepolicy_set_height_for_width(sizePolicy1, q_sizepolicy_has_height_for_width(label_5_sp));
-    q_label_set_size_policy(ui->label_5, sizePolicy1);
+    q_sizepolicy_set_height_for_width(size_policy1, q_sizepolicy_has_height_for_width(label_5_sp));
+    q_label_set_size_policy(ui->label_5, size_policy1);
     q_sizepolicy_delete(label_5_sp);
     q_label_set_alignment(ui->label_5, QT_ALIGNMENTFLAG_ALIGNRIGHT | QT_ALIGNMENTFLAG_ALIGNTRAILING | QT_ALIGNMENTFLAG_ALIGNVCENTER);
     q_gridlayout_add_widget2(ui->gridLayout, ui->label_5, 4, 0);
@@ -131,8 +131,8 @@ static MainWindowUi* new_main_window_ui() {
     ui->label_3 = q_label_new(ui->centralwidget);
     q_label_set_object_name(ui->label_3, "label_3");
     QSizePolicy* label_3_sp = q_label_size_policy(ui->label_3);
-    q_sizepolicy_set_height_for_width(sizePolicy1, q_sizepolicy_has_height_for_width(label_3_sp));
-    q_label_set_size_policy(ui->label_3, sizePolicy1);
+    q_sizepolicy_set_height_for_width(size_policy1, q_sizepolicy_has_height_for_width(label_3_sp));
+    q_label_set_size_policy(ui->label_3, size_policy1);
     q_sizepolicy_delete(label_3_sp);
     q_label_set_alignment(ui->label_3, QT_ALIGNMENTFLAG_ALIGNRIGHT | QT_ALIGNMENTFLAG_ALIGNTRAILING | QT_ALIGNMENTFLAG_ALIGNVCENTER);
     q_gridlayout_add_widget2(ui->gridLayout, ui->label_3, 3, 0);
@@ -140,8 +140,8 @@ static MainWindowUi* new_main_window_ui() {
     ui->label_4 = q_label_new(ui->centralwidget);
     q_label_set_object_name(ui->label_4, "label_4");
     QSizePolicy* label_4_sp = q_label_size_policy(ui->label_4);
-    q_sizepolicy_set_height_for_width(sizePolicy1, q_sizepolicy_has_height_for_width(label_4_sp));
-    q_label_set_size_policy(ui->label_4, sizePolicy1);
+    q_sizepolicy_set_height_for_width(size_policy1, q_sizepolicy_has_height_for_width(label_4_sp));
+    q_label_set_size_policy(ui->label_4, size_policy1);
     q_sizepolicy_delete(label_4_sp);
     q_label_set_alignment(ui->label_4, QT_ALIGNMENTFLAG_ALIGNRIGHT | QT_ALIGNMENTFLAG_ALIGNTRAILING | QT_ALIGNMENTFLAG_ALIGNVCENTER);
     q_gridlayout_add_widget2(ui->gridLayout, ui->label_4, 5, 0);
@@ -170,14 +170,14 @@ static MainWindowUi* new_main_window_ui() {
 
     ui->language = q_combobox_new(ui->centralwidget);
     q_combobox_set_object_name(ui->language, "language");
-    QSizePolicy* sizePolicy2 = q_sizepolicy_new3();
-    q_sizepolicy_set_horizontal_policy(sizePolicy2, QSIZEPOLICY_POLICY_EXPANDING);
-    q_sizepolicy_set_vertical_policy(sizePolicy2, QSIZEPOLICY_POLICY_FIXED);
-    q_sizepolicy_set_horizontal_stretch(sizePolicy2, 0);
-    q_sizepolicy_set_vertical_stretch(sizePolicy2, 0);
+    QSizePolicy* size_policy2 = q_sizepolicy_new3();
+    q_sizepolicy_set_horizontal_policy(size_policy2, QSIZEPOLICY_POLICY_EXPANDING);
+    q_sizepolicy_set_vertical_policy(size_policy2, QSIZEPOLICY_POLICY_FIXED);
+    q_sizepolicy_set_horizontal_stretch(size_policy2, 0);
+    q_sizepolicy_set_vertical_stretch(size_policy2, 0);
     QSizePolicy* language_sp = q_combobox_size_policy(ui->language);
-    q_sizepolicy_set_height_for_width(sizePolicy2, q_sizepolicy_has_height_for_width(language_sp));
-    q_combobox_set_size_policy(ui->language, sizePolicy2);
+    q_sizepolicy_set_height_for_width(size_policy2, q_sizepolicy_has_height_for_width(language_sp));
+    q_combobox_set_size_policy(ui->language, size_policy2);
     q_sizepolicy_delete(language_sp);
     q_gridlayout_add_widget2(ui->gridLayout, ui->language, 5, 2);
 
@@ -188,8 +188,8 @@ static MainWindowUi* new_main_window_ui() {
     ui->label = q_label_new(ui->centralwidget);
     q_label_set_object_name(ui->label, "label");
     QSizePolicy* label_sp = q_label_size_policy(ui->label);
-    q_sizepolicy_set_height_for_width(sizePolicy1, q_sizepolicy_has_height_for_width(label_sp));
-    q_label_set_size_policy(ui->label, sizePolicy1);
+    q_sizepolicy_set_height_for_width(size_policy1, q_sizepolicy_has_height_for_width(label_sp));
+    q_label_set_size_policy(ui->label, size_policy1);
     q_sizepolicy_delete(label_sp);
     q_label_set_alignment(ui->label, QT_ALIGNMENTFLAG_ALIGNRIGHT | QT_ALIGNMENTFLAG_ALIGNTRAILING | QT_ALIGNMENTFLAG_ALIGNVCENTER);
     q_gridlayout_add_widget2(ui->gridLayout, ui->label, 2, 0);
@@ -197,8 +197,8 @@ static MainWindowUi* new_main_window_ui() {
     ui->label_2 = q_label_new(ui->centralwidget);
     q_label_set_object_name(ui->label_2, "label_2");
     QSizePolicy* label_2_sp = q_label_size_policy(ui->label_2);
-    q_sizepolicy_set_height_for_width(sizePolicy1, q_sizepolicy_has_height_for_width(label_2_sp));
-    q_label_set_size_policy(ui->label_2, sizePolicy1);
+    q_sizepolicy_set_height_for_width(size_policy1, q_sizepolicy_has_height_for_width(label_2_sp));
+    q_label_set_size_policy(ui->label_2, size_policy1);
     q_sizepolicy_delete(label_2_sp);
     q_label_set_alignment(ui->label_2, QT_ALIGNMENTFLAG_ALIGNRIGHT | QT_ALIGNMENTFLAG_ALIGNTRAILING | QT_ALIGNMENTFLAG_ALIGNVCENTER);
     q_gridlayout_add_widget2(ui->gridLayout, ui->label_2, 1, 0);
@@ -213,8 +213,8 @@ static MainWindowUi* new_main_window_ui() {
     ui->engine = q_combobox_new(ui->centralwidget);
     q_combobox_set_object_name(ui->engine, "engine");
     QSizePolicy* engine_sp = q_combobox_size_policy(ui->engine);
-    q_sizepolicy_set_height_for_width(sizePolicy2, q_sizepolicy_has_height_for_width(engine_sp));
-    q_combobox_set_size_policy(ui->engine, sizePolicy2);
+    q_sizepolicy_set_height_for_width(size_policy2, q_sizepolicy_has_height_for_width(engine_sp));
+    q_combobox_set_size_policy(ui->engine, size_policy2);
     q_sizepolicy_delete(engine_sp);
     q_gridlayout_add_widget2(ui->gridLayout, ui->engine, 4, 2);
 
@@ -256,9 +256,9 @@ static MainWindowUi* new_main_window_ui() {
     q_statusbar_set_object_name(ui->statusbar, "statusbar");
     q_mainwindow_set_status_bar(ui->MainWindow, ui->statusbar);
 
-    q_sizepolicy_delete(sizePolicy0);
-    q_sizepolicy_delete(sizePolicy1);
-    q_sizepolicy_delete(sizePolicy2);
+    q_sizepolicy_delete(size_policy0);
+    q_sizepolicy_delete(size_policy1);
+    q_sizepolicy_delete(size_policy2);
     q_label_set_buddy(ui->label_4, ui->language);
     q_widget_set_tab_order(ui->plainTextEdit, ui->speakButton);
     q_widget_set_tab_order(ui->speakButton, ui->pauseButton);
@@ -266,6 +266,4 @@ static MainWindowUi* new_main_window_ui() {
     q_widget_set_tab_order(ui->resumeButton, ui->stopButton);
 
     retranslate_main_window_ui(ui);
-
-    return ui;
 }
