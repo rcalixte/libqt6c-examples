@@ -9,10 +9,10 @@ int main(int argc, char* argv[]) {
 
     if (k_zip_open(archive, QIODEVICEBASE_OPENMODEFLAG_WRITEONLY)) {
         k_zip_write_file(archive, "world", "The whole world inside a hello");
-        fprintf(stdout, "Successfully wrote to '%s'\n", ZIP_FILE);
+        printf("Successfully wrote to '%s'\n", ZIP_FILE);
         k_zip_close(archive);
     } else {
-        fprintf(stdout, "Failed to open '%s' for writing\n", ZIP_FILE);
+        fprintf(stderr, "Failed to open '%s' for writing\n", ZIP_FILE);
     }
 
     k_zip_delete(archive);
