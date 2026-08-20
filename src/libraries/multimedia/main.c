@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     q_mediaplayer_on_playback_state_changed(player, on_playback_state_changed);
 
-    fprintf(stdout, "Playing %s\n", MP3_PATH);
+    printf("Playing %s\n", MP3_PATH);
     q_mediaplayer_play(player);
 
     int result = q_coreapplication_exec();
