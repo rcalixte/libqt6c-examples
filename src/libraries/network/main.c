@@ -3,7 +3,7 @@
 void on_finished(void* dns) {
     if (q_dnslookup_error(dns) != QDNSLOOKUP_ERROR_NOERROR) {
         const char* error_str = q_dnslookup_error_string(dns);
-        printf("\nDNS lookup failed: %s\n", error_str);
+        fprintf(stderr, "\nDNS lookup failed: %s\n", error_str);
         libqt_free(error_str);
         q_dnslookup_delete_later(dns);
         q_coreapplication_exit1(q_dnslookup_error(dns));
