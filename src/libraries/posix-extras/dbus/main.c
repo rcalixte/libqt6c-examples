@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     QDBusMessage* reply = q_dbusconnection_call(session_bus, message);
 
     if (q_dbusmessage_type(reply) != QDBUSMESSAGE_MESSAGETYPE_REPLYMESSAGE) {
-        printf("Failed to send message\n");
+        fprintf(stderr, "Failed to send message\n");
         q_coreapplication_quit();
     }
 
