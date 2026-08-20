@@ -6,7 +6,7 @@ int main(int argc, char* argv[]) {
 
     bool ok = qrc_rcc_init();
     if (!ok)
-        printf("Resource initialization failed!\n");
+        fprintf(stderr, "Resource initialization failed!\n");
 
     QWidget* widget = q_widget_new2();
     q_widget_set_minimum_size2(widget, 650, 150);
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 
     ok = qrc_rcc_delete();
     if (!ok)
-        printf("Resource deinitialization failed!\n");
+        fprintf(stderr, "Resource deinitialization failed!\n");
 
     q_size_delete(size1);
     q_icon_delete(icon1);
