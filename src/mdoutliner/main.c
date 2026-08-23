@@ -219,14 +219,18 @@ static void handle_close_current_tab(void* self UNUSED) {
 }
 
 static void create_tab_with_contents(const char* title, const char* content) {
-    AppTab tab;
-    initialize_app_tab(&tab);
+    AppTab* tab = (AppTab*)malloc(sizeof(AppTab));
+    if (!tab) {
+        fprintf(stderr, "Failed to allocate memory for AppTab\n");
+        abort();
+    }
     // the new tab is cleaned up during handle_tab_close
+    initialize_app_tab(tab);
 
-    q_textedit_set_text(tab.text_area, content);
+    q_textedit_set_text(tab->text_area, content);
 
     QIcon* icon = q_icon_from_theme("text-markdown");
-    int idx = q_tabwidget_add_tab2(app_window.tabs, tab.tab, icon, title);
+    int idx = q_tabwidget_add_tab2(app_window.tabs, tab->tab, icon, title);
     q_icon_delete(icon);
 
     q_tabwidget_set_current_index(app_window.tabs, idx);
