@@ -421,14 +421,14 @@ void on_key_press_event(void* self, void* event) {
 void on_paint_event(void* self, void* event) {
     q_frame_super_paint_event(self, event);
 
-    QStylePainter* painter = q_stylepainter_new(self);
+    QPainter* painter = q_painter_new2(q_frame_as_q_paint_device(self));
     QRect* rect = q_frame_contents_rect(self);
 
     if (global_board.is_paused) {
-        q_stylepainter_draw_text6(painter, rect, QT_ALIGNMENTFLAG_ALIGNCENTER,
+        q_painter_draw_text6(painter, rect, QT_ALIGNMENTFLAG_ALIGNCENTER,
                                   "Pause");
         q_rect_delete(rect);
-        q_stylepainter_delete(painter);
+        q_painter_delete(painter);
         return;
     }
 
@@ -454,7 +454,7 @@ void on_paint_event(void* self, void* event) {
         }
 
     q_rect_delete(rect);
-    q_stylepainter_delete(painter);
+    q_painter_delete(painter);
 }
 
 void initialize_board(TetrixBoard* self) {
