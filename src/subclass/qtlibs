@@ -9,5 +9,4 @@ qguiapplication
 qobject
 qpaintdevice
 qpainter
-qstylepainter
 qwidget

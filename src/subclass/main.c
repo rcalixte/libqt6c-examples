@@ -19,11 +19,11 @@ void on_paint_event(void* self, void* ev) {
     q_groupbox_super_paint_event(self, ev);
 
     // Then, draw on top of it
-    QStylePainter* painter = q_stylepainter_new(self);
+    QPainter* painter = q_painter_new2(q_groupbox_as_q_paint_device(self));
     QBrush* brush = q_brush_new12(colors_list[current_color], QT_BRUSHSTYLE_SOLIDPATTERN);
 
-    q_stylepainter_set_brush(painter, brush);
-    q_stylepainter_draw_rect2(painter, 80, 60, 160, 120);
+    q_painter_set_brush(painter, brush);
+    q_painter_draw_rect2(painter, 80, 60, 160, 120);
 
     q_brush_delete(brush);
     q_painter_delete(painter);
