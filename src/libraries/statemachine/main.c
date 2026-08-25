@@ -25,11 +25,11 @@ void on_paint_event(void* self, void* event UNUSED) {
     QVariant* color_variant = q_widget_property(self, "color");
     int32_t color = q_variant_to_int(color_variant);
 
-    QStylePainter* painter = q_stylepainter_new(self);
+    QPainter* painter = q_painter_new2(q_widget_as_q_paint_device(self));
     QBrush* brush = q_brush_new4(color);
 
-    q_stylepainter_set_render_hint(painter, QPAINTER_RENDERHINT_ANTIALIASING);
-    q_stylepainter_set_brush(painter, brush);
+    q_painter_set_render_hint(painter, QPAINTER_RENDERHINT_ANTIALIASING);
+    q_painter_set_brush(painter, brush);
 
     int32_t height = q_widget_height(self);
     int32_t width = q_widget_width(self);
@@ -37,12 +37,12 @@ void on_paint_event(void* self, void* event UNUSED) {
     int32_t size = (min * 2) / 3;
     int32_t x = (width - size) / 2;
     int32_t y = (height - size) / 2;
-    q_stylepainter_draw_ellipse3(painter, x, y, size, size);
+    q_painter_draw_ellipse3(painter, x, y, size, size);
 
     q_variant_delete(color_variant);
     q_variant_delete(on_variant);
     q_brush_delete(brush);
-    q_stylepainter_delete(painter);
+    q_painter_delete(painter);
 }
 
 void initialize_light_widget(LightWidget* light, int32_t color) {
