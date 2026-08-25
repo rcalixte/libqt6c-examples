@@ -18,6 +18,7 @@ int main(int argc, char* argv[]) {
     KCompletion* completion = k_completion_new();
     k_completion_set_sounds_enabled(completion, false);
     k_lineedit_set_completion_object(lineedit, completion, true);
+    k_lineedit_set_auto_delete_completion_object(lineedit, true);
 
     const char* items[] = {"Hello Qt", "Hello C", "Hello libqt6c", "Hello you", "Hello world", NULL};
     k_completion_set_items(completion, items);
@@ -32,7 +33,6 @@ int main(int argc, char* argv[]) {
 
     int result = q_application_exec();
 
-    k_completion_delete(completion);
     q_widget_delete(widget);
     q_application_delete(qapp);
 
