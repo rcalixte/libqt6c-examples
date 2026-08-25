@@ -28,21 +28,21 @@ void on_paint_event(void* self, void* event UNUSED) {
     int32_t x = (q_widget_width(self) - q_fontmetrics_horizontal_advance(wiggly.font_metrics, wiggly.text)) / 4;
     int32_t y = (q_widget_height(self) + q_fontmetrics_ascent(wiggly.font_metrics) - q_fontmetrics_descent(wiggly.font_metrics)) / 2;
 
-    QStylePainter* painter = q_stylepainter_new(self);
+    QPainter* painter = q_painter_new2(q_widget_as_q_paint_device(self));
 
     for (size_t i = 0; i < strlen(wiggly.text); i++) {
         int32_t index = (wiggly.step + i) % sine_table.len;
         q_color_set_hsv(wiggly.color, (63 - index) * (sine_table.len / 4), 255, 191);
-        q_stylepainter_set_pen(painter, wiggly.color);
+        q_painter_set_pen(painter, wiggly.color);
         char ch_str[2] = {wiggly.text[i], '\0'};
-        q_stylepainter_draw_text3(painter,
+        q_painter_draw_text3(painter,
                                   x,
                                   y - (sine_table.data.ints[index] * q_fontmetrics_height(wiggly.font_metrics) * 2) / 300,
                                   ch_str);
         x += q_fontmetrics_horizontal_advance(wiggly.font_metrics, ch_str) * 3;
     }
 
-    q_stylepainter_delete(painter);
+    q_painter_delete(painter);
 }
 
 void on_timer_event(void* self, void* event) {
