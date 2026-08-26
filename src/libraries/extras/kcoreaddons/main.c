@@ -28,12 +28,12 @@ int main(int argc, char* argv[]) {
     q_mainwindow_set_central_widget(window, widget);
     q_widget_set_layout(widget, layout);
 
+    htmlview = q_textbrowser_new2();
     text_edit = q_textedit_new2();
     q_textedit_set_accept_rich_text(text_edit, false);
+    q_textedit_set_placeholder_text(text_edit, "Enter a value like an email address or fully-qualified domain.");
 
     q_hboxlayout_add_widget(layout, text_edit);
-
-    htmlview = q_textbrowser_new2();
     q_hboxlayout_add_widget(layout, htmlview);
 
     timer = q_timer_new2(qapp);
