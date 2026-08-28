@@ -36,9 +36,9 @@ void on_paint_event(void* self, void* event UNUSED) {
         q_painter_set_pen(painter, wiggly.color);
         char ch_str[2] = {wiggly.text[i], '\0'};
         q_painter_draw_text3(painter,
-                                  x,
-                                  y - (sine_table.data.ints[index] * q_fontmetrics_height(wiggly.font_metrics) * 2) / 300,
-                                  ch_str);
+                             x,
+                             y - (sine_table.data.ints[index] * q_fontmetrics_height(wiggly.font_metrics) * 2) / 300,
+                             ch_str);
         x += q_fontmetrics_horizontal_advance(wiggly.font_metrics, ch_str) * 3;
     }
 
