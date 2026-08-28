@@ -426,7 +426,7 @@ void on_paint_event(void* self, void* event) {
 
     if (global_board.is_paused) {
         q_painter_draw_text6(painter, rect, QT_ALIGNMENTFLAG_ALIGNCENTER,
-                                  "Pause");
+                             "Pause");
         q_rect_delete(rect);
         q_painter_delete(painter);
         return;
