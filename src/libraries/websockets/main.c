@@ -1,5 +1,4 @@
 #include <libqt6c.h>
-#include <string.h>
 #include <ctype.h>
 
 static const char WS_URL[] = "ws://localhost:";
