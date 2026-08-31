@@ -105,7 +105,7 @@ static void retranslate_main_window_ui(const MainWindowUi* ui) {
 /// @param ui MainWindowUi*
 /// @param parent QWidget* (can be NULL)
 ///
-void initialize_main_window_ui(MainWindowUi* ui, void* parent) {
+static void initialize_main_window_ui(MainWindowUi* ui, void* parent) {
     ui->MainWindow = q_mainwindow_new2();
     q_mainwindow_set_object_name(ui->MainWindow, "MainWindow");
     q_mainwindow_set_parent(ui->MainWindow, parent);
