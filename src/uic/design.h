@@ -84,7 +84,7 @@ static void retranslate_main_window_ui(const MainWindowUi* ui) {
 /// @param ui MainWindowUi*
 /// @param parent QWidget* (can be NULL)
 ///
-void initialize_main_window_ui(MainWindowUi* ui, void* parent) {
+static void initialize_main_window_ui(MainWindowUi* ui, void* parent) {
     ui->MainWindow = q_mainwindow_new2();
     q_mainwindow_set_object_name(ui->MainWindow, "MainWindow");
     q_mainwindow_set_parent(ui->MainWindow, parent);
@@ -140,9 +140,9 @@ void initialize_main_window_ui(MainWindowUi* ui, void* parent) {
     ui->treeWidget = q_treewidget_new(ui->centralwidget);
     q_treewidget_set_object_name(ui->treeWidget, "treeWidget");
     q_treewidget_set_frame_shape(ui->treeWidget, QFRAME_SHAPE_PANEL);
-    QTreeWidgetItem* ui_treeWidget_item = q_treewidgetitem_new();
-    q_treewidget_set_header_item(ui->treeWidget, ui_treeWidget_item);
-    q_treewidgetitem_set_text(ui_treeWidget_item, 0, "1");
+    QTreeWidgetItem* ui_treeWidget_colitem = q_treewidgetitem_new();
+    q_treewidget_set_header_item(ui->treeWidget, ui_treeWidget_colitem);
+    q_treewidgetitem_set_text(ui_treeWidget_colitem, 0, "1");
     q_gridlayout_add_widget2(ui->gridLayout, ui->treeWidget, 0, 1);
 
     q_mainwindow_set_central_widget(ui->MainWindow, ui->centralwidget);
