@@ -53,10 +53,6 @@ typedef struct {
     QLabel* game_over_label;
 } TetrixWindow;
 
-static QSignalMapper* score_mapper;
-static QSignalMapper* level_mapper;
-static QSignalMapper* lines_mapper;
-
 static TetrixBoard global_board;
 static TetrixWindow tetrix_window;
 static int frame_width;
@@ -305,8 +301,8 @@ void remove_full_lines(TetrixBoard* self) {
     if (num_full_lines > 0) {
         self->num_lines_removed += num_full_lines;
         self->score += 10 * num_full_lines;
-        q_signalmapper_mapped_int(lines_mapper, self->num_lines_removed);
-        q_signalmapper_mapped_int(score_mapper, self->score);
+        q_lcdnumber_display2(tetrix_window.lines_lcd, self->num_lines_removed);
+        q_lcdnumber_display2(tetrix_window.score_lcd, self->score);
 
         q_basictimer_start(self->timer, 500, self->frame);
         self->is_waiting_after_line = true;
@@ -326,11 +322,11 @@ void piece_dropped(TetrixBoard* self, uint8_t drop_height) {
     if (self->num_pieces_dropped % 25 == 0) {
         self->level += 1;
         q_basictimer_start(self->timer, timeout_time(self), self->frame);
-        q_signalmapper_mapped_int(level_mapper, self->level);
+        q_lcdnumber_display2(tetrix_window.level_lcd, self->level);
     }
 
     self->score += drop_height + 7;
-    q_signalmapper_mapped_int(score_mapper, self->score);
+    q_lcdnumber_display2(tetrix_window.score_lcd, self->score);
     remove_full_lines(self);
 
     if (!self->is_waiting_after_line)
@@ -550,9 +546,9 @@ void new_game(void* self UNUSED) {
     q_pushbutton_set_disabled(tetrix_window.pause_button, false);
     clear_board(&global_board);
 
-    q_signalmapper_mapped_int(lines_mapper, global_board.num_lines_removed);
-    q_signalmapper_mapped_int(score_mapper, global_board.score);
-    q_signalmapper_mapped_int(level_mapper, global_board.level);
+    q_lcdnumber_display2(tetrix_window.lines_lcd, global_board.num_lines_removed);
+    q_lcdnumber_display2(tetrix_window.score_lcd, global_board.score);
+    q_lcdnumber_display2(tetrix_window.level_lcd, global_board.level);
 
     new_piece(&global_board);
     q_basictimer_start(global_board.timer, timeout_time(&global_board), global_board.frame);
@@ -613,18 +609,6 @@ void initialize_tetrix_window(TetrixWindow* self) {
     q_sizepolicy_delete(label_policy);
 
     self->window = q_widget_new2();
-    score_mapper = q_signalmapper_new2(self->window);
-    q_signalmapper_set_mapping(score_mapper, self->score_lcd, 0);
-    q_signalmapper_on_mapped_int(score_mapper, on_score_changed);
-
-    level_mapper = q_signalmapper_new2(self->window);
-    q_signalmapper_set_mapping(level_mapper, self->level_lcd, 0);
-    q_signalmapper_on_mapped_int(level_mapper, on_level_changed);
-
-    lines_mapper = q_signalmapper_new2(self->window);
-    q_signalmapper_set_mapping(lines_mapper, self->lines_lcd, 0);
-    q_signalmapper_on_mapped_int(lines_mapper, on_lines_removed_changed);
-
     QGridLayout* layout = q_gridlayout_new(self->window);
     q_gridlayout_add_widget2(layout, create_label("NEXT"), 0, 0);
     q_gridlayout_add_widget2(layout, self->next_piece_label, 1, 0);
@@ -646,20 +630,6 @@ void initialize_tetrix_window(TetrixWindow* self) {
 
     q_widget_set_window_title(self->window, "Qt 6 Tetrix Example");
     q_widget_set_fixed_size2(self->window, 1000, 750);
-
-    QMessageBox* message_box = q_messagebox_new(self->window);
-    q_messagebox_set_option2(message_box, QMESSAGEBOX_OPTION_DONTUSENATIVEDIALOG, true);
-    q_messagebox_set_window_modality(message_box, QT_WINDOWMODALITY_APPLICATIONMODAL);
-    q_messagebox_set_text_format(message_box, QT_TEXTFORMAT_MARKDOWNTEXT);
-    q_messagebox_set_window_title(message_box, "Game Controls");
-    q_messagebox_set_text(message_box, "### - Left/Right: Move piece\n"
-                                       "### - Down/Up: Rotate piece\n"
-                                       "### - D: Move piece one line down\n"
-                                       "### - Space: Drop piece\n"
-                                       "### - Alt+N/Ctrl+N: New game\n"
-                                       "### - Alt+Q/Ctrl+Q: Quit\n"
-                                       "### - Alt+P/Esc: Pause");
-    q_messagebox_show(message_box);
 }
 
 void cleanup_window(const TetrixWindow* self) {
@@ -674,6 +644,20 @@ int main(int argc, char* argv[]) {
     global_board = tetrix_window.board;
 
     q_widget_show(tetrix_window.window);
+
+    QMessageBox* message_box = q_messagebox_new(tetrix_window.window);
+    q_messagebox_set_option2(message_box, QMESSAGEBOX_OPTION_DONTUSENATIVEDIALOG, true);
+    q_messagebox_set_window_modality(message_box, QT_WINDOWMODALITY_APPLICATIONMODAL);
+    q_messagebox_set_text_format(message_box, QT_TEXTFORMAT_MARKDOWNTEXT);
+    q_messagebox_set_window_title(message_box, "Game Controls");
+    q_messagebox_set_text(message_box, "### - Left/Right: Move piece\n"
+                                       "### - Down/Up: Rotate piece\n"
+                                       "### - D: Move piece one line down\n"
+                                       "### - Space: Drop piece\n"
+                                       "### - Alt+N/Ctrl+N: New game\n"
+                                       "### - Alt+Q/Ctrl+Q: Quit\n"
+                                       "### - Alt+P/Esc: Pause");
+    q_messagebox_show(message_box);
 
     int result = q_application_exec();
 
