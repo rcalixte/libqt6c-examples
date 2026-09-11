@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     // QList<int>
     int nums[] = {10, 20, 30, 40, 50};
     libqt_list numbers = {
-        .len = 5,
+        .len = sizeof nums / sizeof nums[0],
         .data.ints = nums,
     };
     QVersionNumber* version = q_versionnumber_new2(numbers);
@@ -91,9 +91,8 @@ int main(int argc, char* argv[]) {
         q_keysequence_from_string("F1"),
         q_keysequence_from_string("F2"),
         q_keysequence_from_string("F3"),
-        NULL,
     };
-    libqt_list key_list = qlist(key_data, 3);
+    libqt_list key_list = qlist(key_data, sizeof key_data / sizeof key_data[0]);
     QAction* action = q_action_new();
     q_action_set_shortcuts(action, key_list);
     libqt_list shortcuts = q_action_shortcuts(action);
