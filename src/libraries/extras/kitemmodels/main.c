@@ -1,60 +1,51 @@
 #include <libqt6c.h>
 
+#define MODEL_CAPACITY 4
+static QStandardItem* row_data[MODEL_CAPACITY];
+
 static KRearrangeColumnsProxyModel* proxy;
+static libqt_list row = {
+    .len = 0,
+    .data.ptr = (void*)row_data,
+};
 
 static void timer_callback() {
     int headers[] = {2, 1, 0, 3};
     libqt_list columns = {
-        .len = 4,
+        .len = sizeof headers / sizeof headers[0],
         .data.ints = headers,
     };
 
     k_rearrangecolumnsproxymodel_set_source_columns(proxy, columns);
 }
 
+static libqt_list make_standard_items_list(const char* labels[]) {
+    size_t i = 0;
+    for (i = 0; labels[i] != NULL; i++)
+        row_data[i] = q_standarditem_new2(labels[i]);
+    row.len = i;
+    return row;
+}
+
 int main(int argc, char* argv[]) {
     QApplication* qapp = q_application_new(&argc, argv);
 
-    QStandardItem* row_0_items[] = {
-        q_standarditem_new2("A0"),
-        q_standarditem_new2("B0"),
-        q_standarditem_new2("C0"),
-        q_standarditem_new2("D0"),
-        NULL,
-    };
-    libqt_list row_0 = qlist(row_0_items, 5);
-
-    QStandardItem* row_1_items[] = {
-        q_standarditem_new2("A1"),
-        q_standarditem_new2("B1"),
-        q_standarditem_new2("C1"),
-        q_standarditem_new2("D1"),
-        NULL,
-    };
-    libqt_list row_1 = qlist(row_1_items, 5);
-
-    QStandardItem* row_2_items[] = {
-        q_standarditem_new2("A2"),
-        q_standarditem_new2("B2"),
-        q_standarditem_new2("C2"),
-        q_standarditem_new2("D2"),
-        NULL,
-    };
-    libqt_list row_2 = qlist(row_2_items, 5);
-
+    const char* row_0[] = {"A0", "B0", "C0", "D0", NULL};
+    const char* row_1[] = {"A1", "B1", "C1", "D1", NULL};
+    const char* row_2[] = {"A2", "B2", "C2", "D2", NULL};
     const char* labels[] = {"H1", "H2", "H3", "H4", NULL};
 
     QStandardItemModel* source = q_standarditemmodel_new();
-    q_standarditemmodel_insert_row(source, 0, row_0);
-    q_standarditemmodel_insert_row(source, 1, row_1);
-    q_standarditemmodel_insert_row(source, 2, row_2);
+    q_standarditemmodel_append_row(source, make_standard_items_list(row_0));
+    q_standarditemmodel_append_row(source, make_standard_items_list(row_1));
+    q_standarditemmodel_append_row(source, make_standard_items_list(row_2));
     q_standarditemmodel_set_horizontal_header_labels(source, labels);
 
     proxy = k_rearrangecolumnsproxymodel_new();
 
     int headers[] = {2, 3, 1, 0};
     libqt_list columns = {
-        .len = 4,
+        .len = sizeof headers / sizeof headers[0],
         .data.ints = headers,
     };
 
@@ -69,7 +60,7 @@ int main(int argc, char* argv[]) {
     q_treeview_show(treeview);
 
     QTimer* timer = q_timer_new();
-    q_timer_start(timer, 1000);
+    q_timer_start(timer, 3000);
     q_timer_on_timeout(timer, timer_callback);
 
     int result = q_application_exec();
