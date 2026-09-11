@@ -36,9 +36,8 @@ int main(int argc, char* argv[]) {
         variant_actions,
         variant_hints,
         variant_timeout,
-        NULL,
     };
-    libqt_list args = qlist(arguments, 8);
+    libqt_list args = qlist(arguments, sizeof arguments / sizeof arguments[0]);
 
     q_dbusmessage_set_arguments(message, args);
 
