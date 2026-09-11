@@ -180,7 +180,7 @@ void initialize_app_tab(AppTab* tab) {
 
     int size_list[] = {250, 550};
     libqt_list sizes = {
-        .len = 2,
+        .len = sizeof size_list / sizeof size_list[0],
         .data.ints = size_list,
     };
     q_splitter_set_sizes(panes, sizes);
