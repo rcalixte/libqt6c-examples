@@ -9,7 +9,7 @@ static int sine_values[] = {
     -100, -92, -71, -38};
 
 static libqt_list sine_table = {
-    .len = 16,
+    .len = sizeof sine_values / sizeof sine_values[0],
     .data.ints = sine_values,
 };
 
