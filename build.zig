@@ -5,6 +5,7 @@ const configureQtExeRootModule = @import("libqt6c").configureQtExeRootModule;
 
 var buffer: [1024]u8 = undefined;
 var disabled_paths: std.ArrayList([]const u8) = .empty;
+const win_root = "C:/Qt/6.8.3/llvm-mingw_64";
 
 var main_files: std.ArrayList(struct {
     dir: []const u8,
@@ -18,6 +19,7 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
     const target = b.standardTargetOptions(.{});
     const extra_paths = b.option([]const []const u8, "extra-paths", "Extra library header and include search paths") orelse &.{};
+    const maintainer = b.option(bool, "maintainer", "Enable maintainer mode") orelse false;
 
     const is_macos = target.result.os.tag == .macos or host_os == .macos;
     const is_windows = target.result.os.tag == .windows or host_os == .windows;
@@ -169,6 +171,7 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
         .@"extra-paths" = extra_paths,
         .@"macos-libraries" = try macos_syslibs.toOwnedSlice(b.allocator),
+        .maintainer = maintainer,
     });
 
     const run_all_step = b.step("run", "Build and run all of the examples");
@@ -182,6 +185,11 @@ pub fn build(b: *std.Build) !void {
         "opengl32sw",
         "swresample-5",
         "swscale-8",
+    } else &.{};
+
+    const maintainer_flags: []const []const u8 = if (maintainer) &.{
+        "-Werror",
+        "-Wextra",
     } else &.{};
 
     // Create an executable for each main.c
@@ -218,7 +226,7 @@ pub fn build(b: *std.Build) !void {
         // Add main build source file
         exe.root_module.addCSourceFile(.{
             .file = b.path(main.path),
-            .flags = c_flags,
+            .flags = maintainer_flags,
         });
 
         // Create a run step
@@ -257,8 +265,6 @@ pub fn build(b: *std.Build) !void {
     }
 }
 
-const win_root = "C:/Qt/6.8.3/llvm-mingw_64";
-
 const special_dirs = [_][]const u8{
     "/extras/",
     "/foss-extras/",
@@ -266,8 +272,4 @@ const special_dirs = [_][]const u8{
     "/posix-extras/",
     "/posix-restricted/",
     "/restricted-extras/",
-};
-
-const c_flags = &.{
-    "-O2",
 };
