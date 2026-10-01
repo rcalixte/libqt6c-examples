@@ -26,12 +26,12 @@ static struct {
 
 // Map functions
 static void map_init(size_t initial_capacity) {
-    app_tab_map.keys = (void**)malloc(initial_capacity * sizeof(void*));
+    app_tab_map.keys = (void**)malloc(initial_capacity * sizeof *app_tab_map.keys);
     if (!app_tab_map.keys) {
         fprintf(stderr, "Failed to allocate memory for app_tab_map.keys\n");
         abort();
     }
-    app_tab_map.values = (AppTab**)malloc(initial_capacity * sizeof(AppTab*));
+    app_tab_map.values = (AppTab**)malloc(initial_capacity * sizeof *app_tab_map.values);
     if (!app_tab_map.values) {
         fprintf(stderr, "Failed to allocate memory for app_tab_map.values\n");
         abort();
@@ -43,8 +43,8 @@ static void map_init(size_t initial_capacity) {
 static void map_put(void* key, AppTab* value) {
     if (app_tab_map.size >= app_tab_map.capacity) {
         size_t new_capacity = app_tab_map.capacity * 2;
-        app_tab_map.keys = (void**)realloc(app_tab_map.keys, new_capacity * sizeof(void*));
-        app_tab_map.values = (AppTab**)realloc(app_tab_map.values, new_capacity * sizeof(AppTab*));
+        app_tab_map.keys = (void**)realloc(app_tab_map.keys, new_capacity * sizeof *app_tab_map.keys);
+        app_tab_map.values = (AppTab**)realloc(app_tab_map.values, new_capacity * sizeof *app_tab_map.values);
         app_tab_map.capacity = new_capacity;
     }
     app_tab_map.keys[app_tab_map.size] = key;
@@ -219,7 +219,7 @@ static void handle_close_current_tab(void* self UNUSED) {
 }
 
 static void create_tab_with_contents(const char* title, const char* content) {
-    AppTab* tab = (AppTab*)malloc(sizeof(AppTab));
+    AppTab* tab = (AppTab*)malloc(sizeof *tab);
     if (!tab) {
         fprintf(stderr, "Failed to allocate memory for AppTab\n");
         abort();
@@ -260,7 +260,7 @@ static void handle_file_open(void* self UNUSED) {
     long size = ftell(file);
     rewind(file);
 
-    char* content = (char*)malloc(size + 1);
+    char* content = (char*)malloc(size);
     if (!content) {
         fclose(file);
         libqt_free(fname);
@@ -268,7 +268,6 @@ static void handle_file_open(void* self UNUSED) {
     }
 
     size_t read = fread(content, 1, size, file);
-    content[read] = '\0';
     fclose(file);
 
     // Get basename of file
