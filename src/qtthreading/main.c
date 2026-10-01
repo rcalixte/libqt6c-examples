@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
     q_mainwindow_set_central_widget(window, widget);
 
     // Create counters array
-    Counter** counters = (Counter**)malloc(thread_count * sizeof(Counter*));
+    Counter** counters = (Counter**)malloc(thread_count * sizeof *counters);
     if (!counters) {
         fprintf(stderr, "Failed to allocate counters array\n");
         return 1;
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 
     // Initialize counters
     for (size_t i = 0; i < thread_count; i++) {
-        counters[i] = (Counter*)malloc(sizeof(Counter));
+        counters[i] = (Counter*)malloc(sizeof *counters[i]);
         if (!counters[i]) {
             fprintf(stderr, "Failed to allocate counter %zu\n", i);
             // Cleanup previously allocated counters
@@ -122,7 +122,7 @@ int main(int argc, char* argv[]) {
     q_vboxlayout_add_widget(layout, button);
 
     // Setup button data
-    ButtonData* button_data = (ButtonData*)malloc(sizeof(ButtonData));
+    ButtonData* button_data = (ButtonData*)malloc(sizeof *button_data);
     if (!button_data) {
         fprintf(stderr, "Failed to allocate button data\n");
         for (size_t i = 0; i < thread_count; i++)
