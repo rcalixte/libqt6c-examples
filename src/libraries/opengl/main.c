@@ -2,7 +2,7 @@
 
 static QOpenGLExtraFunctions* glfuncs;
 
-void initialize_g_l() {
+void initialize_g_l(void* self UNUSED) {
     glfuncs = q_openglcontext_extra_functions(q_openglcontext_current_context());
 
     q_openglextrafunctions_initialize_open_g_l_functions(glfuncs);
