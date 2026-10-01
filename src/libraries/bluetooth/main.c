@@ -33,7 +33,7 @@ void on_clicked(void* self) {
             QBLUETOOTHDEVICEDISCOVERYAGENT_DISCOVERYMETHOD_LOWENERGYMETHOD);
 }
 
-void on_device_discovered(void* self UNUSED, void* info) {
+void on_device_discovered(void* self UNUSED, const void* info) {
     const char* name = q_bluetoothdeviceinfo_name(info);
 
     QBluetoothAddress* address = q_bluetoothdeviceinfo_address(info);
