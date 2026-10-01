@@ -5,7 +5,7 @@ static QListWidget* listwidget = NULL;
 void add_place(QPlace* place) {
     const char* name = q_place_name(place);
     const char* placeid = q_place_place_id(place);
-    char* text = malloc(strlen(name) + strlen(placeid) + 2);
+    char* text = (char*)malloc(strlen(name) + strlen(placeid) + 2);
     snprintf(text, strlen(name) + strlen(placeid) + 1, "%s\n%s", name, placeid);
 
     q_listwidget_add_item(listwidget, text);
