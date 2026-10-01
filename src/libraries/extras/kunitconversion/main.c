@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
     to = q_combobox_new2();
 
     libqt_list units = k_unitconversion__unitcategory_units(category);
-    KUnitConversion__Unit** unit_data = units.data.ptr;
+    KUnitConversion__Unit** unit_data = (KUnitConversion__Unit**)units.data.ptr;
 
     for (size_t i = 0; i < units.len; i++) {
         const char* description = k_unitconversion__unit_description(unit_data[i]);
