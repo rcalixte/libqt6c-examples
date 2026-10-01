@@ -2,11 +2,11 @@
 
 static char buf[16];
 
-int on_row_count(void* self UNUSED, void* index UNUSED) {
+int on_row_count(const void* self UNUSED, const void* index UNUSED) {
     return 1000;
 }
 
-QVariant* on_data(void* self UNUSED, void* index, int role) {
+QVariant* on_data(const void* self UNUSED, const void* index, int role) {
     switch (role) {
     case QT_ITEMDATAROLE_FOREGROUNDROLE:
         if (q_modelindex_row(index) % 2 == 0) {
