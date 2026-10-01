@@ -177,12 +177,12 @@ TetrixShape shape_at(const TetrixBoard* self, int x, int y) {
     return self->board[y * BOARD_WIDTH + x];
 }
 
-QSize* on_size_hint() {
+QSize* on_size_hint(const void* self UNUSED) {
     return q_size_new4(BOARD_WIDTH * 15 + frame_width * 2,
                        BOARD_HEIGHT * 15 + frame_width * 2);
 }
 
-QSize* on_minimum_size_hint() {
+QSize* on_minimum_size_hint(const void* self UNUSED) {
     return q_size_new4(BOARD_WIDTH * 5 + frame_width * 2,
                        BOARD_HEIGHT * 5 + frame_width * 2);
 }
@@ -434,7 +434,7 @@ void on_paint_event(void* self, void* event) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             TetrixShape shape = shape_at(&global_board, j, BOARD_HEIGHT - i - 1);
             if (shape != NO_SHAPE)
-                draw_square(&global_board, (QPainter*)painter,
+                draw_square(&global_board, painter,
                             q_rect_left(rect) + j * square_width(&global_board),
                             board_top + i * square_height(&global_board), shape);
         }
@@ -443,7 +443,7 @@ void on_paint_event(void* self, void* event) {
         for (int i = 0; i < NUM_CELLS; i++) {
             int x = global_board.cur_x + get_x(&global_board.cur_piece, i);
             int y = global_board.cur_y - get_y(&global_board.cur_piece, i);
-            draw_square(&global_board, (QPainter*)painter,
+            draw_square(&global_board, painter,
                         q_rect_left(rect) + x * square_width(&global_board),
                         board_top + (BOARD_HEIGHT - y - 1) * square_height(&global_board),
                         global_board.cur_piece.piece_shape);
