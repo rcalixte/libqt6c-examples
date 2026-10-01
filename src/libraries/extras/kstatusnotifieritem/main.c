@@ -18,14 +18,14 @@ QIcon* create_icon(int color) {
     return icon;
 }
 
-void on_activate_requested(void* self UNUSED, bool active, void* pos) {
+void on_activate_requested(void* self UNUSED, bool active, const void* pos) {
     const char* active_str = active ? "true" : "false";
     int x = q_point_x(pos);
     int y = q_point_x(pos);
     const char* fmt = "Activated: active = %s, pos = (%d, %d)";
     size_t len = snprintf(NULL, 0, fmt, active_str, x, y);
 
-    char* text = malloc(len + 1);
+    char* text = (char*)malloc(len + 1);
     if (!text) {
         fprintf(stderr, "Failed to allocate memory for text\n");
         abort();
@@ -36,13 +36,13 @@ void on_activate_requested(void* self UNUSED, bool active, void* pos) {
     free(text);
 }
 
-void on_secondary_activate_requested(void* self UNUSED, void* pos) {
+void on_secondary_activate_requested(void* self UNUSED, const void* pos) {
     int x = q_point_x(pos);
     int y = q_point_y(pos);
     const char* fmt = "Secondary Activated: pos = (%d, %d)";
     size_t len = snprintf(NULL, 0, fmt, x, y);
 
-    char* text = malloc(len + 1);
+    char* text = (char*)malloc(len + 1);
     if (!text) {
         fprintf(stderr, "Failed to allocate memory for text\n");
         abort();
@@ -58,7 +58,7 @@ void on_scroll_requested(void* self UNUSED, int delta, int32_t orientation) {
     const char* fmt = "Scrolled %s: delta = %d";
     size_t len = snprintf(NULL, 0, fmt, orientation_str, delta);
 
-    char* text = malloc(len + 1);
+    char* text = (char*)malloc(len + 1);
     if (!text) {
         fprintf(stderr, "Failed to allocate memory for text\n");
         abort();
