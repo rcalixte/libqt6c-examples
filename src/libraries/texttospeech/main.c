@@ -39,7 +39,7 @@ void on_voice_selected(void* self UNUSED, int index) {
     if (voices.len <= (size_t)index)
         return;
 
-    QVoice** voice_data = voices.data.ptr;
+    QVoice** voice_data = (QVoice**)voices.data.ptr;
     q_texttospeech_set_voice(speech, voice_data[index]);
     reset();
 }
@@ -83,7 +83,7 @@ void on_state_changed(void* self UNUSED, int32_t state) {
                              state == QTEXTTOSPEECH_STATE_SPEAKING || state == QTEXTTOSPEECH_STATE_PAUSED);
 }
 
-void on_locale_changed(void* self UNUSED, void* locale) {
+void on_locale_changed(void* self UNUSED, const void* locale) {
     QVariant* variant = q_variant_new21(locale);
     q_combobox_set_current_index(ui.language, q_combobox_find_data(ui.language, variant));
     q_variant_delete(variant);
@@ -93,14 +93,14 @@ void on_locale_changed(void* self UNUSED, void* locale) {
     q_combobox_clear(ui.voice);
 
     if (voices.len > 0) {
-        QVoice** voice_data = voices.data.ptr;
+        QVoice** voice_data = (QVoice**)voices.data.ptr;
         for (size_t i = 0; i < voices.len; i++)
             q_voice_delete(voice_data[i]);
         free(voices.data.ptr);
     }
 
     voices = q_texttospeech_available_voices(speech);
-    QVoice** voice_data = voices.data.ptr;
+    QVoice** voice_data = (QVoice**)voices.data.ptr;
     QVoice* current = q_texttospeech_voice(speech);
     const char* current_name = q_voice_name(current);
 
@@ -111,7 +111,7 @@ void on_locale_changed(void* self UNUSED, void* locale) {
         const char* fmt = "%s - %s - %s";
         size_t len = snprintf(NULL, 0, fmt, name, gender_name, age_name);
 
-        char* item = malloc(len + 1);
+        char* item = (char*)malloc(len + 1);
         if (!item) {
             fprintf(stderr, "Failed to allocate memory for text\n");
             abort();
@@ -146,7 +146,7 @@ void on_engine_ready() {
 
     q_combobox_clear(ui.language);
     libqt_list locales = q_texttospeech_available_locales(speech);
-    QLocale** locale_data = locales.data.ptr;
+    QLocale** locale_data = (QLocale**)locales.data.ptr;
     QLocale* current = q_texttospeech_locale(speech);
     const char* current_name = q_locale_name(current);
 
@@ -156,7 +156,7 @@ void on_engine_ready() {
         const char* fmt = "%s (%s)";
         size_t len = snprintf(NULL, 0, fmt, language, territory);
 
-        char* name = malloc(len + 1);
+        char* name = (char*)malloc(len + 1);
         if (!name) {
             fprintf(stderr, "Failed to allocate memory for text\n");
             free(locale_data);
@@ -245,7 +245,7 @@ int main(int argc, char* argv[]) {
     int result = q_application_exec();
 
     if (voices.len > 0) {
-        QVoice** voice_data = voices.data.ptr;
+        QVoice** voice_data = (QVoice**)voices.data.ptr;
         for (size_t i = 0; i < voices.len; i++)
             q_voice_delete(voice_data[i]);
         free(voices.data.ptr);
