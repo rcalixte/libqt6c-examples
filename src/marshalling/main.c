@@ -1,7 +1,7 @@
 #include <libqt6c.h>
 
-const char** on_mime_types() {
-    const char** ret = (const char**)malloc(4 * sizeof(char*));
+const char** on_mime_types(const void* self UNUSED) {
+    const char** ret = (const char**)malloc(4 * sizeof *ret);
     if (ret == NULL)
         return NULL;
 
@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
     // QMap<QString, QVariant>
     libqt_map input_map;
     input_map.len = 3;
-    const char** map_key = (const char**)malloc(input_map.len * sizeof(char*));
+    const char** map_key = (const char**)malloc(input_map.len * sizeof *map_key);
     if (map_key == NULL) {
         fprintf(stderr, "Failed to allocate memory for map key\n");
         exit(1);
@@ -154,7 +154,7 @@ int main(int argc, char* argv[]) {
     map_key[0] = "foo";
     map_key[1] = "bar";
     map_key[2] = "baz";
-    QVariant** map_value = (QVariant**)malloc(input_map.len * sizeof(QVariant*));
+    QVariant** map_value = (QVariant**)malloc(input_map.len * sizeof *map_value);
     if (map_value == NULL) {
         fprintf(stderr, "Failed to allocate memory for map value\n");
         free(map_key);
@@ -187,20 +187,20 @@ int main(int argc, char* argv[]) {
     free(map_key);
 
     // QMultiMap<QString, QString>
-    char** map_keys = (char**)malloc(2 * sizeof(char*));
+    char** map_keys = (char**)malloc(2 * sizeof *map_keys);
     if (map_keys == NULL) {
         fprintf(stderr, "Failed to allocate memory for keys\n");
         abort();
     }
     map_keys[0] = "Accept";
     map_keys[1] = NULL;
-    char*** map_values = (char***)malloc(1 * sizeof(const char**));
+    char*** map_values = (char***)malloc(1 * sizeof *map_values);
     if (map_values == NULL) {
         free(map_keys);
         fprintf(stderr, "Failed to allocate memory for values\n");
         abort();
     }
-    map_values[0] = (char**)malloc(4 * sizeof(char*));
+    map_values[0] = (char**)malloc(4 * sizeof *map_values[0]);
     if (map_values[0] == NULL) {
         free(map_keys);
         free(map_values);
