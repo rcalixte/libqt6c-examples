@@ -11,8 +11,8 @@ static TextMapping text_mapping[] = {
     {.key = "Comment", .property = KFILEMETADATA_PROPERTY_PROPERTY_COMMENT},
 };
 
-const char** on_mimetypes() {
-    const char** ret = (const char**)malloc(2 * sizeof(char*));
+const char** on_mimetypes(const void* self UNUSED) {
+    const char** ret = (const char**)malloc(2 * sizeof *ret);
     if (ret == NULL)
         return NULL;
 
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
         const char* name = k_filemetadata__propertyinfo_display_name(info);
         for (size_t j = 0; values[i][j] != NULL; j++) {
             const char* value_str = q_variant_to_string(values[i][j]);
-            char* text = malloc(strlen(name) + strlen(value_str) + 3);
+            char* text = (char*)malloc(strlen(name) + strlen(value_str) + 3);
             snprintf(text, strlen(name) + strlen(value_str) + 3, "%s: %s", name, value_str);
             q_listwidget_add_item(listwidget, text);
             free(text);
