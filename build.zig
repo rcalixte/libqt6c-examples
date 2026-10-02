@@ -34,7 +34,7 @@ pub fn build(b: *std.Build) !void {
     }
 
     // Find all main.c files
-    var dir = try b.build_root.handle.openDir(b.graph.io, "src", .{ .iterate = true });
+    var dir = try b.root.openDir(b.graph.io, "src", .{ .iterate = true });
     defer dir.close(b.graph.io);
 
     var walker = try dir.walk(b.allocator);
@@ -52,7 +52,7 @@ pub fn build(b: *std.Build) !void {
                 std.mem.containsAtLeast(u8, parent_dir, 1, "qtthreading") or
                 std.mem.containsAtLeast(u8, parent_dir, 1, "webengine"))) continue;
             const qtlibs_path = b.fmt("{s}/{s}/{s}", .{ "src", parent_dir, "qtlibs" });
-            var qtlibs_file = try b.build_root.handle.openFile(b.graph.io, qtlibs_path, .{});
+            var qtlibs_file = try b.root.openFile(b.graph.io, qtlibs_path, .{});
             defer qtlibs_file.close(b.graph.io);
 
             var contents = try std.Io.Dir.cwd().readFileAlloc(b.graph.io, qtlibs_path, b.allocator, .unlimited);
@@ -66,11 +66,11 @@ pub fn build(b: *std.Build) !void {
             }
 
             const syslibs_path = b.fmt("{s}/{s}/{s}", .{ "src", parent_dir, "syslibs" });
-            const syslibs_file = b.build_root.handle.openFile(b.graph.io, syslibs_path, .{}) catch null;
+            const syslibs_file = b.root.openFile(b.graph.io, syslibs_path, .{}) catch null;
             const macos_syslibs_path = b.fmt("{s}/{s}/{s}", .{ "src", parent_dir, "osx_syslibs" });
             var macos_syslibs_file: ?std.Io.File = null;
             if (is_macos)
-                macos_syslibs_file = b.build_root.handle.openFile(b.graph.io, macos_syslibs_path, .{}) catch null;
+                macos_syslibs_file = b.root.openFile(b.graph.io, macos_syslibs_path, .{}) catch null;
             var syslibs_contents: std.ArrayList([]const u8) = .empty;
 
             if (syslibs_file) |syslib_file| {
@@ -104,7 +104,7 @@ pub fn build(b: *std.Build) !void {
 
             if (is_windows) {
                 const screenshot_file = b.fmt("{s}/{s}/{s}", .{ "src", parent_dir, "screenshot.png" });
-                b.build_root.handle.access(b.graph.io, screenshot_file, .{}) catch {
+                b.root.access(b.graph.io, screenshot_file, .{}) catch {
                     win_gui = false;
                 };
             }
@@ -233,6 +233,7 @@ pub fn build(b: *std.Build) !void {
         const exe_install = b.addInstallArtifact(exe, .{});
         const run_cmd = b.addRunArtifact(exe);
         run_cmd.step.dependOn(&exe_install.step);
+        run_cmd.addPassthruArgs();
 
         const run_description = b.fmt("Build and run the {s} example", .{exe_name});
 
