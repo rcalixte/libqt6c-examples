@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     q_widget_delete(widget);
 
     for (size_t i = 0; names[i] != NULL; i++)
-        free((char*)names[i]);
+        libqt_free(names[i]);
     free(names);
 
     q_application_delete(qapp);
