@@ -111,11 +111,11 @@ int main(int argc, char* argv[]) {
 
     // QByteArray
     const char* f_input = "foo bar baz";
-    char* bat = q_file_encode_name(f_input);
+    const char* bat = q_file_encode_name(f_input);
     const char* f_output = q_file_decode_name(bat);
     printf("QByteArray: %s\n", f_output);
     libqt_free(f_output);
-    free(bat);
+    libqt_free(bat);
 
     // QAnyStringView
     QObject* object = q_object_new();
@@ -187,23 +187,23 @@ int main(int argc, char* argv[]) {
     free(map_key);
 
     // QMultiMap<QString, QString>
-    char** map_keys = (char**)malloc(2 * sizeof *map_keys);
+    const char** map_keys = (const char**)malloc(2 * sizeof *map_keys);
     if (map_keys == NULL) {
         fprintf(stderr, "Failed to allocate memory for keys\n");
         abort();
     }
     map_keys[0] = "Accept";
     map_keys[1] = NULL;
-    char*** map_values = (char***)malloc(1 * sizeof *map_values);
+    const char*** map_values = (const char***)malloc(1 * sizeof *map_values);
     if (map_values == NULL) {
-        free(map_keys);
+        libqt_free(map_keys);
         fprintf(stderr, "Failed to allocate memory for values\n");
         abort();
     }
-    map_values[0] = (char**)malloc(4 * sizeof *map_values[0]);
+    map_values[0] = (const char**)malloc(4 * sizeof *map_values[0]);
     if (map_values[0] == NULL) {
-        free(map_keys);
-        free(map_values);
+        libqt_free(map_keys);
+        libqt_free(map_values);
         fprintf(stderr, "Failed to allocate memory for values[0]\n");
         abort();
     }
@@ -219,11 +219,11 @@ int main(int argc, char* argv[]) {
     QHttpHeaders* qheaders = q_httpheaders_from_multi_map(map);
     for (size_t i = 0; i < map.len; i++)
         free(map_values[i]);
-    free(map_values);
-    free(map_keys);
+    libqt_free(map_values);
+    libqt_free(map_keys);
     libqt_map header_map = q_httpheaders_to_multi_map(qheaders);
-    char** header_keys = (char**)header_map.keys;
-    char*** header_values = (char***)header_map.values;
+    const char** header_keys = (const char**)header_map.keys;
+    const char*** header_values = (const char***)header_map.values;
     for (size_t i = 0; i < header_map.len; i++) {
         printf("HTTP Header: %s: ", header_keys[i]);
         size_t count = 0;
@@ -236,11 +236,11 @@ int main(int argc, char* argv[]) {
                 printf(",");
         }
         printf("\n");
-        free(header_values[i]);
+        libqt_free(header_values[i]);
         libqt_free(header_keys[i]);
     }
-    free(header_values);
-    free(header_keys);
+    libqt_free(header_values);
+    libqt_free(header_keys);
     q_httpheaders_delete(qheaders);
 
     // Qt function pointer
