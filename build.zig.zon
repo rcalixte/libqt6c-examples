@@ -4,8 +4,8 @@
     .fingerprint = 0x221fd13f404bd8f9,
     .dependencies = .{
         .libqt6c = .{
-            .url = "git+https://github.com/rcalixte/libqt6c#643d83d09aa7d730f4cd2dc413ae2be2ee0fb13f",
-            .hash = "libqt6c-6.8.2-DLhhNv8dEhNLugaWWv_pT4ITqOW5Bp1QkqHx3tunkZ0N",
+            .url = "git+https://github.com/rcalixte/libqt6c#3d9f2ca00d3e5168fac497e8625ee894300c2b23",
+            .hash = "libqt6c-6.8.2-DLhhNm-daBNsW9t-t4GkVFZLyeSdyBVhQ4gdowDfBc3J",
         },
     },
     .paths = .{
