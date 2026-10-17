@@ -2,13 +2,12 @@
 #include <pthread.h>
 #include <time.h>
 
-static char buffer[32];
-
 typedef struct Counter {
     uint32_t counter;
     QLabel* label;
     bool running;
     pthread_t thread;
+    char buffer[32];
 } Counter;
 
 typedef struct ButtonData {
@@ -20,8 +19,8 @@ typedef struct ButtonData {
 void async_update(void* ctx) {
     Counter* counter = (Counter*)ctx;
     counter->counter++;
-    snprintf(buffer, sizeof(buffer), "%d %ld", counter->counter, time(NULL));
-    q_label_set_text(counter->label, buffer);
+    snprintf(counter->buffer, sizeof(counter->buffer), "%d %ld", counter->counter, time(NULL));
+    q_label_set_text(counter->label, counter->buffer);
 }
 
 void* run_counter(void* arg) {
